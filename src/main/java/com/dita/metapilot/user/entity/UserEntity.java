@@ -17,4 +17,5 @@ public class UserEntity {
     private String profileImage;
     private String createdAt;
     private String visitedAt;
+
 }

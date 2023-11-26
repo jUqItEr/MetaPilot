@@ -12,4 +12,5 @@ public class RegisterDto {
     private String password;
     private String nickname;
     private String email;
+
 }
