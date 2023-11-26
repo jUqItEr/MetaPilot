@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://hxlab.co.kr:13307/metapilot?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: dita2414
+
+  security:
+    user:
+      name: dita
+      password: 1234
+      roles: USER, ADMIN
+
+  mvc:
+    static-path-pattern: "/static/**"
+
+mybatis:
+  mapper-locations: classpath:mappers/**/*.xml
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+server:
+  servlet:
+    multipart:
+      maxFileSize: 15MB
+      maxRequestSize: 100MB
+  port: 8000
