@@ -4,10 +4,67 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dita.metapilot.user.repository.UserRepository">
-    <!-- 회원가입
-    -->
-    <insert id="saveUser" parameterType="com.dita.metapilot.user.dto.RegisterDto">
+
+    <resultMap id="userEntity" type="com.dita.metapilot.user.entity.UserEntity">
+        <result property="id" column="id" javaType="String"></result>
+        <result property="nickname" column="nickname"></result>
+        <result property="password" column="password"></result>
+        <result property="email" column="email"></result>
+        <result property="oauthId" column="oauth_id"></result>
+        <result property="profileImage" column="profile_image"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="visitedAt" column="visited_at"></result>
+        <collection property="userRoleEntities" resultMap="userRoleEntities"></collection>
+    </resultMap>
+
+    <resultMap id="userRoleEntities" type="com.dita.metapilot.user.entity.UserRoleEntity">
+        <result property="roleId" column="user_role_id"></result>
+        <result property="userId" column="user_tbl_id"></result>
+        <collection property="roleEntity" resultMap="roleEntity"></collection>
+    </resultMap>
+
+    <resultMap id="roleEntity" type="com.dita.metapilot.user.entity.RoleEntity">
+        <result property="id" column="role_id"></result>
+        <result property="name" column="role_name"></result>
+    </resultMap>
+
+    <!-- 회원가입 -->
+    <insert id="registerUser" parameterType="com.dita.metapilot.user.dto.RegisterDto">
         insert into user_tbl
         values (#{id}, #{password}, #{nickname}, #{email}, null, null, now(), now())
     </insert>
+
+    <!-- 회원 가입 권한 생성 -->
+
+
+    <!-- 아이디 중복 체크 -->
+    <select id="findUserByUserId" resultMap="userEntity">
+        select
+            id
+        from
+            user_tbl
+        where
+            id = #{id}
+    </select>
+
+    <!-- 유저 정보 가져오는 뷰 -->
+    <select id="getUser" parameterType="String" resultMap="userEntity">
+        select
+            *
+        from
+            user_view
+        where
+            id = #{id}
+    </select>
+
+    <!--  로그인 방문 시각 업데이트  -->
+    <update id="userVisit">
+        update
+            user_tbl
+        set
+            visited_at = now()
+        where
+            id = #{id}
+    </update>
+
 </mapper>
