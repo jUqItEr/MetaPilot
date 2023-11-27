@@ -25,6 +25,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
