@@ -12,7 +12,6 @@ import javax.validation.Valid;
 
 
 @Controller
-@RestController
 @RequestMapping("/user")
 public class UserController {
 
@@ -24,6 +23,7 @@ public class UserController {
         return "user/login.html";
     }
 
+    @ResponseBody
     @PostMapping("/api/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) {
         return ResponseEntity.ok(userService.registerUser(registerDto));
