@@ -1,150 +1,142 @@
-body{
-    margin:0;
-    color:#6a6f8c;
-    background:#c8c8c8;
-    font:600 16px/18px 'Open Sans',sans-serif;
+html,
+body {
+  height: 100%;
+}
+
+.form-signin {
+  max-width: 5000px;
+  padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
   }
-  *,:after,:before{box-sizing:border-box}
-  .clearfix:after,.clearfix:before{content:'';display:table}
-  .clearfix:after{clear:both;display:block}
-  a{color:inherit;text-decoration:none}
-  
-  .login-wrap{
-    width:100%;
-    margin:auto;
-    max-width:525px;
-    min-height:670px;
-    position:relative;
-    background:url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center;
-    box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
-  }
-  .login-html{
-    width:100%;
-    height:100%;
-    position:absolute;
-    padding:90px 70px 50px 70px;
-    background:rgba(40,57,101,.9);
-  }
-  .login-html .sign-in-htm,
-  .login-html .sign-up-htm{
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    position:absolute;
-    transform:rotateY(180deg);
-    backface-visibility:hidden;
-    transition:all .4s linear;
-  }
-  .login-html .sign-in,
-  .login-html .sign-up,
-  .login-form .group .check{
-    display:none;
-  }
-  .login-html .tab,
-  .login-form .group .label,
-  .login-form .group .button{
-    text-transform:uppercase;
-  }
-  .login-html .tab{
-    font-size:22px;
-    margin-right:15px;
-    padding-bottom:5px;
-    margin:0 15px 10px 0;
-    display:inline-block;
-    border-bottom:2px solid transparent;
-  }
-  .login-html .sign-in:checked + .tab,
-  .login-html .sign-up:checked + .tab{
-    color:#fff;
-    border-color:#1161ee;
-  }
-  .login-form{
-    min-height:345px;
-    position:relative;
-    perspective:1000px;
-    transform-style:preserve-3d;
-  }
-  .login-form .group{
-    margin-bottom:15px;
-  }
-  .login-form .group .label,
-  .login-form .group .input,
-  .login-form .group .button{
-    width:100%;
-    color:#fff;
-    display:block;
-  }
-  .login-form .group .input,
-  .login-form .group .button{
-    border:none;
-    padding:15px 20px;
-    border-radius:25px;
-    background:rgba(255,255,255,.1);
-  }
-  .login-form .group input[data-type="password"]{
-    text-security:circle;
-    -webkit-text-security:circle;
-  }
-  .login-form .group .label{
-    color:#aaa;
-    font-size:12px;
-  }
-  .login-form .group .button{
-    background:#1161ee;
-  }
-  .login-form .group label .icon{
-    width:15px;
-    height:15px;
-    border-radius:2px;
-    position:relative;
-    display:inline-block;
-    background:rgba(255,255,255,.1);
-  }
-  .login-form .group label .icon:before,
-  .login-form .group label .icon:after{
-    content:'';
-    width:10px;
-    height:2px;
-    background:#fff;
-    position:absolute;
-    transition:all .2s ease-in-out 0s;
-  }
-  .login-form .group label .icon:before{
-    left:3px;
-    width:5px;
-    bottom:6px;
-    transform:scale(0) rotate(0);
-  }
-  .login-form .group label .icon:after{
-    top:6px;
-    right:0;
-    transform:scale(0) rotate(0);
-  }
-  .login-form .group .check:checked + label{
-    color:#fff;
-  }
-  .login-form .group .check:checked + label .icon{
-    background:#1161ee;
-  }
-  .login-form .group .check:checked + label .icon:before{
-    transform:scale(1) rotate(45deg);
-  }
-  .login-form .group .check:checked + label .icon:after{
-    transform:scale(1) rotate(-45deg);
-  }
-  .login-html .sign-in:checked + .tab + .sign-up + .tab + .login-form .sign-in-htm{
-    transform:rotate(0);
-  }
-  .login-html .sign-up:checked + .tab + .login-form .sign-up-htm{
-    transform:rotate(0);
-  }
-  
-  .hr{
-    height:2px;
-    margin:60px 0 50px 0;
-    background:rgba(255,255,255,.2);
-  }
-  .foot-lnk{
-    text-align:center;
-  }
+}
+
+.b-example-divider {
+  width: 100%;
+  height: 3rem;
+  background-color: rgba(0, 0, 0, .1);
+  border: solid rgba(0, 0, 0, .15);
+  border-width: 1px 0;
+  box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+
+.b-example-vr {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 100vh;
+}
+
+.bi {
+  vertical-align: -.125em;
+  fill: currentColor;
+}
+
+.nav-scroller {
+  position: relative;
+  z-index: 2;
+  height: 2.75rem;
+  overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 1rem;
+  margin-top: -1px;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.btn-bd-primary {
+  --bd-violet-bg: #712cf9;
+  --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: var(--bs-white);
+  --bs-btn-bg: var(--bd-violet-bg);
+  --bs-btn-border-color: var(--bd-violet-bg);
+  --bs-btn-hover-color: var(--bs-white);
+  --bs-btn-hover-bg: #6528e0;
+  --bs-btn-hover-border-color: #6528e0;
+  --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+  --bs-btn-active-color: var(--bs-btn-hover-color);
+  --bs-btn-active-bg: #5a23c8;
+  --bs-btn-active-border-color: #5a23c8;
+}
+.bd-mode-toggle {
+  z-index: 1500;
+}
+/*login.css 내용 옳기기*/
+.sign-in,.sign-up{
+
+  display: none;
+}
+
+.tab{
+  margin: 30px;
+  margin-bottom: 15px;
+  font-size:22px;
+  display:inline-block;
+  border-bottom:2px solid transparent;
+}
+
+.sign-in:checked + .tab,
+.sign-up:checked + .tab{
+  color:blue;
+  border-color:blue;
+}
+.mb-4{
+  margin-right: 30px;
+}
+
+
+.google-login{
+  background: url('../image/logo-google.png') no-repeat; /* 이미지 설정 및 반복 방지 */
+}
+
+.kakao-login{
+  background: url('../image/logo-kakao.png') no-repeat; /* 이미지 설정 및 반복 방지 */
+}
+
+.naver-login{
+  background: url('../image/logo-naver.png') no-repeat; /* 이미지 설정 및 반복 방지 */
+}
+.google-login,
+.kakao-login,
+.naver-login{
+  background-size: contain; /* 이미지를 요소에 맞게 조정 */
+  width: 150px; /* 원하는 너비로 조정 */
+  height: 50px; /* 원하는 높이로 조정 */
+  border: none; /* 테두리 제거 */
+  font-weight: bold;
+  cursor: pointer; /* 커서 스타일 변경 (선택 사항) */
+  color:black;
+}
