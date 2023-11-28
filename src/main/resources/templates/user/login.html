@@ -2,63 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/static/css/login.css">
+    <title>로그인</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link href="../../static/css/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="../../static/css/login.css" rel="stylesheet">
 </head>
-<body>
-<div class="login-wrap">
-    <div class="login-html">
+
+<body class="d-flex align-items-center py-4 bg-body-tertiary ">
+    <div class="form-signin m-auto " style="width: 500px;height:620px;padding: 20px;margin: 50px;border: 1px solid lightgray">
+        <!-- logo -->
+        <img class="mb-4" src="../../static/image/bootstrap-logo.svg" alt="" width="72" height="57" >
+
+        <!-- sign in/sing up (page move)        -->
         <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
         <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
-        <div class="login-form">
-            <div class="sign-in-htm">
-                <div class="group">
-                    <label for="user" class="label">Username</label>
-                    <input id="user" type="text" class="input">
-                </div>
-                <div class="group">
-                    <label for="pass" class="label">Password</label>
-                    <input id="pass" type="password" class="input" data-type="password">
-                </div>
-                <div class="group">
-                    <input id="check" type="checkbox" class="check" checked>
-                    <label for="check"><span class="icon"></span> Keep me Signed in</label>
-                </div>
-                <div class="group">
-                    <input type="submit" class="button" value="Sign In">
-                </div>
-                <div class="hr"></div>
-                <div class="foot-lnk">
-                    <a href="#forgot">Forgot Password?</a>
-                </div>
+
+        <form>
+            <!-- title-->
+            <h1 class="h3 mb-3 fw-normal">로그인</h1>
+            <!--  id-->
+            <div class="form-floating">
+                <label for="floatingInput">아이디</label>
+                <input type="text" class="form-control" id="floatingInput" placeholder="ID">
             </div>
-            <div class="sign-up-htm">
-                <div class="group">
-                    <label for="user" class="label">Username</label>
-                    <input id="user" type="text" class="input">
-                </div>
-                <div class="group">
-                    <label for="pass" class="label">Password</label>
-                    <input id="pass" type="password" class="input" data-type="password">
-                </div>
-                <div class="group">
-                    <label for="nickname" class="label">nickname</label>
-                    <input id="nickname" type="text" class="input">
-                </div>
-                <div class="group">
-                    <label for="pass" class="label">Email Address</label>
-                    <input id="pass" type="text" class="input">
-                </div>
-                <div class="group">
-                    <input type="submit" class="button" value="Sign Up">
-                </div>
-                <div class="hr"></div>
-                <div class="foot-lnk">
-                    <label for="tab-1">Already Member?</a>
-                </div>
+            <!--pw-->
+            <div class="form-floating">
+                <label for="floatingPassword">비밀번호</label>
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
             </div>
-        </div>
+            <!--remeber login-->
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    로그인 유지
+                </label>
+            </div>
+            <!--sign in btn-->
+            <button class="btn btn-primary w-100 py-2" type="submit" style="margin-bottom: 10px">로그인</button>
+            <button class="btn w-100 py-2 google-login"  type="submit">구글로 로그인</button>
+            <button class="btn w-100 py-2 kakao-login" type="submit">카카오로 로그인</button>
+            <button class="btn w-100 py-2 naver-login" type="submit">네이버로 로그인</button>
+
+
+        </form>
     </div>
-</div>
+
+    <!--radio page move    -->
+    <script>
+        $(document).ready(function() {
+            $('#tab-2').click(function() {
+                // Redirect to regist.html
+                window.location.href = 'register.html';
+            });
+        });
+    </script>
+
 </body>
 </html>
