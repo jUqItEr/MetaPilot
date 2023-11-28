@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link href="../../static/css/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="../../static/css/login.css" rel="stylesheet">
+</head>
+<body class="d-flex align-items-center py-4 bg-body-tertiary ">
+<div class="login-wrap form-signin m-auto " style="width: 500px;padding: 20px;margin: 50px;border: 1px solid lightgray">
+    <div class="sign-up-htm ">
+        <div class="login-html">
+            <!-- logo -->
+            <img class="mb-4" src="../../static/image/bootstrap-logo.svg" alt="" width="72" height="57">
+            <!-- sign in/sing up (page move)        -->
+            <input id="tab-1" type="radio" name="tab" class="sign-in" ><label for="tab-1" class="tab">Sign In</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up" checked><label for="tab-2" class="tab">Sign Up</label>
+            <div class="login-form">
+                <!-- title-->
+                <h1 class="h3 mb-3 fw-normal">회원가입</h1>
+                <div class="group form-floating">
+                    <label for="user" class="label" >아이디</label>
+                    <input id="user" type="text" class="register-input form-control" >
+                </div>
+                <div class="group form-floating">
+                    <label for="pass" class="label">패스워드</label>
+                    <input id="pass" type="password" class="register-input form-control" data-type="password" placeholder="Password">
+                </div>
+                <div class="group form-floating">
+                    <label for="nickname" class="label">닉네임</label>
+                    <input id="nickname" type="text" class="register-input form-control">
+                </div>
+                <div class="group form-floating">
+                    <label for="email" class="label">이메일</label>
+                    <input id="email" type="text" class="register-input form-control">
+                </div>
+                <div class="group form-floating" >
+                    <input type="submit" class="register-button btn btn-primary w-100 py-2" value="Sign Up" style="margin:20px 0;">
+                 </div>
+                <div class="hr"></div>
+                <div class="foot-lnk">
+                    <a for="tab-1">이미 회원이십니까?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="/static/js/user/register.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#tab-1').click(function() {
+                // Redirect to regist.html
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+</body>
+</html>
