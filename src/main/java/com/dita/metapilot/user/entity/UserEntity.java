@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +19,5 @@ public class UserEntity {
     private String profileImage;
     private String createdAt;
     private String visitedAt;
-
+    private List<UserRoleEntity> userRoleEntities;
 }
