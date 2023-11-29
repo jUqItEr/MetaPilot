@@ -2,6 +2,7 @@ package com.dita.metapilot.admin.repository;
 
 import com.dita.metapilot.admin.dto.CategoryDto;
 import com.dita.metapilot.admin.dto.PostDto;
+import com.dita.metapilot.admin.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -13,6 +14,15 @@ import org.apache.ibatis.annotations.Mapper;
  * */
 @Mapper
 public interface AdminRepository {
+    /**
+     * <p>Block user.</p>
+     *
+     * @since 2023. 11. 29.
+     * @param dto User Data Transfer Object.
+     * @return It'll be return true if the user can block successfully.
+     * */
+    boolean blockUser(UserDto dto);
+
     /**
      * <p>Create category.</p>
      *
@@ -42,6 +52,10 @@ public interface AdminRepository {
 
     /**
      * <p>Delete post.</p>
+     *
+     * @since 2023. 11. 29.
+     * @param dto Post Data Transfer Object.
+     * @return It should be return true if an item deleted successfully.
      * */
     boolean deletePost(PostDto dto);
 
