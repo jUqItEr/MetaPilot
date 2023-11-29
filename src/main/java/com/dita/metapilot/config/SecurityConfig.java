@@ -68,7 +68,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/user/login") // 로그인 페이지 get요청
                 .loginProcessingUrl("/user/login") // 로그인 인증 post 요청
                 .failureForwardUrl("/user/login") // 실패시 넘어가는 페이지
-                .defaultSuccessUrl("/user/login/success"); //로그인 성공시 넘어가는 페이지
+                .defaultSuccessUrl("/index"); //로그인 성공시 넘어가는 페이지
+//                .and()
+
+//            .oauth2Login()
+//                .successHandler(oAuth2SuccessHandler)
+//                .userInfoEndpoint()
+//                .userService(principalUserDetailsService);
     }
 
 }

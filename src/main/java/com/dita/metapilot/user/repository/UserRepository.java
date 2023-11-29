@@ -1,6 +1,7 @@
 package com.dita.metapilot.user.repository;
 
 import com.dita.metapilot.user.dto.RegisterDto;
+import com.dita.metapilot.user.dto.UserDto;
 import com.dita.metapilot.user.entity.UserEntity;
 import com.dita.metapilot.user.entity.UserRoleEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,7 +22,7 @@ public interface UserRepository {
      * @param registerDto 사용자가 입력한 회원가입 정보를 담은 DTO.
      * @return 회원가입이 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
-    public boolean registerUser(RegisterDto registerDto);
+    boolean registerUser(RegisterDto registerDto);
 
     /**
      * 사용자의 역할을 생성하는 메서드.
@@ -29,7 +30,7 @@ public interface UserRepository {
      * @param registerDto 사용자의 역할 정보를 담은 DTO.
      * @return 역할 생성이 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
-    public boolean createRole(RegisterDto registerDto);
+    boolean createRole(RegisterDto registerDto);
 
     /**
      * 주어진 userId를 가진 사용자를 찾는 메서드.
@@ -37,7 +38,7 @@ public interface UserRepository {
      * @param userId 찾고자 하는 사용자의 ID.
      * @return 해당 ID를 가진 사용자의 UserEntity 객체. 해당 사용자가 없으면 null을 반환합니다.
      */
-    public UserEntity findUserByUserId(String userId); //userId 중복 체크
+    UserEntity findUserByUserId(String userId); //userId 중복 체크
 
     /**
      * 주어진 userId로 사용자 정보를 가져오는 메서드.
@@ -45,7 +46,7 @@ public interface UserRepository {
      * @param userId 가져오고자 하는 사용자의 ID.
      * @return 해당 ID를 가진 사용자의 UserEntity 객체. 해당 사용자가 없으면 null을 반환합니다.
      */
-    public UserEntity getUser(String userId);
+    UserEntity getUser(String userId); //유저 정보 가져오기
 
     /**
      * 사용자의 방문 기록을 저장하는 메서드.
@@ -53,5 +54,5 @@ public interface UserRepository {
      * @param userId 방문 기록을 저장할 사용자의 ID.
      * @return 방문 기록 저장이 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
-    public boolean userVisit(String userId);
+    boolean userVisit(String userId);
 }
