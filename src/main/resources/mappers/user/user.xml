@@ -31,40 +31,40 @@
     <!-- 회원가입 -->
     <insert id="registerUser" parameterType="com.dita.metapilot.user.dto.RegisterDto">
         insert into user_tbl
-        values (#{id}, #{password}, #{nickname}, #{email}, null, null, now(), now())
+        values (#{id}, #{password}, #{nickname}, #{email}, null, null, now(), null)
     </insert>
 
     <!-- 회원 가입 권한 생성 -->
+    <insert id="createRole" parameterType="com.dita.metapilot.user.dto.RegisterDto">
+        insert into user_role_tbl
+        values (#{id}, 0)
+    </insert>
 
 
     <!-- 아이디 중복 체크 -->
     <select id="findUserByUserId" resultMap="userEntity">
         select
-            id
+        id
         from
-            user_tbl
+        user_tbl
         where
-            id = #{id}
+        id = #{id}
     </select>
 
     <!-- 유저 정보 가져오는 뷰 -->
     <select id="getUser" parameterType="String" resultMap="userEntity">
         select
-            *
+        *
         from
-            user_view
+        user_view
         where
-            id = #{id}
+        id = #{id}
     </select>
 
     <!--  로그인 방문 시각 업데이트  -->
     <update id="userVisit">
-        update
-            user_tbl
-        set
-            visited_at = now()
-        where
-            id = #{id}
+        update user_tbl set visited_at = now() where id = #{id}
     </update>
+
 
 </mapper>
