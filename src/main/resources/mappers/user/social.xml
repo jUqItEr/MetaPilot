@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dita.metapilot.user.repository.SocialRepository">
+
+    <insert id="createUser">
+        insert into user_tbl
+        values (#{socialId}, null, #{nickname}, #{socialId}, #{socialId}, null, now(), null)
+    </insert>
+
+    <select id="getUser" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto" resultType="com.dita.metapilot.user.entity.UserEntity">
+        select
+            social_id as socialId,
+            nickname,
+            profile_image as profileImage,
+            created_at as createdAt,
+            visited_at as visitedAt
+        from
+            user_tbl
+        where
+            social_id = #{socialId}
+    </select>
+
+    <select id="checkDuplicate" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto" resultType="java.lang.Boolean">
+        select
+            social_id
+        from
+            user_tbl
+        where
+            social_id = #{socialId}
+    </select>
+
+    <insert id="createRole" parameterType="com.dita.metapilot.user.dto.RegisterDto">
+        insert into user_role_tbl
+        values (#{id}, 0)
+    </insert>
+
+</mapper>

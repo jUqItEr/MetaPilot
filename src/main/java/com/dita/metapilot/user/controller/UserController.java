@@ -6,6 +6,7 @@ import com.dita.metapilot.user.dto.RegisterDto;
 import com.dita.metapilot.user.entity.UserEntity;
 import com.dita.metapilot.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
  * @since 2023. 11. 27.
  * @version 1.0.0
  * */
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -75,6 +77,13 @@ public class UserController {
         return ResponseEntity.ok(userService.registerUser(registerDto));
     }
 
+    /**
+     * <p>유저 정보를 처리하는 컨트롤러 메서드</p>
+     *
+     * @param userId 사용자 Id
+     * @since 2023. 11. 29.
+     * @return 사용자의 아이디 유무를 판단하여 결과값 반환
+     */
     @ResponseBody
     @GetMapping("/{userId}")
     public ResponseEntity<? extends SwaggerRespDto<? extends UserEntity>> getUser(@PathVariable String userId) {
@@ -95,16 +104,16 @@ public class UserController {
 
         if (principalDetails != null) {
             principalDetails.getAuthorities().forEach(role -> {
-                System.out.println("로그인된 사용자의 권한 : {}" + role.getAuthority());
+                log.info("Role : {", role.getAuthority() ,"}");
             });
+
+            return ResponseEntity
+                    .ok()
+                    .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", principalDetails));
         } else {
             return ResponseEntity
                     .badRequest()
-                    .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "failed", null));
+                    .body(new SwaggerRespDto<>(HttpStatus.BAD_REQUEST.value(), "failed", null));
         }
-
-        return ResponseEntity
-                .ok()
-                .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", principalDetails));
     }
 }

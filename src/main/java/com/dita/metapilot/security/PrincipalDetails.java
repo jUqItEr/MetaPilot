@@ -6,6 +6,7 @@ import com.dita.metapilot.user.entity.UserRoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ import java.util.*;
  *
  */
 @RequiredArgsConstructor
+@Slf4j
 public class PrincipalDetails implements UserDetails {
 
     @Getter
@@ -39,6 +41,7 @@ public class PrincipalDetails implements UserDetails {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (UserRoleEntity userRoleEntity : user.getUserRoleEntities()) {
             authorities.add(new SimpleGrantedAuthority(userRoleEntity.getRoleEntity().getName()));
+            log.info(userRoleEntity.getRoleEntity().getName()); //TODO
         }
         return authorities;
     }

@@ -36,6 +36,7 @@ public class PrincipalDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         UserEntity user = userRepository.getUser(userId);
+        userRepository.userVisit(userId);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }

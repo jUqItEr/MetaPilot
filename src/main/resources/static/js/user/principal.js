@@ -1,3 +1,7 @@
+$(function() {
+     LoginController.getInstance().LoginController();
+});
+
 class LoginController {
     static #instance = null;
     static getInstance() {
@@ -13,10 +17,11 @@ class LoginController {
         $.ajax({
             async: false,
             type: "get",
-            url: "http://localhost:8000/api/account/principal",
+            url: "/user/principal",
             dataType: "json",
             success: response => {
                 responseData = response.data;
+                console.log(responseData);
             },
             error: error => {
                 console.log(error);
