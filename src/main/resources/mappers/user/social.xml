@@ -23,18 +23,22 @@
             social_id = #{socialId}
     </select>
 
-    <select id="checkDuplicate" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto" resultType="java.lang.Boolean">
+    <select id="checkDuplicate" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto" resultType="com.dita.metapilot.user.entity.UserEntity">
         select
-            social_id
+            social_id,
+            email
         from
             user_tbl
         where
             social_id = #{socialId}
     </select>
 
-    <insert id="createRole" parameterType="com.dita.metapilot.user.dto.RegisterDto">
+    <select id="findUserBySocialId" resultType="com.dita.metapilot.user.entity.UserEntity">
+        select * from user_tbl where social_id = #{socialId}
+    </select>
+
+    <insert id="createRole" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto">
         insert into user_role_tbl
         values (#{id}, 0)
     </insert>
-
 </mapper>

@@ -30,7 +30,7 @@ public class UserEntity {
     private String password;
     private String nickname;
     private String email;
-    private String oauthId;
+    private String socialId;
     private String profileImage;
     private String createdAt;
     private String visitedAt;

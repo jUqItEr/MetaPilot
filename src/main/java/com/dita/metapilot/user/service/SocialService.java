@@ -5,6 +5,7 @@ import com.dita.metapilot.exception.DuplicateException;
 import com.dita.metapilot.user.dto.SocialRegisterDto;
 import com.dita.metapilot.user.entity.UserEntity;
 import com.dita.metapilot.user.repository.SocialRepository;
+import com.dita.metapilot.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,17 +19,24 @@ import java.util.Map;
 public class SocialService {
 
     private final SocialRepository socialRepository;
+    private final UserRepository userRepository;
 
-//    public boolean registerUser(SocialRegisterDto socialRegisterDto) {
-//
-//    }
+    public SocialRegisterDto registerUser(SocialRegisterDto socialRegisterDto) {
+        responseDuplicateError(socialRegisterDto);
+        socialRepository.createUser(socialRegisterDto);
+        socialRepository.createRole(socialRegisterDto);
+        return socialRegisterDto;
+    }
 
-    public void responseDuplicateError(boolean errorCode) {
-        Map<String, String> errorMap = new HashMap<>();
-        if (errorCode) {
-            errorMap.put("socialId", "이미 사용중인 소셜 이메일입니다.");
+    public void responseDuplicateError(SocialRegisterDto socialRegisterDto) {
+        UserEntity user = socialRepository.checkDuplicate(socialRegisterDto);
+
+        if (user != null) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("email", "이미 존재하는 사용자 아이디 입니다.");
+
+            throw new CustomValidationException(errorMap);
         }
-        throw new DuplicateException(errorMap);
     }
 
     public UserEntity getUser(String socialId) {
