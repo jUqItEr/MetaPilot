@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SocialRegisterDto {
+    private String id;
     private String socialId;
+    private String email;
     private String nickname;
 }
