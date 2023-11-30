@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Mybatis mapper XML for user who has permit the administrator privilege.
+
+    @author: Kiseok Kang (@jUqItEr)
+    @filename: admin.xml
+    @since: 2023. 11. 28.
+    @version: 1.0.0
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dita.metapilot.admin.repository.AdminRepository">
+    <!-- Block User. -->
+    <insert id="blockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
+        <![CDATA[
+            insert into
+                block_tbl
+            values (
+                null, ${userId}
+            )
+        ]]>
+    </insert>
+
+    <!-- Create category. -->
+    <insert id="createCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+        <![CDATA[
+            insert into
+                category_tbl
+            values (
+                null, null, ${subject}, ${depth}, ${pos}, ${type}, ${visible},
+                ${countVisible}, ${listVisible}, ${listCount}, now()
+            )
+        ]]>
+        <!-- Get reference id for staging categories. -->
+        <selectKey resultType="int" keyProperty="refId" keyColumn="category_tbl_ref_id" order="AFTER">
+            <![CDATA[
+                select max(id) from category_tbl
+            ]]>
+        </selectKey>
+    </insert>
+
+    <!-- Delete category. -->
+    <delete id="deleteCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+        <![CDATA[
+            delete from
+                category_tbl
+            where
+                id = ${id}
+        ]]>
+    </delete>
+
+    <!-- Delete comment. -->
+    <delete id="deleteComment" parameterType="com.dita.metapilot.admin.dto.CommentDto">
+        <![CDATA[
+            delete from
+                comment_tbl
+            where
+                id = ${id}
+        ]]>
+    </delete>
+
+    <!-- Delete post with post id. -->
+    <delete id="deletePost" parameterType="com.dita.metapilot.admin.dto.PostDto">
+        <![CDATA[
+            delete from
+                post_tbl
+            where
+                id = ${id}
+        ]]>
+    </delete>
+
+    <!-- Update category. -->
+    <update id="updateCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+        <![CDATA[
+            update
+                category_tbl
+            set
+                category_tbl_ref_id = ${refId},
+                depth = ${depth},
+                pos = ${pos},
+                visible = ${isVisible},
+                count_visible = ${isCountVisible}
+        ]]>
+    </update>
+</mapper>

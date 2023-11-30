@@ -14,8 +14,8 @@
             <!-- logo -->
             <img class="mb-4" src="../../static/image/bootstrap-logo.svg" alt="" width="72" height="57">
             <!-- sign in/sing up (page move)        -->
-            <input id="tab-1" type="radio" name="tab" class="sign-in" ><label for="tab-1" class="tab">Sign In</label>
-            <input id="tab-2" type="radio" name="tab" class="sign-up" checked><label for="tab-2" class="tab">Sign Up</label>
+            <input id="tab-1" type="radio" name="tab" class="sign-in" ><label for="tab-1" class="tab"><a href="login">Sign In</a></label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up" checked><label for="tab-2" class="tab"><a href="register">Sign Up</a></label>
             <div class="login-form">
                 <!-- title-->
                 <h1 class="h3 mb-3 fw-normal">회원가입</h1>
@@ -37,7 +37,7 @@
                 </div>
                 <div class="group form-floating" >
                     <input type="submit" class="register-button btn btn-primary w-100 py-2" value="Sign Up" style="margin:20px 0;">
-                 </div>
+                </div>
                 <div class="hr"></div>
                 <div class="foot-lnk">
                     <a for="tab-1">이미 회원이십니까?</a>
@@ -46,14 +46,6 @@
         </div>
     </div>
 </div>
-    <script src="/static/js/user/register.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#tab-1').click(function() {
-                // Redirect to regist.html
-                window.location.href = 'login.html';
-            });
-        });
-    </script>
+<script src="/static/js/user/register.js"></script>
 </body>
 </html>

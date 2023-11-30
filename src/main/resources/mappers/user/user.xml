@@ -31,10 +31,14 @@
     <!-- 회원가입 -->
     <insert id="registerUser" parameterType="com.dita.metapilot.user.dto.RegisterDto">
         insert into user_tbl
-        values (#{id}, #{password}, #{nickname}, #{email}, null, null, now(), now())
+        values (#{id}, #{password}, #{nickname}, #{email}, null, null, now(), null)
     </insert>
 
     <!-- 회원 가입 권한 생성 -->
+    <insert id="createRole" parameterType="com.dita.metapilot.user.dto.RegisterDto">
+        insert into user_role_tbl
+        values (#{id}, 0)
+    </insert>
 
 
     <!-- 아이디 중복 체크 -->
@@ -59,12 +63,8 @@
 
     <!--  로그인 방문 시각 업데이트  -->
     <update id="userVisit">
-        update
-            user_tbl
-        set
-            visited_at = now()
-        where
-            id = #{id}
+        update user_tbl set visited_at = now() where id = #{id}
     </update>
+
 
 </mapper>

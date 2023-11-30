@@ -9,53 +9,40 @@
 </head>
 
 <body class="d-flex align-items-center py-4 bg-body-tertiary ">
-    <div class="form-signin m-auto " style="width: 500px;height:620px;padding: 20px;margin: 50px;border: 1px solid lightgray">
-        <!-- logo -->
-        <img class="mb-4" src="../../static/image/bootstrap-logo.svg" alt="" width="72" height="57" >
+<div class="form-signin m-auto " style="width: 500px;height:620px;padding: 20px;margin: 50px;border: 1px solid lightgray">
+    <!-- logo -->
+    <img class="mb-4" src="../../static/image/bootstrap-logo.svg" alt="" width="72" height="57" >
 
-        <!-- sign in/sing up (page move)        -->
-        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
-        <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+    <!-- sign in/sing up (page move)        -->
+    <input id="tab-1" type="radio" name="tab" class="sign-in" ><label for="tab-1" class="tab"><a href="login">Sign In</a></label>
+    <input id="tab-2" type="radio" name="tab" class="sign-up" checked><label for="tab-2" class="tab"><a href="register">Sign Up</a></label>
 
-        <form>
-            <!-- title-->
-            <h1 class="h3 mb-3 fw-normal">로그인</h1>
-            <!--  id-->
-            <div class="form-floating">
-                <label for="floatingInput">아이디</label>
-                <input type="text" class="form-control" id="floatingInput" placeholder="ID">
-            </div>
-            <!--pw-->
-            <div class="form-floating">
-                <label for="floatingPassword">비밀번호</label>
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-            </div>
-            <!--remeber login-->
-            <div class="form-check text-start my-3">
-                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    로그인 유지
-                </label>
-            </div>
-            <!--sign in btn-->
-            <button class="btn btn-primary w-100 py-2" type="submit" style="margin-bottom: 10px">로그인</button>
-            <button class="btn w-100 py-2 google-login"  type="submit">구글로 로그인</button>
-            <button class="btn w-100 py-2 kakao-login" type="submit">카카오로 로그인</button>
-            <button class="btn w-100 py-2 naver-login" type="submit">네이버로 로그인</button>
-
-
-        </form>
-    </div>
-
-    <!--radio page move    -->
-    <script>
-        $(document).ready(function() {
-            $('#tab-2').click(function() {
-                // Redirect to regist.html
-                window.location.href = 'register.html';
-            });
-        });
-    </script>
-
+    <form action="/user/login" method="post">
+        <!-- title-->
+        <h1 class="h3 mb-3 fw-normal">로그인</h1>
+        <!--  id-->
+        <div class="form-floating">
+            <label for="floatingInput">아이디</label>
+            <input type="text" class="form-control" id="floatingInput" name="username" placeholder="ID">
+        </div>
+        <!--pw-->
+        <div class="form-floating">
+            <label for="floatingPassword">비밀번호</label>
+            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+        </div>
+        <!--remeber login-->
+        <div class="form-check text-start my-3">
+            <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+                로그인 유지
+            </label>
+        </div>
+        <!--sign in btn-->
+        <button class="btn btn-primary w-100 py-2" type="submit" style="margin-bottom: 10px">로그인</button>
+        <button class="btn w-100 py-2 google-login"  type="submit">구글로 로그인</button>
+        <button class="btn w-100 py-2 kakao-login" type="submit">카카오로 로그인</button>
+        <button class="btn w-100 py-2 naver-login" type="submit">네이버로 로그인</button>
+    </form>
+</div>
 </body>
 </html>
