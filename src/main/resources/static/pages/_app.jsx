@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -13,6 +14,9 @@ export default function MyApp({ Component, pageProps }) {
 
     return (
         <>
+            <Head>
+                <link rel='shortcut icon' href='/favicon.ico' />
+            </Head>
             <Component { ...pageProps } />
         </>
     )

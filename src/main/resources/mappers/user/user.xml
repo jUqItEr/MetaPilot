@@ -31,13 +31,13 @@
     <!-- 회원가입 -->
     <insert id="registerUser" parameterType="com.dita.metapilot.user.dto.RegisterDto">
         insert into user_tbl
-        values (#{id}, #{password}, #{nickname}, #{email}, null, null, now(), null)
+        values (#{id}, #{password}, #{nickname}, #{email}, null, null, null, now(), null)
     </insert>
 
     <!-- 회원 가입 권한 생성 -->
     <insert id="createRole" parameterType="com.dita.metapilot.user.dto.RegisterDto">
         insert into user_role_tbl
-        values (#{id}, 0)
+        values (#{id}, 1)
     </insert>
 
 
