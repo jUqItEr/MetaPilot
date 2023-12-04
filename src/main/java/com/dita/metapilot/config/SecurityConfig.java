@@ -1,5 +1,8 @@
 package com.dita.metapilot.config;
 
+import com.dita.metapilot.security.OAuth2SuccessHandler;
+import com.dita.metapilot.security.PrincipalDetailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +11,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
  * <p>SecurityConfig 페이지 접근권한, 로그인, 소셜로그인 담당</p>
@@ -17,9 +23,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @since 23.11.21
  *
  * */
-@EnableWebSecurity
+@EnableWebSecurity      // 스프링 시큐리티 필터가 스프링 필터체인에 등록이 됨.
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final PrincipalDetailService principalUserDetailsService;
+
 
     /**
      * <p>Bean 생성</p>
@@ -27,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 비밀번호 암호화에 사용되는 BCryptPasswordEncoder 인스턴스를 반환
      * @return BCryptPasswordEncoder 인스턴스.
      */
+    //Bean : 해당 메서드의 리턴되는 오브젝트를 IoC로 등록해준다.
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -53,13 +65,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf().disable(); // csrf 비활성화
         http.httpBasic().disable();
-        http.authorizeRequests()
-                .antMatchers("/mypage/**", "/security/**")
-                .authenticated()
-                .antMatchers("/admin/**")
-                .hasRole("ADMIN")   // ROLE_ADMIN, ROLE_MANAGER
+        http.authorizeRequests() //
+                .antMatchers("/post/**", "/security/**").authenticated() //post 접근 권한 막음
+                .antMatchers("/admin/**").hasRole("ADMIN")   // ROLE_ADMIN 관리자 페이지 접근 권한
                 .anyRequest()
                 .permitAll()
                 .and()
@@ -68,13 +78,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/user/login") // 로그인 페이지 get요청
                 .loginProcessingUrl("/user/login") // 로그인 인증 post 요청
                 .failureForwardUrl("/user/login") // 실패시 넘어가는 페이지
-                .defaultSuccessUrl("/index"); //로그인 성공시 넘어가는 페이지
-//                .and()
+                .defaultSuccessUrl("/") //로그인 성공시 넘어가는 페이지 (우리는 메인 페이지)
+                .and()
 
-//            .oauth2Login()
-//                .successHandler(oAuth2SuccessHandler)
-//                .userInfoEndpoint()
-//                .userService(principalUserDetailsService);
+            .oauth2Login()
+                .successHandler(oAuth2SuccessHandler)
+                .userInfoEndpoint()
+                .userService((OAuth2UserService<OAuth2UserRequest, OAuth2User>) principalUserDetailsService);
     }
 
 }
