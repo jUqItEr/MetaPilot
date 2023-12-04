@@ -2,13 +2,19 @@ package com.dita.metapilot.jwt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.dita.metapilot.security.PrincipalDetails;
+import com.dita.metapilot.user.dto.LoginRequestDto;
 import com.dita.metapilot.user.entity.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.auth0.jwt.JWT;
@@ -24,66 +30,70 @@ import java.util.Date;
 // UsernamePasswordAuthenticationFilter 얘가 동작
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
+
     private final AuthenticationManager authenticationManager;
 
-    // login 요청을 하면 로그인 시도를 위해서 실행되는 함수
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("JwtAuthenticationFilter : login ing.....");
+    // Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
+    // 인증 요청시에 실행되는 함수 => /login
 
-        // 1. id, password 받아서
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
+
+        System.out.println("JwtAuthenticationFilter : 진입");
+
+        // request에 있는 username과 password를 파싱해서 자바 Object로 받기
+        ObjectMapper om = new ObjectMapper();
+        LoginRequestDto loginRequestDto = null;
         try {
-//            BufferedReader br = request.getReader();
-//
-//            String input = null;
-//            while((input = br.readLine()) != null) {
-//                System.out.println(input); //id=sibal112&password=1234 ==> {"id":"sibal122", "password": "1234"}
-//            }
-            ObjectMapper om = new ObjectMapper();
-            UserEntity user = om.readValue(request.getInputStream(), UserEntity.class);
-            System.out.println(user);
-
-            // 토큰 생성
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(user.getId(), user.getPassword());
-            
-            // PrincipalDetailsService loadUserByUsername() 함수가 실행된 후 정상이면 authentication이 리턴됨
-            // authentication 속에 내 로그인 정보가 담김
-            // DB에 있는 id랑 password가 같다.
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
-            // authentication 객체가 session 영역에 저장됨. => 로그인이 되었다는 뜻.
-            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            System.out.println("로그인 완료됨 ? "+principalDetails.getUser().getId());
-            System.out.println("userEntity : " + user);
-            // authentication 객체가 session 영역에 저장을 해야하고 그 방법은 return 으로 끝
-            // return의 이유는 권한 관리를 security가 대신 해주기 때문에 편하려고 하는거.
-            // 굳이 JWT 토큰을 사용하면서 세션을 만들 이유가 없음. 근데 권한 처리때문에 session을 넣어 준다.
-            return authentication;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            loginRequestDto = om.readValue(request.getInputStream(), LoginRequestDto.class);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        // 2. 정상인지 로그인 시도를 한다. authenticationManager로 로그인 시도를 하면 PrincipalDetailsService가 호출
-        // 3. PrincipalDetailsService가 속의 loadUserByUsername() 함수 실행
-        // 4. PrincipalDetails를 session에 담고 (세션에 안담을거면 권한 관리가 필요없긴함 하지만 우린 권한이 있으니까 거쳐야함)
-        // 5. JWT 토큰을 만들어서 응답해주면 끝
+
+        System.out.println("JwtAuthenticationFilter : "+loginRequestDto);
+
+        // 유저네임패스워드 토큰 생성
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDto.getId(),
+                        loginRequestDto.getPassword());
+
+        System.out.println("JwtAuthenticationFilter : 토큰생성완료");
+
+        // authenticate() 함수가 호출 되면 인증 프로바이더가 유저 디테일 서비스의
+        // loadUserByUsername(토큰의 첫번째 파라메터) 를 호출하고
+        // UserDetails를 리턴받아서 토큰의 두번째 파라메터(credential)과
+        // UserDetails(DB값)의 getPassword()함수로 비교해서 동일하면
+        // Authentication 객체를 만들어서 필터체인으로 리턴해준다.
+
+        // Tip: 인증 프로바이더의 디폴트 서비스는 UserDetailsService 타입
+        // Tip: 인증 프로바이더의 디폴트 암호화 방식은 BCryptPasswordEncoder
+        // 결론은 인증 프로바이더에게 알려줄 필요가 없음.
+        Authentication authentication =
+                authenticationManager.authenticate(authenticationToken);
+
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("Authentication : "+principalDetailis.getUser().getId());
+        return authentication;
     }
 
-    // attemptAuthentication 실행 후 인증이 정상적으로 되었으면 successfulAuthentication 함수 실행
-    // JWT 토큰을 만들어서 request요청한 사용자에게 JWT 토큰을 response 해주면 됨.
+    // JWT Token 생성해서 response에 담아주기
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        System.out.println("successfulAuthentication 실행됨 : 인증이 완료되었다는 뜻");
-        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
 
-        //RSA 방식이 아닌 Hash 암호방식 이방식을 더 많이 쓴다고 하심
+        PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
+
         String jwtToken = JWT.create()
-                .withSubject("cos토큰") // 토큰이름 (크게 의미 x)
-                .withExpiresAt(new Date(System.currentTimeMillis()+(60000*5))) //만료 시간 5분으로 설정(명승's 마음임 ㅎ)
-                .withClaim("username", principalDetails.getUser().getId()) // 토큰에 아이디만 넣는다.
-                .sign(Algorithm.HMAC512("cos"));
+                .withSubject(principalDetailis.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
+//                .withClaim("id", principalDetailis.getUser().getId())
+                .withClaim("username", principalDetailis.getUser().getId())
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
-        response.addHeader("Authorization","Bearer " + jwtToken); //Header에 담겨서 응답이됨. 사용자에게
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
     }
+
 }
