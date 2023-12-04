@@ -2,6 +2,7 @@ package com.dita.metapilot.user.entity;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,9 +31,10 @@ public class UserEntity {
     private String password;
     private String nickname;
     private String email;
+    private String provider;
     private String socialId;
     private String profileImage;
     private String createdAt;
     private String visitedAt;
-    private List<UserRoleEntity> userRoleEntities;
+    private UserRoleEntity userRoleEntities;
 }

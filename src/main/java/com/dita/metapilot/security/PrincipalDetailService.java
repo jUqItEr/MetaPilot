@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
+ * 시큐리티 설정에서 loginProcessingUrl("/login");
+ * /login 요청이 오면 자동으로 UserDetailsService타입으로 IoC되어 있는 loadUserByUsername 함수가 실행
+ *
  * <p>Spring Security의 UserDetailsService 인터페이스 구현체. 실질적인 로그인 역할</p>
  *
  * <p>사용자의 인증 정보를 로드하는 역할</p>
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0
  *
  */
+
+// http://localhost:8000/login <- 스프링 시큐리티 기본 로그인 요청 주소가 요기임
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailService implements UserDetailsService {
@@ -35,6 +40,7 @@ public class PrincipalDetailService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        System.out.println("PrincipalDetailsService의 loadUserByUserId");
         UserEntity user = userRepository.getUser(userId);
         userRepository.userVisit(userId);
         if (user == null) {
