@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -111,6 +112,30 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", user));
+    }
+
+    //모두 접근 가능
+    @ResponseBody
+    @GetMapping("user")
+    public String user(Authentication authentication) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("principal : "+principal.getUser().getId());
+        System.out.println("principal : "+principal.getUser().getPassword());
+
+        return "<h1>user</h1>";
+    }
+    //유저는 접근 안됨
+    @ResponseBody
+    @GetMapping("/moderator")
+    public String moderator(){
+        return "user";
+    }
+
+    //관리자만 가능
+    @ResponseBody
+    @GetMapping("/admin")
+    public String admin(){
+        return "user";
     }
 
     //일반 로그인
