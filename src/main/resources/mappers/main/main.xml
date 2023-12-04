@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Mybatis mapper XML for getting basic information of content management system.
+
+    @author: Kiseok Kang (@jUqItEr)
+    @filename: main.xml
+    @since: 2023. 12. 01.
+    @version: 1.0.0
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dita.metapilot.main.repository.MainRepository">
+    <!-- Get CMS Information. -->
+    <select id="getCmsInfo" resultType="com.dita.metapilot.main.entity.CmsInfoEntity">
+        select
+            bi.*
+        from blog_info_tbl bi
+    </select>
+</mapper>

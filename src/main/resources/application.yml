@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://hxlab.co.kr:13307/metapilot?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://hxlab.co.kr:13307/test?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: dita2414
 
@@ -10,6 +10,33 @@ spring:
       name: dita
       password: 1234
       roles: USER, ADMIN
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 481032003116-128a137nne2ei25lgfb7qn4la9h0lusm.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+            redirectUri: http://localhost:8000/login/oauth2/code/google #고정
+          naver:
+            client-id: KKLTKhPdrznQJblkS0Uj
+            client-secret: T6ZOXfPHpG
+            scope:
+              - name
+              - email
+            client-name: Naver
+            authorization-grant-type: authorization_code
+            redirectUri: http://localhost:8000/login/oauth2/code/naver
+
+        provider:
+          naver:
+            authorizationUri: https://nid.naver.com/oauth2.0/authorize #네이버 로그인창
+            tokenUri: https://nid.naver.com/oauth2.0/token #토큰
+            userInfoUri: https://openapi.naver.com/v1/nid/me # 프로필 정보 받기
+            user-name-attribute: response #회원정보를 json으로 받는데 response라는 키값으로 네이버가 리턴해줌.
+
 
   mvc:
     static-path-pattern: "/static/**"
