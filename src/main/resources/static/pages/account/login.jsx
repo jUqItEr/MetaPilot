@@ -15,9 +15,25 @@ export default function LoginPage() {
     const handleSubmit = async (event) => {
         event.preventDefault()
 
-        axios.post('/user/login2')
-            .then((res) => { console.log(res) })
-            .catch((err) => { console.log(err) })
+        const { id, password } = event.target.elements
+
+        axios({
+            headers: {
+                Authorization: 'cos'
+            },
+            data: {
+                id: id.value,
+                password: password.value
+            },
+            method: 'post',
+            url: '/login'
+        }) 
+        .then((res) => {
+            console.log(res.headers)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
 
     return ( 
@@ -36,10 +52,9 @@ export default function LoginPage() {
                             <div className='card shadow-lg'>
                                 <div className='card-body p-5'>
                                     <h1 className='fs-4 card-title fw-bold mb-4'>로그인</h1>
-                                    <form onSubmit={handleSubmit}>
-                                        <div className='mb-3'>
-                                            <label className='mb-2 text-muted' htmlFor='username'>아이디</label>
-                                            <input className='form-control' id='username' type='text' name='username' autoFocus required />
+                                    <form onSubmit={handleSubmit}><div className='mb-3'>
+                                            <label className='mb-2 text-muted' htmlFor='id'>아이디</label>
+                                            <input className='form-control' id='id' type='text' name='id' autoFocus required />
                                             <div className='invalid-feedback'>
                                                 아이디가 잘못되었습니다
                                             </div>

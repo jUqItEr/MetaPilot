@@ -15,6 +15,7 @@
     <select id="getCmsInfo" resultType="com.dita.metapilot.main.entity.CmsInfoEntity">
         select
             bi.*
-        from blog_info_tbl bi
+        from
+            blog_info_tbl bi
     </select>
 </mapper>
