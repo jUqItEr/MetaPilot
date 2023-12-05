@@ -1,4 +1,4 @@
-package com.dita.metapilot.admin.dto;
+package com.dita.metapilot.category.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +9,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryDto {
     private int id;
-    private String subject;
     private int categoryTblRefId;
+    private String subject;
     private int depth;
     private int pos;
     private int type;
     private int visible;
+    private int fold;
     private int countVisible;
+    private int listVisible;
+    private int listCount;
 }
