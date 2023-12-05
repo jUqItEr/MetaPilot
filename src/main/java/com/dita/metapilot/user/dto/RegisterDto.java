@@ -2,6 +2,7 @@ package com.dita.metapilot.user.dto;
 
 import com.dita.metapilot.user.entity.UserRoleEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,5 +26,20 @@ public class RegisterDto {
     private String password;
     private String nickname;
     private String email;
+    private String provider;
+    private String socialId;
+    private String createdAt;
+    private String profileImage;
     private List<UserRoleEntity> userRoleEntities;
+
+    @Builder
+    public RegisterDto(String id, String email, String nickname, String provider, String socialId, String profileImage, String createdAt) {
+        this.id = id;
+        this.email = email;
+        this.provider = provider;
+        this.nickname = nickname;
+        this.socialId = socialId;
+        this.profileImage = profileImage;
+        this.createdAt = createdAt;
+    }
 }

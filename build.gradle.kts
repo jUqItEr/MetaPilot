@@ -34,6 +34,7 @@ dependencies {
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("com.auth0:java-jwt:3.10.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     compileOnly("org.projectlombok:lombok")

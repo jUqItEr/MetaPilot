@@ -1,5 +1,6 @@
 package com.dita.metapilot.user.controller;
 
+import com.dita.metapilot.exception.CustomValidationException;
 import com.dita.metapilot.log.dto.SwaggerRespDto;
 import com.dita.metapilot.security.PrincipalDetails;
 import com.dita.metapilot.user.dto.RegisterDto;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -40,7 +42,7 @@ public class UserController {
      */
     @GetMapping("/login")
     public String loginPage() {
-        return "user/login.html";
+        return "user/login";
     }
 
     /**
@@ -50,7 +52,7 @@ public class UserController {
      */
     @GetMapping("/register")
     public String registerPage() {
-        return "user/register.html";
+        return "user/register";
     }
 
     /**
@@ -77,6 +79,20 @@ public class UserController {
         return ResponseEntity.ok(userService.registerUser(registerDto));
     }
 
+    @GetMapping("/api/checkUserId")
+    public ResponseEntity<?> checkUserId(@RequestParam String userId) {
+        try {
+            userService.duplicateUserId(userId);
+            return ResponseEntity
+                    .ok()
+                    .body("사용 가능한 아이디입니다.");
+        } catch (CustomValidationException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getErrorMap()); //이미 중복인 경우 배드 리퀘스트 발생
+        }
+    }
+
     /**
      * <p>유저 정보를 처리하는 컨트롤러 메서드</p>
      *
@@ -98,14 +114,38 @@ public class UserController {
                 .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", user));
     }
 
+    //모두 접근 가능
+    @ResponseBody
+    @GetMapping("user")
+    public String user(Authentication authentication) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("principal : "+principal.getUser().getId());
+        System.out.println("principal : "+principal.getUser().getPassword());
+
+        return "<h1>user</h1>";
+    }
+    //유저는 접근 안됨
+    @ResponseBody
+    @GetMapping("/moderator")
+    public String moderator(){
+        return "user";
+    }
+
+    //관리자만 가능
+    @ResponseBody
+    @GetMapping("/admin")
+    public String admin(){
+        return "user";
+    }
+
+    //일반 로그인
     @ResponseBody
     @GetMapping("/principal")
     public ResponseEntity<SwaggerRespDto<? extends PrincipalDetails>> getPrincipalDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         if (principalDetails != null) {
-            principalDetails.getAuthorities().forEach(role -> {
-                log.info("Role : {", role.getAuthority() ,"}");
-            });
+            principalDetails.getAuthorities();
+            System.out.println("role : " + principalDetails.getAuthorities());
 
             return ResponseEntity
                     .ok()

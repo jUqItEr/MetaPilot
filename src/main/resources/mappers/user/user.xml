@@ -10,7 +10,7 @@
         <result property="nickname" column="nickname"></result>
         <result property="password" column="password"></result>
         <result property="email" column="email"></result>
-        <result property="oauthId" column="oauth_id"></result>
+        <result property="socialId" column="social_id"></result>
         <result property="profileImage" column="profile_image"></result>
         <result property="createdAt" column="created_at"></result>
         <result property="visitedAt" column="visited_at"></result>

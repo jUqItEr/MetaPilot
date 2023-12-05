@@ -14,10 +14,8 @@ export default function LoginPage() {
     const checkId = () => {
         let result = undefined
 
-        axios.post('/user/hasId')
-            .then((res) => result = res.data.data)
-            .catch((err) => console.log(err))
-        
+        axios.post('/user/api/checkId')
+            .then((res) => result = res.data.data)        
         return result
     }
 
@@ -25,10 +23,7 @@ export default function LoginPage() {
         event.preventDefault()
 
         const { id, email, nickname, password, passwordCheck } = event.target.elements
-
-        // if (checkId() === undefined) {
-        //     return alert('이미 사용중인 아이디입니다')
-        // }
+        
         if (password.value !== passwordCheck.value) {
             return alert('비밀번호가 일치하지 않습니다')
         }
@@ -62,16 +57,8 @@ export default function LoginPage() {
                                     <form onSubmit={handleSubmit}>
                                         <div className='mb-3'>
                                             <label className='mb-2 text-muted' htmlFor='id'>아이디</label>
-                                            <div className='form-group'>
-                                                <div className='controls form-inline'>
-                                                    <div className='col-sm-8'>
-                                                        <input className='form-control input-sm input-small' id='id' type='text' name='id' autoFocus required />
-                                                    </div>
-                                                    <div className='col-sm-4'>
-                                                    <button className='btn btn-primary' type='button'>중복 확인</button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <input className='form-control' id='id' type='text' name='id' autoFocus required />
+                                            <button className='btn btn-primary' type='button' onClick={checkId}>중복 확인</button>
                                         </div>
                                         
                                         <div className='mb-3'>
