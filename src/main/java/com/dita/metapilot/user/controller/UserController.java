@@ -116,7 +116,7 @@ public class UserController {
 
     //모두 접근 가능
     @ResponseBody
-    @GetMapping("user")
+    @GetMapping("/user")
     public String user(Authentication authentication) {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         System.out.println("principal : "+principal.getUser().getId());
