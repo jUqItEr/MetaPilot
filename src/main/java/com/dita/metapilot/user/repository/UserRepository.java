@@ -49,6 +49,12 @@ public interface UserRepository {
      */
     UserEntity findUserByUserId(String userId); //userId 중복 체크
 
+    /**
+     * <p>userId를 통해 Token이 DB에 저장되어 있는지 확인하는 메서드.</p>
+     *
+     * @param userId 찾고자 하는 사용자의 ID.
+     * @return int값을 반환하여 count갯수를 출력 (1 or 0)
+     */
     int findUserToken(String userId);
 
     /**
