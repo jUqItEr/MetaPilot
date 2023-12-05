@@ -46,9 +46,6 @@
         values(#{id}, #{accessToken}, #{refreshToken})
     </insert>
 
-
-
-
     <!-- 아이디 중복 체크 -->
     <select id="findUserByUserId" resultMap="userEntity">
         select
@@ -69,6 +66,7 @@
             id = #{id}
     </select>
 
+    <!-- id를 가진 토큰 테이블의 칼럼 갯수를 반환 -->
     <select id="findUserToken" parameterType="String" resultType="int">
         select count(*) from user_auth_tbl where user_tbl_id = #{id}
     </select>

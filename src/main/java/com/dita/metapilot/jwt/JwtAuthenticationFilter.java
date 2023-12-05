@@ -23,10 +23,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
-// 스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음.
-// localhost:8000/login 요청해서 userId, password (POST 전송)
-// UsernamePasswordAuthenticationFilter 얘가 동작
 
+/**
+ * <p>스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음</p>
+ * <p>localhost:8000/login 요청해서 userId, password (POST 전송)</p>
+ * <p>UsernamePasswordAuthenticationFilter 얘가 동작</p>
+ *
+ * @author 권명승 (@myeongseung)
+ * @since 2023. 12. 02.
+ * @version 1.0.0
+ * */
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
@@ -38,6 +44,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final UserRepository userRepository;
 
+    /**
+     * <p>사용자 이름과 비밀번호를 추출하려 토큰 객체를 생성하고 </p>
+     * <p></p>AuthenticationManager에 전달하여 사용자를 인증</p>
+     *
+     * @author 권명승 (@myeongseung)
+     * @since 2023. 12. 02.
+     * @version 1.0.0
+     * */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
@@ -55,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         System.out.println("JwtAuthenticationFilter : " + loginRequestDto); //TODO
 
-        // 유저네임패스워드 토큰 생성
+        // username password 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
                         loginRequestDto.getId(),

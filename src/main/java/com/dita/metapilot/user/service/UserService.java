@@ -44,11 +44,6 @@ public class UserService {
         return registerDto;
     }
 
-    public TokenDto registerToken(TokenDto tokenDto) {
-        userRepository.createToken(tokenDto);
-        return tokenDto;
-    }
-
     /**
      * 사용자 ID의 중복을 확인하는 메서드.
      *

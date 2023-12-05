@@ -99,6 +99,7 @@ public class UserController {
      * @param userId 사용자 Id
      * @since 2023. 11. 29.
      * @return 사용자의 아이디 유무를 판단하여 결과값 반환
+     * @deprecated
      */
     @ResponseBody
     @GetMapping("/{userId}")
@@ -114,31 +115,13 @@ public class UserController {
                 .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", user));
     }
 
-    //모두 접근 가능
-    @ResponseBody
-    @GetMapping("/user")
-    public String user(Authentication authentication) {
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("principal : "+principal.getUser().getId());
-        System.out.println("principal : "+principal.getUser().getPassword());
-
-        return "<h1>user</h1>";
-    }
-    //유저는 접근 안됨
-    @ResponseBody
-    @GetMapping("/moderator")
-    public String moderator(){
-        return "user";
-    }
-
-    //관리자만 가능
-    @ResponseBody
-    @GetMapping("/admin")
-    public String admin(){
-        return "user";
-    }
-
-    //일반 로그인
+    /**
+     * <p>유저 정보를 전부 가져오는 메소드</p>
+     *
+     * @param principalDetails
+     * @since 2023. 11. 29.
+     * @return 사용자의 정보를 판단하여 결과값 반환
+     */
     @ResponseBody
     @GetMapping("/principal")
     public ResponseEntity<SwaggerRespDto<? extends PrincipalDetails>> getPrincipalDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -156,4 +139,46 @@ public class UserController {
                     .body(new SwaggerRespDto<>(HttpStatus.BAD_REQUEST.value(), "failed", null));
         }
     }
+
+    /**
+     * <p>유저 정보를 전부 가져오는 메소드</p>
+     *
+     * @param authentication
+     * @since 2023. 11. 29.
+     * @return 세션에 있는 사용자 아이디, 비밀번호 인증
+     */
+    @ResponseBody
+    @GetMapping("/user")
+    public String user(Authentication authentication) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("principal : "+principal.getUser().getId());
+        System.out.println("principal : "+principal.getUser().getPassword());
+
+        return "<h1>user</h1>";
+    }
+
+    /**
+     * <p>moderator 권한 접근 여부 확인</p>
+     *
+     * @since 2023. 12. 04.
+     * @deprecated
+     */
+    @ResponseBody
+    @GetMapping("/moderator")
+    public String moderator(){
+        return "user";
+    }
+
+    /**
+     * <p>admin 권한 접근 여부 확인</p>
+     *
+     * @since 2023. 12. 04.
+     * @deprecated
+     */
+    @ResponseBody
+    @GetMapping("/admin")
+    public String admin(){
+        return "user";
+    }
+
 }
