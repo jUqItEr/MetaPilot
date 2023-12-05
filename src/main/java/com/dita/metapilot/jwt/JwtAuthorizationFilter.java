@@ -39,7 +39,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
             chain.doFilter(request, response);
             return;
         }
-        System.out.println("header : "+header);
+        System.out.println("header : " + header); //TODO
         String token = request.getHeader(JwtProperties.HEADER_STRING)
                 .replace(JwtProperties.TOKEN_PREFIX, "");
 
@@ -63,7 +63,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 
             // 강제로 시큐리티의 세션에 접근하여 값 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println(" what ? authentication : " + authentication);
+            System.out.println(" what ? authentication : " + authentication); //TODO
         }
 
         chain.doFilter(request, response);

@@ -40,6 +40,14 @@
         values (#{id}, 1)
     </insert>
 
+    <!-- 회원 토큰 추가 -->
+    <insert id="createToken" parameterType="com.dita.metapilot.user.dto.TokenDto">
+        insert into user_auth_tbl
+        values(#{id}, #{accessToken}, #{refreshToken})
+    </insert>
+
+
+
 
     <!-- 아이디 중복 체크 -->
     <select id="findUserByUserId" resultMap="userEntity">
@@ -59,6 +67,10 @@
             user_view
         where
             id = #{id}
+    </select>
+
+    <select id="findUserToken" parameterType="String" resultType="int">
+        select count(*) from user_auth_tbl where user_tbl_id = #{id}
     </select>
 
     <!--  로그인 방문 시각 업데이트  -->
