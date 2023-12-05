@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import IndexHeader from '../layout/home/header';
 
 export default function IndexPage() {
     const [info, setInfo] = useState([])
@@ -31,7 +32,7 @@ export default function IndexPage() {
             <Head>
                 <title>{info['title']}</title>
             </Head>
-            
+            <IndexHeader/>
         </>
     )
 }

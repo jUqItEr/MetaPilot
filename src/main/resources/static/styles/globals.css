@@ -22,11 +22,11 @@
   }
 
   body {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif !important;
     width: 100vw;
     height: 100vh;
-    overflow: scroll;
     margin: 0;
-    background-color: var(--color-background);
-    color: var(--color-primary);
+    background-color: var(--color-background) !important;
+    color: var(--color-primary) !important;
     transition: background 0.3s ease;
   }
