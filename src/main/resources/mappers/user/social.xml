@@ -7,10 +7,10 @@
 
     <insert id="createUser">
         insert into user_tbl
-        values (#{socialId}, null, #{nickname}, #{socialId}, #{socialId}, null, now(), null)
+        values (#{id}, null, #{nickname}, #{email},#{socialId}, #{provider}, #{profileImage}, now(), null)
     </insert>
 
-    <select id="getUser" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto" resultType="com.dita.metapilot.user.entity.UserEntity">
+    <select id="getUser" parameterType="com.dita.metapilot.user.entity.UserEntity" resultType="com.dita.metapilot.user.entity.UserEntity">
         select
             social_id as socialId,
             nickname,
@@ -23,7 +23,7 @@
             social_id = #{socialId}
     </select>
 
-    <select id="checkDuplicate" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto" resultType="com.dita.metapilot.user.entity.UserEntity">
+    <select id="checkDuplicate" parameterType="com.dita.metapilot.user.entity.UserEntity" resultType="com.dita.metapilot.user.entity.UserEntity">
         select
             social_id,
             email
@@ -37,8 +37,8 @@
         select * from user_tbl where social_id = #{socialId}
     </select>
 
-    <insert id="createRole" parameterType="com.dita.metapilot.user.dto.SocialRegisterDto">
+    <insert id="createRole" parameterType="com.dita.metapilot.user.entity.UserEntity">
         insert into user_role_tbl
-        values (#{id}, 0)
+        values (#{id}, 1)
     </insert>
 </mapper>

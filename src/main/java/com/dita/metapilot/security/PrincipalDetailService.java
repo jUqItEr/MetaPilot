@@ -40,9 +40,9 @@ public class PrincipalDetailService implements UserDetailsService {
         UserEntity user = userRepository.getUser(userId);
         userRepository.userVisit(userId);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            return null;
+        }else {
+            return new PrincipalDetails(user);
         }
-
-        return new PrincipalDetails(user);
     }
 }

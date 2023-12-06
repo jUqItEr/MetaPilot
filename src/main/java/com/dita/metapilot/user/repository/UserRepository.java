@@ -7,6 +7,8 @@ import com.dita.metapilot.user.entity.UserEntity;
 import com.dita.metapilot.user.entity.UserRoleEntity;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Optional;
+
 /**
  * <p>사용자 관련 데이터 처리를 위한 MyBatis 매퍼 인터페이스</p>
  *
@@ -73,6 +75,6 @@ public interface UserRepository {
      */
     boolean userVisit(String userId);
 
-
+    Optional<UserEntity> findByProviderAndProviderId(String provider, String socialId);
 
 }
