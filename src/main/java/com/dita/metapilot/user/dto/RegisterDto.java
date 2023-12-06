@@ -21,6 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RegisterDto {
     private String id;
     private String password;
@@ -31,15 +32,4 @@ public class RegisterDto {
     private String createdAt;
     private String profileImage;
     private List<UserRoleEntity> userRoleEntities;
-
-    @Builder
-    public RegisterDto(String id, String email, String nickname, String provider, String socialId, String profileImage, String createdAt) {
-        this.id = id;
-        this.email = email;
-        this.provider = provider;
-        this.nickname = nickname;
-        this.socialId = socialId;
-        this.profileImage = profileImage;
-        this.createdAt = createdAt;
-    }
 }
