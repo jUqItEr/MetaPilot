@@ -22,6 +22,14 @@ import java.io.IOException;
 // 권한이나 인증이 필요한 특정 주소를 요청했을 때 위 필터를 무조건 타게 되어있음.
 // 만약 권한이 인증이 필요한 주소가 아니라면 이 필터를 안탐.
 // 인가
+
+/**
+ * <p>BasicAuthenticationFilter 를 확장하여 jwt 기반의 인증 절차 처리 하는 필터</p>
+ *
+ * @author 권명승 (@myeongseung)
+ * @since 2023. 12. 02.
+ * @version 1.0.0
+ * */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 
     private UserRepository userRepository;
@@ -31,6 +39,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
         this.userRepository = userRepository;
     }
 
+
+    /**
+     * <p>http 요청을 필터링 하는데 사용되는 메서드, jwt 토큰 추출하고 검증함</p>
+     *
+     * @author 권명승 (@myeongseung)
+     * @since 2023. 12. 02.
+     * @version 1.0.0
+     * */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -39,7 +55,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
             chain.doFilter(request, response);
             return;
         }
-        System.out.println("header : "+header);
+        System.out.println("header : " + header); //TODO
         String token = request.getHeader(JwtProperties.HEADER_STRING)
                 .replace(JwtProperties.TOKEN_PREFIX, "");
 
@@ -63,7 +79,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 
             // 강제로 시큐리티의 세션에 접근하여 값 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println(" what ? authentication : " + authentication);
+            System.out.println(" what ? authentication : " + authentication); //TODO
         }
 
         chain.doFilter(request, response);

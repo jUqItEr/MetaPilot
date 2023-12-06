@@ -3,8 +3,12 @@ package com.dita.metapilot.jwt;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.dita.metapilot.security.PrincipalDetails;
 import com.dita.metapilot.user.dto.LoginRequestDto;
+import com.dita.metapilot.user.dto.TokenDto;
+import com.dita.metapilot.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.el.parser.Token;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,10 +23,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
-// 스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음.
-// localhost:8000/login 요청해서 userId, password (POST 전송)
-// UsernamePasswordAuthenticationFilter 얘가 동작
 
+/**
+ * <p>스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음</p>
+ * <p>localhost:8000/login 요청해서 userId, password (POST 전송)</p>
+ * <p>UsernamePasswordAuthenticationFilter 얘가 동작</p>
+ *
+ * @author 권명승 (@myeongseung)
+ * @since 2023. 12. 02.
+ * @version 1.0.0
+ * */
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
@@ -31,6 +41,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
     // 인증 요청시에 실행되는 함수 => /login
 
+
+    private final UserRepository userRepository;
+
+    /**
+     * <p>사용자 이름과 비밀번호를 추출하려 토큰 객체를 생성하고 </p>
+     * <p></p>AuthenticationManager에 전달하여 사용자를 인증</p>
+     *
+     * @author 권명승 (@myeongseung)
+     * @since 2023. 12. 02.
+     * @version 1.0.0
+     * */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
@@ -46,15 +67,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             e.printStackTrace();
         }
 
-        System.out.println("JwtAuthenticationFilter : "+loginRequestDto);
+        System.out.println("JwtAuthenticationFilter : " + loginRequestDto); //TODO
 
-        // 유저네임패스워드 토큰 생성
+        // username password 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
                         loginRequestDto.getId(),
                         loginRequestDto.getPassword());
 
-        System.out.println("JwtAuthenticationFilter : 토큰생성완료");
+        System.out.println("JwtAuthenticationFilter : 토큰생성완료"); //TODO
 
         // authenticate() 함수가 호출 되면 인증 프로바이더가 유저 디테일 서비스의
         // loadUserByUsername(토큰의 첫번째 파라메터) 를 호출하고
@@ -69,7 +90,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 authenticationManager.authenticate(authenticationToken);
 
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("Authentication : "+principalDetailis.getUser().getId());
+        System.out.println("Authentication : "+principalDetailis.getUser().getId()); //TODO
         return authentication;
     }
 
@@ -80,15 +101,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
 
-        String jwtToken = JWT.create()
+        String jwtAccessToken = JWT.create()
                 .withSubject(principalDetailis.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
-//                .withClaim("id", principalDetailis.getUser().getId())
+                .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.ACCESS_TIME))
                 .withClaim("username", principalDetailis.getUser().getId())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
-        System.out.println("Jwt Properties : " + JwtProperties.HEADER_STRING +  JwtProperties.TOKEN_PREFIX+jwtToken);
+        String jwtRefreshToken = JWT.create()
+                .withSubject(principalDetailis.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
+                .withClaim("username", principalDetailis.getUser().getId())
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtAccessToken);
+
+        if (userRepository.findUserToken(principalDetailis.getUser().getId()) == 0) {
+            TokenDto tokenDto = new TokenDto();
+
+            tokenDto.setId(principalDetailis.getUser().getId());
+            tokenDto.setAccessToken(jwtAccessToken);
+            tokenDto.setRefreshToken(jwtRefreshToken);
+            userRepository.createToken(tokenDto);
+        }else {
+            System.out.println("이미 존재합니다.");
+        }
+
+        System.out.println("Jwt Properties : " + JwtProperties.HEADER_STRING +  JwtProperties.TOKEN_PREFIX+jwtAccessToken); //TODO
     }
 
 }

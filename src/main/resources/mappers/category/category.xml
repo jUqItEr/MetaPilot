@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dita.metapilot.category.repository.CategoryRepository">
+
+    <resultMap id="categoryEntity" type="com.dita.metapilot.category.entity.CategoryEntity">
+        <result property="id" column="id"></result>
+        <result property="categoryTblRefId" column="category_tbl_ref_id"></result>
+        <result property="subject" column="subject"></result>
+        <result property="depth" column="depth"></result>
+        <result property="pos" column="pos"></result>
+        <result property="type" column="type"></result>
+        <result property="fold" column="fold"></result>
+        <result property="visible" column="visible"></result>
+        <result property="countVisible" column="count_visible"></result>
+        <result property="listVisible" column="list_visible"></result>
+        <result property="listCount" column="list_count"></result>
+        <result property="createdAt" column="created_at"></result>
+    </resultMap>
+
+    <resultMap id="categoryPostEntity" type="com.dita.metapilot.category.entity.CategoryPostEntity">
+        <result property="id" column="id"></result>
+        <result property="cSubject" column="cSubject"></result>
+        <result property="categoryTblRefId" column="category_tbl_ref_id"></result>
+        <result property="userTblId" column="user_tbl_id"></result>
+        <result property="subject" column="subject"></result>
+        <result property="count" column="count"></result>
+        <result property="createdAt" column="created_at"></result>
+    </resultMap>
+
+    <!-- 카테고리 목록 list -->
+    <select id="categoryView" resultMap="categoryEntity">
+        select
+            id, category_tbl_ref_id, subject, depth, pos, type, visible, fold, count_visible, list_visible, list_count, created_at
+        from
+            category_tbl
+        order by
+            pos asc
+    </select>
+
+    <!-- 특정 카테고리를 클릭하면 그 카테고리에 해당된 post 글들을 list -->
+    <select id="categoryPostView" parameterType="com.dita.metapilot.category.dto.CategoryPostDto" resultMap="categoryPostEntity">
+        select
+            c.id, c.subject as 'cSubject', c.category_tbl_ref_id, p.user_tbl_id, p.subject, p.count, p.created_at
+        from
+            category_tbl as c
+        left outer join
+            post_tbl as p
+        on
+            p.category_tbl_id = c.id
+        where
+            (c.id = #{postCategoryId} or c.category_tbl_ref_id = #{postCategoryId}) and p.subject is not null
+        order by
+            p.created_at desc
+    </select>
+
+    <!-- 카테고리 생성 -->
+    <insert id="createCategory" parameterType="com.dita.metapilot.category.dto.CategoryDto">
+        <!--INSERT INTO
+            category_tbl
+        VALUES
+        (null, #{categoryTblRefId}, #{subject}
+        , CASE WHEN #{categoryTblRefId} = 1 THEN 0 ELSE 1 END
+        , (SELECT COALESCE(MAX(pos), 0) + 1 FROM (SELECT pos FROM category_tbl) as t)
+        , #{type}, #{visible}, #{fold}, #{countVisible}, #{listVisible}, #{listCount}, NOW())-->
+        set @refId = (SELECT id FROM category_tbl WHERE id = #{id});
+        set @depth = (SELECT depth FROM category_tbl WHERE id = #{id});
+        set @maxPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl);
+        set @maxPos2 = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl WHERE category_tbl_ref_id = @refId);
+
+        set @maxPos = if(@refId = 1, @maxPos, @maxPos2);
+
+        UPDATE category_tbl
+        SET pos = pos + 1
+        WHERE pos > @maxPos2;
+
+        INSERT INTO category_tbl
+        values(null, @refId, #{subject}, @depth, @maxPos+1, 1, 0, 0, 0, 0, 0, now());
+    </insert>
+
+    <!-- 카테고리 구분선 생성 -->
+    <insert id="createCategoryLine" parameterType="com.dita.metapilot.category.dto.CategoryDto">
+        <!--INSERT INTO
+            category_tbl
+        VALUES
+        (null, #{categoryTblRefId}, '-&#45;&#45;&#45;&#45;'
+        , CASE WHEN #{categoryTblRefId} = 1 THEN 0 ELSE 1 END
+        , (SELECT COALESCE(MAX(pos), 0) + 1 FROM (SELECT pos FROM category_tbl) as t)
+        , 0, 0, 0, 0, 0, 0, NOW())-->
+        set @refId = (SELECT id FROM category_tbl WHERE id = #{id});
+        set @depth = (SELECT depth FROM category_tbl WHERE id = #{id});
+        set @maxPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl);
+        set @maxPos2 = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl WHERE category_tbl_ref_id = @refId);
+
+        set @maxPos = if(@refId = 1, @maxPos, @maxPos2);
+
+        UPDATE category_tbl
+        SET pos = pos + 1
+        WHERE pos > @maxPos2;
+
+        INSERT INTO category_tbl
+        values(null, @refId, '-----', @depth, @maxPos+1, 1, 0, 0, 0, 0, 0, now());
+    </insert>
+
+    <!-- 카테고리 삭제 -->
+    <delete id="deleteCategory" parameterType="com.dita.metapilot.category.dto.CategoryDto">
+        SET @target_pos = (SELECT pos FROM category_tbl WHERE id = #{id});
+
+        UPDATE
+            category_tbl
+        SET
+            pos = pos - 1
+        WHERE
+            pos > @target_pos;
+
+        DELETE FROM
+            category_tbl
+        WHERE
+            id = #{id};
+    </delete>
+
+    <!-- 카테고리 수정 -->
+    <update id="updateCategory" parameterType="com.dita.metapilot.category.dto.CategoryDto">
+        update
+            category_tbl
+        set
+            subject = #{subject},
+            category_tbl_ref_id = #{categoryTblRefId},
+            pos = #{pos},
+            type = #{type},
+            visible = #{visible},
+            count_visible = #{countVisible}
+        where
+            id = #{id}
+    </update>
+
+    <!-- 선택한 카테고리 한 칸 올리기 -->
+    <update id="updateCategoryUp" parameterType="com.dita.metapilot.category.dto.CategoryDto">
+        UPDATE
+            category_tbl
+        SET
+            pos = #{pos}+100
+        WHERE
+            pos = #{pos}-1;
+
+        UPDATE
+            category_tbl
+        SET
+            pos = #{pos}-1
+        WHERE
+            pos = #{pos};
+
+        UPDATE
+            category_tbl
+        SET
+            pos = #{pos}
+        WHERE
+            pos = #{pos}+100;
+    </update>
+
+    <!-- 선택한 카테고리 한 칸 내리기 -->
+    <update id="updateCategoryDown" parameterType="com.dita.metapilot.category.dto.CategoryDto">
+        UPDATE
+            category_tbl
+        SET
+            pos = #{pos}+100
+        WHERE
+            pos = #{pos}+1;
+
+        UPDATE
+            category_tbl
+        SET
+            pos = #{pos}+1
+        WHERE
+            pos = #{pos};
+
+        UPDATE
+            category_tbl
+        SET
+            pos = #{pos}
+        WHERE
+            pos = #{pos}+100;
+    </update>
+
+    <!-- 카테고리 헤더 list -->
+    <select id="categoryHeader" resultMap="categoryEntity">
+        <![CDATA[
+            SELECT id, subject
+            from category_tbl
+            where `type` & 8 > 0
+            order by pos asc
+        ]]>
+    </select>
+
+</mapper>

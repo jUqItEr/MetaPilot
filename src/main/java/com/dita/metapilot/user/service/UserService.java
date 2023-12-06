@@ -2,6 +2,7 @@ package com.dita.metapilot.user.service;
 
 import com.dita.metapilot.exception.CustomValidationException;
 import com.dita.metapilot.user.dto.RegisterDto;
+import com.dita.metapilot.user.dto.TokenDto;
 import com.dita.metapilot.user.entity.UserEntity;
 import com.dita.metapilot.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
