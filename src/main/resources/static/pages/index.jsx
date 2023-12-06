@@ -3,7 +3,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import IndexHeader from '../layout/home/header';
 
-export default function IndexPage() {
+
+const IndexPage = () => {
     const [info, setInfo] = useState([])
     
     /**
@@ -25,14 +26,16 @@ export default function IndexPage() {
 
     useEffect(() => {
         getInfo()
-    })
+    }, [])
 
     return (
         <>
             <Head>
-                <title>{info['title']}</title>
+                <title>{info.title}</title>
             </Head>
             <IndexHeader/>
         </>
     )
 }
+
+export default IndexPage
