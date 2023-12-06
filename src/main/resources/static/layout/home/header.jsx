@@ -3,35 +3,33 @@
 import $ from 'jquery'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import Link from 'next/link';
+import { TopHeader } from '../../components/home/header';
+import { useTheme } from 'next-themes';
+
+const ThemeChanger = () => {
+    const [ mounted, setMounted ] = useState(false)
+    const { theme, setTheme } = useTheme()
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) {
+        return null
+    }
+
+    return (
+        <div className=''>
+            <h1>{theme}</h1>
+            <button onClick={() => setTheme('light')}>Light!</button>
+            <button onClick={() => setTheme('dark')}>Dark!</button>
+        </div>
+    )
+}
 
 export default function IndexHeader() {
-    const [isDarkMode, setIsDarkMode] = useState(false)
     const [info, setInfo]  = useState([])
-
-    const header = []
-
-    const darkModeHandler = () => {
-        setIsDarkMode(!isDarkMode)
-
-        document.body.setAttribute('data-theme', isDarkMode ? 'light' : 'dark')
-    }
-
-    const getHeader = async () => {
-        axios({
-            method: 'get',
-            url: '/category/api/categoryHeader',
-        })
-        .then((res) => {
-            res.data.forEach((menu) => {
-                const node = $(`<Link className='nav-link' href='/category/${menu['id']}'></Link>`)
-
-                node.appendTo($(`<a>${menu['subject']}</a>`))
-                header.push(node)
-
-                console.log(header)
-            })
-        })
-    }
 
     const getInfo = async () => {
         axios({
@@ -45,37 +43,31 @@ export default function IndexHeader() {
 
     useEffect(() => {
         getInfo()
-        getHeader()
     }, [])
-
+    
     return (
         <>
-        <nav className='navbar navbar-expand-lg bg-light'>
-            <div className='container-fluid'>
-                <a className='navbar-brand' href='#'>{info['title']}</a>
-                <button className='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarNavAltMarkup' aria-controls='navbarNavAltMarkup' aria-expanded='false' aria-label='Toggle navigation'>
-                    <span className='navbar-toggler-icon'></span>
-                </button>
-                <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
-                    <div className='navbar-nav'>
-                        {header}
-                        {/* <a className='nav-link active' aria-current='page' href='#'>Home</a>
-                        <a className='nav-link' href='#'>Features</a>
-                        <a className='nav-link' href='#'>Pricing</a>
-                        <a className='nav-link disabled'>Disabled</a> */}
+            <header className='navbar navbar-expand-lg bg-light border-bottom'>
+                <div className='container-fluid'>
+                    <Link href='/'>
+                        <a className='navbar-brand'>{info['title']}</a>
+                    </Link>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
+                        <div className='navbar-nav'>
+                            <TopHeader/>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </header>
             <nav className='navbar navbar-expand-md'>
                 <h1>한글 테스트</h1>
+                <ThemeChanger/>
             </nav>
-            <div className=''>
-                <h1>Test</h1>
-                <button onClick={darkModeHandler}>
-                    {isDarkMode ? 'light' : 'dark'}
-                </button>
-            </div>
+            
         </>
     )
 }

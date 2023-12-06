@@ -1,32 +1,24 @@
 :root {
-    --color-primary-accent: #2614c7;
-    --color-primary: #000;
-    --color-button: #3d486c;
-    --color-paragraph: #797979;
-    --color-button-text: rgb(255, 255, 255);
-    --color-background: #fff;
-    --color-anchor: #000aff;
-  }
-  
-  [data-theme='dark'] {
-    --color-primary-accent: #00ff4c;
-    --color-primary: #fff;
-    --color-button: #00ff4c;
-    --color-paragraph: #8a8a8a;
-    --color-button-text: rgb(0, 0, 0);
-    --color-background: #000;
-  }
+  /* Your default theme */
+  --background: white;
+  --foreground: black;
+}
 
-  * {
-    box-sizing: border-box;
-  }
+[data-theme='dark'] {
+  --background: black;
+  --foreground: white;
+}
 
-  body {
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif !important;
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    background-color: var(--color-background) !important;
-    color: var(--color-primary) !important;
-    transition: background 0.3s ease;
-  }
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif !important;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  transition: background 0.3s ease;
+}

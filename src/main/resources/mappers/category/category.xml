@@ -190,6 +190,7 @@
             SELECT id, subject
             from category_tbl
             where `type` & 8 > 0
+            order by pos asc
         ]]>
     </select>
 
