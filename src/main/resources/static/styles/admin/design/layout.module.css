@@ -1,0 +1,58 @@
+.wrap {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    width: 100%;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+.pageTitle {
+    margin-left: 20px;
+    padding: 10px 20px;
+    width: calc( 200px + 15%);
+    border-bottom: 1px solid black;
+}
+
+.pageContent {
+    width: calc(40% + 500px);
+    padding: 20px;
+}
+.pageTitleFont {
+    font-size: 24px;
+}
+
+.pageSubTitle {
+    width: 60%;
+}
+.layoutIcon{
+    border : 1px solid darkgray;
+    width: 40%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 20px;
+}
+.layoutIconBtn{
+    width:60px;
+    height:60px;
+    margin : 10px;
+    overflow: hidden;
+    border:none;
+    background-color: white;
+    border-radius: 10%;
+    padding: 0;
+}
+.layoutImg{
+    border : 1px solid darkgray;
+    padding: 20px;
+    width: 40%;
+}
+.submitBtn{
+    padding: 20px 0 0 0 ;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+}

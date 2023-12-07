@@ -24,6 +24,10 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
 
+    public CategoryEntity getCategoryInfo(int id) {
+        return categoryRepository.getCategoryInfo(id);
+    }
+
 
     /**
      * <p>카테고리를 List하는 기능</p>

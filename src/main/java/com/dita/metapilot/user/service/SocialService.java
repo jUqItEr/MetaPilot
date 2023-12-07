@@ -1,8 +1,7 @@
 package com.dita.metapilot.user.service;
 
 import com.dita.metapilot.exception.CustomValidationException;
-import com.dita.metapilot.exception.DuplicateException;
-import com.dita.metapilot.user.dto.SocialRegisterDto;
+import com.dita.metapilot.user.dto.RegisterDto;
 import com.dita.metapilot.user.entity.UserEntity;
 import com.dita.metapilot.user.repository.SocialRepository;
 import com.dita.metapilot.user.repository.UserRepository;
@@ -21,15 +20,15 @@ public class SocialService {
     private final SocialRepository socialRepository;
     private final UserRepository userRepository;
 
-    public SocialRegisterDto registerUser(SocialRegisterDto socialRegisterDto) {
-        responseDuplicateError(socialRegisterDto);
-        socialRepository.createUser(socialRegisterDto);
-        socialRepository.createRole(socialRegisterDto);
-        return socialRegisterDto;
+    public UserEntity registerUser(UserEntity user) {
+        responseDuplicateError(user);
+        socialRepository.createUser(user);
+        socialRepository.createRole(user);
+        return user;
     }
 
-    public void responseDuplicateError(SocialRegisterDto socialRegisterDto) {
-        UserEntity user = socialRepository.checkDuplicate(socialRegisterDto);
+    public void responseDuplicateError(UserEntity user) {
+        user = socialRepository.checkDuplicate(user);
 
         if (user != null) {
             Map<String, String> errorMap = new HashMap<>();

@@ -1,6 +1,7 @@
-import { useEffect } from "react"
+import { useEffect } from 'react'
 
-export default function RootLayout({ children }) {
+
+const RootLayout = ({ children }) => {
     const setInitialColorMode = () => {
         const getInitialColorMode = () => {
             const persistedPreference = localStorage.getItem('theme')
@@ -22,8 +23,6 @@ export default function RootLayout({ children }) {
 
         element.style.setProperty('--initial-color-mode', currentColorMode)
 
-        console.log(currentColorMode)
-
         if (currentColorMode === 'dark') {
             document.body.setAttribute('data-theme', 'dark')
         }
@@ -44,3 +43,5 @@ export default function RootLayout({ children }) {
         </html>
     )
 }
+
+export default RootLayout

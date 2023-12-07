@@ -3,7 +3,10 @@ package com.dita.metapilot.category.controller;
 import com.dita.metapilot.category.dto.CategoryDto;
 import com.dita.metapilot.category.dto.CategoryPostDto;
 import com.dita.metapilot.category.service.CategoryService;
+import com.dita.metapilot.log.dto.SwaggerRespDto;
+import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,7 +23,7 @@ import javax.validation.Valid;
  * */
 
 @Controller
-@RequestMapping("/category")
+@RequestMapping("/api/category")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -48,7 +51,7 @@ public class CategoryController {
      *      createdAt : 카테고리 작성일
      */
     @ResponseBody
-    @GetMapping("/api/list")
+    @GetMapping("/list")
     public ResponseEntity<?> list() {
         return ResponseEntity.ok(categoryService.categoryView());
     }
@@ -78,7 +81,7 @@ public class CategoryController {
      *      createdAt : 게시글 작성일
      */
     @ResponseBody
-    @PostMapping("/api/listPost")
+    @PostMapping("/postList")
     public ResponseEntity<?> listPost(@Valid @RequestBody CategoryPostDto categoryPostDto, BindingResult bindingResult) {
         return ResponseEntity.ok(categoryService.categoryPostView(categoryPostDto));
     }
@@ -102,7 +105,7 @@ public class CategoryController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/api/createCategory")
+    @PostMapping("/createCategory")
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(categoryService.createCategory(categoryDto));
     }
@@ -118,7 +121,7 @@ public class CategoryController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/api/createCategoryLine")
+    @PostMapping("/createDivisor")
     public ResponseEntity<?> createCategoryLine(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(categoryService.createCategoryLine(categoryDto));
     }
@@ -135,7 +138,7 @@ public class CategoryController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/api/deleteCategory")
+    @PostMapping("/deleteCategory")
     public ResponseEntity<?> deleteCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(categoryService.deleteCategory(categoryDto));
     }
@@ -159,7 +162,7 @@ public class CategoryController {
      * @since 2023. 11. 30.
      */
     @ResponseBody
-    @PostMapping("/api/updateCategory")
+    @PostMapping("/updateCategory")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(categoryService.updateCategory(categoryDto));
     }
@@ -177,7 +180,7 @@ public class CategoryController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/api/updateCategoryUp")
+    @PostMapping("/updateCategoryUp")
     public ResponseEntity<?> updateCategoryUp(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(categoryService.updateCategoryUp(categoryDto));
     }
@@ -195,7 +198,7 @@ public class CategoryController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/api/updateCategoryDown")
+    @PostMapping("/updateCategoryDown")
     public ResponseEntity<?> updateCategoryDown(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(categoryService.updateCategoryDown(categoryDto));
     }
@@ -210,10 +213,15 @@ public class CategoryController {
      * @return ResponseEntity
      */
     @ResponseBody
-    @GetMapping("/api/categoryHeader")
+    @GetMapping("/header")
     public ResponseEntity<?> categoryHeader() {
         return ResponseEntity.ok(categoryService.categoryHeader());
     }
 
 
+    @ResponseBody
+    @PostMapping("/info")
+    public ResponseEntity<?> getCategoryInfo(@Valid @RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.ok(categoryService.getCategoryInfo(categoryDto.getId()));
+    }
 }

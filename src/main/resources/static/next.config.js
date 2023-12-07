@@ -1,7 +1,7 @@
 {import('next').NextConfig}
 
 const nextConfig = {
-    reactStrictMode: true,
+    reactStrictMode: false,
     swcMinify: true,
     async rewrites() {
         if (process.env.NODE_ENV === 'package') {

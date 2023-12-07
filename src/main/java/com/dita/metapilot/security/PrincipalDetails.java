@@ -56,11 +56,13 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        UserRoleEntity userRoleEntity = user.getUserRoleEntities();
-        if (userRoleEntity != null) {
-            RoleEntity role = userRoleEntity.getRoleEntity();
-            if (role != null) {
-                authorities.add(new SimpleGrantedAuthority(role.getName()));
+        if (user != null) {
+            UserRoleEntity userRoleEntity = user.getUserRoleEntities();
+            if (userRoleEntity != null) {
+                RoleEntity role = userRoleEntity.getRoleEntity();
+                if (role != null) {
+                    authorities.add(new SimpleGrantedAuthority(role.getName()));
+                }
             }
         } else {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // 기본 권한

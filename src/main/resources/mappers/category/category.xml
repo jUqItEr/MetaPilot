@@ -30,6 +30,27 @@
         <result property="createdAt" column="created_at"></result>
     </resultMap>
 
+    <select id="getCategoryInfo" parameterType="int" resultMap="categoryEntity">
+        select
+            id,
+            category_tbl_ref_id,
+            subject,
+            depth,
+            pos,
+            type,
+            visible,
+            fold,
+            count_visible,
+            list_visible,
+            list_count,
+            created_at
+        from
+            category_tbl
+        where
+            id = ${id}
+    </select>
+
+
     <!-- 카테고리 목록 list -->
     <select id="categoryView" resultMap="categoryEntity">
         select
@@ -51,7 +72,8 @@
         on
             p.category_tbl_id = c.id
         where
-            (c.id = #{postCategoryId} or c.category_tbl_ref_id = #{postCategoryId}) and p.subject is not null
+            (c.id = #{postCategoryId} or c.category_tbl_ref_id = #{postCategoryId}) and p.subject is not null and
+            p.deleted = 0
         order by
             p.created_at desc
     </select>

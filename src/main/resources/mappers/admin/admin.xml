@@ -11,6 +11,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dita.metapilot.admin.repository.AdminRepository">
+    <resultMap id="categoryEntity" type="com.dita.metapilot.admin.entity.CategoryEntity">
+        <result property="id" column="id"></result>
+        <result property="categoryTblRefId" column="category_tbl_ref_id"></result>
+        <result property="subject" column="subject"></result>
+        <result property="depth" column="depth"></result>
+        <result property="pos" column="pos"></result>
+        <result property="type" column="type"></result>
+        <result property="fold" column="fold"></result>
+        <result property="visible" column="visible"></result>
+        <result property="countVisible" column="count_visible"></result>
+        <result property="listVisible" column="list_visible"></result>
+        <result property="listCount" column="list_count"></result>
+        <result property="createdAt" column="created_at"></result>
+    </resultMap>
+
     <!-- Block User. -->
     <insert id="blockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
         <![CDATA[
@@ -22,32 +37,86 @@
         ]]>
     </insert>
 
-    <!-- Create category. -->
+    <!-- 카테고리 목록 list -->
+    <select id="categoryView" resultMap="categoryEntity">
+        select
+            id, category_tbl_ref_id, subject, depth, pos, type, visible, fold, count_visible, list_visible, list_count, created_at
+        from
+            category_tbl
+        order by
+            pos asc
+    </select>
+
+    <!-- 카테고리 생성 -->
     <insert id="createCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
         <![CDATA[
-            insert into
-                category_tbl
-            values (
-                null, null, ${subject}, ${depth}, ${pos}, ${type}, ${visible},
-                ${countVisible}, ${listVisible}, ${listCount}, now()
-            )
+            set @id = #{id};
+            set @inputType = #{type};
+            set @maxPos = if(@id=1, (SELECT COALESCE(MAX(pos), 0) FROM category_tbl)
+            ,(SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id));
+            set @refId = (SELECT category_tbl_ref_id FROM category_tbl where id = @id);
+            set @type = (SELECT type FROM category_tbl where id = @id);
+            set @depth = (SELECT depth FROM category_tbl where id = @id);
+
+            set @gain = if(@depth = 1, 0, 1);
+            set @setDepth = if(@id = 1 or @refId = 1, 0, 1);
+
+            set @maxPos = if(@type = 0, (SELECT pos from category_tbl where id = @id), @maxPos);
+
+            update category_tbl
+            set pos = pos + @gain
+            where (pos > @maxPos);
+
+            set @refId = if(@type = 0, @refId, @id);
+            set @setDepth = if(@refId = 1, 0, 1);
+            set @type = @inputType;
+
+            insert into category_tbl
+            select null, @refId, #{subject}, @setDepth, @maxPos+1, @type, #{visible}, #{fold}, #{countVisible}, #{listVisible}, #{listCount}, now()
+            where @depth !=1;
         ]]>
-        <!-- Get reference id for staging categories. -->
-        <selectKey resultType="int" keyProperty="refId" keyColumn="category_tbl_ref_id" order="AFTER">
-            <![CDATA[
-                select max(id) from category_tbl
-            ]]>
-        </selectKey>
     </insert>
 
-    <!-- Delete category. -->
-    <delete id="deleteCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+    <!-- 카테고리 구분선 생성 -->
+    <insert id="createCategoryLine" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
         <![CDATA[
-            delete from
-                category_tbl
-            where
-                id = ${id}
+            set @id = #{id};
+            set @refId = if(@id = 1, 1, (select category_tbl_ref_id from category_tbl where id = @id));
+            set @depth = (select depth from category_tbl where id = @id);
+            set @maxPos = if(@id = 1, (SELECT COALESCE(MAX(pos), 0) FROM category_tbl), (select pos from category_tbl where id = @id));
+
+            set @setDepth = if(@id != 1 and @depth = 0, 1, @depth);
+            set @refId = if(@id != 1 and @depth = 0, @id, @refId);
+            set @maxPos = if(@id != 1 and @depth = 0, (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id), @maxPos);
+
+            select subject, @id, @refId, @depth, @setDepth, @maxPos
+            from category_tbl
+            where id = @id;
+
+            update category_tbl
+            set pos = pos + 1
+            where (pos > @maxPos);
+
+            insert into category_tbl
+            select null, @refId, '-----', @setDepth, @maxPos+1, 0, 0, 0, 0, 0, 0, now();
         ]]>
+    </insert>
+
+    <!-- 카테고리 삭제 -->
+    <delete id="deleteCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+        SET @target_pos = (SELECT pos FROM category_tbl WHERE id = #{id});
+
+        UPDATE
+            category_tbl
+        SET
+            pos = pos - 1
+        WHERE
+            pos > @target_pos;
+
+        DELETE FROM
+            category_tbl
+        WHERE
+            id = #{id};
     </delete>
 
     <!-- Delete comment. -->
@@ -70,17 +139,75 @@
         ]]>
     </delete>
 
-    <!-- Update category. -->
+    <!-- 카테고리 수정 -->
     <update id="updateCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
-        <![CDATA[
-            update
-                category_tbl
-            set
-                category_tbl_ref_id = ${refId},
-                depth = ${depth},
-                pos = ${pos},
-                visible = ${isVisible},
-                count_visible = ${isCountVisible}
-        ]]>
+        update
+            category_tbl
+        set
+            subject = #{subject},
+            category_tbl_ref_id = #{categoryTblRefId},
+            pos = #{pos},
+            type = #{type},
+            visible = #{visible},
+            count_visible = #{countVisible}
+        where
+            id = #{id}
     </update>
+
+    <!-- 선택한 카테고리 한 칸 올리기 -->
+    <update id="updateCategoryUp" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+        UPDATE
+        category_tbl
+        SET
+        pos = #{pos}+100
+        WHERE
+        pos = #{pos}-1;
+
+        UPDATE
+        category_tbl
+        SET
+        pos = #{pos}-1
+        WHERE
+        pos = #{pos};
+
+        UPDATE
+        category_tbl
+        SET
+        pos = #{pos}
+        WHERE
+        pos = #{pos}+100;
+    </update>
+
+    <!-- 선택한 카테고리 한 칸 내리기 -->
+    <update id="updateCategoryDown" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+        UPDATE
+        category_tbl
+        SET
+        pos = #{pos}+100
+        WHERE
+        pos = #{pos}+1;
+
+        UPDATE
+        category_tbl
+        SET
+        pos = #{pos}+1
+        WHERE
+        pos = #{pos};
+
+        UPDATE
+        category_tbl
+        SET
+        pos = #{pos}
+        WHERE
+        pos = #{pos}+100;
+    </update>
+
+    <!-- 카테고리 헤더 list -->
+    <select id="categoryHeader" resultMap="categoryEntity">
+        <![CDATA[
+            SELECT id, subject
+            from category_tbl
+            where `type` & 8 > 0
+        ]]>
+    </select>
 </mapper>

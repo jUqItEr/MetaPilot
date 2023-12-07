@@ -103,4 +103,6 @@ public interface CategoryRepository {
      */
     List<CategoryEntity> categoryHeader();
 
+    CategoryEntity getCategoryInfo(int id);
+
 }

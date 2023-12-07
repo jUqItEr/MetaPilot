@@ -30,7 +30,6 @@ import javax.validation.Valid;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -40,7 +39,7 @@ public class UserController {
      * @return 로그인 페이지의 경로를 문자열로 반환
      * @since 2023. 11. 27.
      */
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     public String loginPage() {
         return "user/login";
     }
@@ -50,7 +49,7 @@ public class UserController {
      * @return 회원가입 페이지의 경로를 문자열로 반환
      * @since 2023. 11. 28.
      */
-    @GetMapping("/register")
+    @GetMapping("/user/register")
     public String registerPage() {
         return "user/register";
     }
@@ -60,84 +59,9 @@ public class UserController {
      * @return 로그인 성공 페이지의 경로를 문자열로 반환
      * @since 2023. 11. 28.
      */
-    @GetMapping("/login/success")
+    @GetMapping("/user/login/success")
     public String loginSuccess() {
         return "user/loginSuccess.html";
-    }
-
-    /**
-     * <p>회원가입 요청을 처리하는 컨트롤러 메서드</p>
-     *
-     * @param registerDto 회원가입 요청 시 필요한 사용자 정보를 담은 DTO
-     * @param bindingResult 요청 데이터의 검증 결과를 담은 객체
-     * @since 2023. 11. 28.
-     * @return ResponseEntity 객체를 반환하며, 회원가입이 성공적으로 처리되었을 경우 서비스 계층에서 반환된 결과를 포함
-     */
-    @ResponseBody
-    @PostMapping("/api/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) {
-        return ResponseEntity.ok(userService.registerUser(registerDto));
-    }
-
-    @GetMapping("/api/checkUserId")
-    public ResponseEntity<?> checkUserId(@RequestParam String userId) {
-        try {
-            userService.duplicateUserId(userId);
-            return ResponseEntity
-                    .ok()
-                    .body("사용 가능한 아이디입니다.");
-        } catch (CustomValidationException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e.getErrorMap()); //이미 중복인 경우 배드 리퀘스트 발생
-        }
-    }
-
-    /**
-     * <p>유저 정보를 처리하는 컨트롤러 메서드</p>
-     *
-     * @param userId 사용자 Id
-     * @since 2023. 11. 29.
-     * @return 사용자의 아이디 유무를 판단하여 결과값 반환
-     * @deprecated
-     */
-    @ResponseBody
-    @GetMapping("/{userId}")
-    public ResponseEntity<? extends SwaggerRespDto<? extends UserEntity>> getUser(@PathVariable String userId) {
-        UserEntity user = userService.getUser(userId);
-        if (user == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new SwaggerRespDto<>(HttpStatus.NOT_FOUND.value(), "User not found", null));
-        }
-        return ResponseEntity
-                .ok()
-                .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", user));
-    }
-
-    /**
-     * <p>유저 정보를 전부 가져오는 메소드</p>
-     *
-     * @param principalDetails
-     * @since 2023. 11. 29.
-     * @return 사용자의 정보를 판단하여 결과값 반환
-     */
-    @ResponseBody
-    @GetMapping("/principal")
-    public ResponseEntity<SwaggerRespDto<? extends PrincipalDetails>> getPrincipalDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-
-        if (principalDetails != null) {
-            principalDetails.getAuthorities();
-            System.out.println("role : " + principalDetails.getAuthorities());
-
-            return ResponseEntity
-                    .ok()
-                    .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", principalDetails));
-        } else {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new SwaggerRespDto<>(HttpStatus.BAD_REQUEST.value(), "failed", null));
-        }
     }
 
     /**
@@ -180,5 +104,82 @@ public class UserController {
     public String admin(){
         return "user";
     }
+
+    /**
+     * <p>회원가입 요청을 처리하는 컨트롤러 메서드</p>
+     *
+     * @param registerDto 회원가입 요청 시 필요한 사용자 정보를 담은 DTO
+     * @param bindingResult 요청 데이터의 검증 결과를 담은 객체
+     * @since 2023. 11. 28.
+     * @return ResponseEntity 객체를 반환하며, 회원가입이 성공적으로 처리되었을 경우 서비스 계층에서 반환된 결과를 포함
+     */
+    @ResponseBody
+    @PostMapping("/api/user/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(userService.registerUser(registerDto));
+    }
+
+    @GetMapping("/api/user/checkUserId")
+    public ResponseEntity<?> checkUserId(@RequestParam String userId) {
+        try {
+            userService.duplicateUserId(userId);
+            return ResponseEntity
+                    .ok()
+                    .body("사용 가능한 아이디입니다.");
+        } catch (CustomValidationException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getErrorMap()); //이미 중복인 경우 배드 리퀘스트 발생
+        }
+    }
+
+    /**
+     * <p>유저 정보를 처리하는 컨트롤러 메서드</p>
+     *
+     * @param userId 사용자 Id
+     * @since 2023. 11. 29.
+     * @return 사용자의 아이디 유무를 판단하여 결과값 반환
+     * @deprecated
+     */
+    @ResponseBody
+    @GetMapping("/api/user/{userId}")
+    public ResponseEntity<? extends SwaggerRespDto<? extends UserEntity>> getUser(@PathVariable String userId) {
+        UserEntity user = userService.getUser(userId);
+        if (user == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new SwaggerRespDto<>(HttpStatus.NOT_FOUND.value(), "User not found", null));
+        }
+        return ResponseEntity
+                .ok()
+                .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", user));
+    }
+
+    /**
+     * <p>유저 정보를 전부 가져오는 메소드</p>
+     *
+     * @param principalDetails
+     * @since 2023. 11. 29.
+     * @return 사용자의 정보를 판단하여 결과값 반환
+     */
+    @ResponseBody
+    @GetMapping("/api/user/principal")
+    public ResponseEntity<SwaggerRespDto<? extends PrincipalDetails>> getPrincipalDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        if (principalDetails != null) {
+            principalDetails.getAuthorities();
+            System.out.println("role : " + principalDetails.getAuthorities());
+
+            return ResponseEntity
+                    .ok()
+                    .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", principalDetails));
+        } else {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new SwaggerRespDto<>(HttpStatus.BAD_REQUEST.value(), "failed", null));
+        }
+    }
+
+
 
 }

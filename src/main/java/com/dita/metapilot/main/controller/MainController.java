@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping()
+@RequestMapping("/api")
 public class MainController {
     private final MainService mainService;
 
     @ResponseBody
-    @GetMapping(value="api/info")
+    @GetMapping(value="/info")
     public ResponseEntity<? extends SwaggerRespDto<? extends CmsInfoEntity>> getCmsInfo() {
         CmsInfoEntity entity = mainService.getCmsInfo();
 
