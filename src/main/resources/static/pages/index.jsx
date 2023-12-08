@@ -2,6 +2,7 @@ import axios from 'axios';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import IndexHeader from '../layout/home/header';
+import IndexSidebar from '../layout/home/sidebar';
 
 
 const IndexPage = () => {
@@ -34,6 +35,7 @@ const IndexPage = () => {
                 <title>{info.title}</title>
             </Head>
             <IndexHeader/>
+            <IndexSidebar/>
         </>
     )
 }
