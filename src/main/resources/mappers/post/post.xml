@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dita.metapilot.post.repository.PostRepository">
+
+	<resultMap id="postEntity" type="com.dita.metapilot.post.entity.PostEntity">
+		<result property="postId" column="id"></result>
+		<result property="subject" column="subject"></result>
+		<result property="content" column="content"></result>
+		<result property="userId" column="user_tbl_id"></result>
+		<result property="createdAt" column="created_at"></result>
+		<result property="count" column="count"></result>
+		<result property="notice" column="notice"></result>
+		<result property="categoryId" column="category_tbl_id"></result>
+		<result property="deleted" column="deleted"></result>
+		<result property="type" column="type"></result>
+		<result property="likeCount" column="liked"></result>
+	</resultMap>
+
+	<resultMap id="postDto" type="com.dita.metapilot.post.dto.FindPostByHashtagDto">
+		<id property="postId" column="id" />
+		<result property="categoryId" column="category_tbl_id" />
+		<result property="userId" column="user_tbl_id" />
+		<result property="subject" column="subject" />
+		<result property="content" column="content" />
+		<result property="type" column="type" />
+		<result property="createdAt" column="created_at" />
+		<collection property="hashtags" ofType="com.dita.metapilot.post.dto.HashtagDto">
+			<result property="content" column="hashcontent" />
+		</collection>
+	</resultMap>
+
+	<!-- 해시태그 생성 -->
+	<insert id="createHashtag" parameterType="com.dita.metapilot.post.dto.HashtagDto">
+		insert into hashtag_tbl(content)
+		values(#{content})
+		<selectKey resultType="int" keyProperty="hashtagId" order="AFTER">
+			select max(id) from hashtag_tbl
+		</selectKey>
+	</insert>
+
+	<!-- 게시글 좋아요 추가 -->
+	<insert id="createLike" parameterType="com.dita.metapilot.post.dto.PostResponseDto">
+		<![CDATA[
+        insert into post_like_tbl(post_tbl_id, user_tbl_id)
+        values(#{postId}, #{userId})
+        ]]>
+	</insert>
+
+	<!-- 게시글 작성 -->
+	<insert id="createPost" parameterType="com.dita.metapilot.post.dto.PostDto">
+		insert into post_tbl(category_tbl_id ,user_tbl_id, subject, content, count, deleted, type, created_at)
+		values(#{catergoryId}, #{userId}, #{subject}, #{content}, 0, 0, #{type}, now())
+	</insert>
+
+	<!-- 게시글에 해시태그 추가 -->
+	<insert id="createPostHashtag" parameterType="com.dita.metapilot.post.dto.PostTagDto">
+		insert into post_hashtag_tbl(post_tbl_id, hashtag_tbl_id, created_at)
+		values(#{postId}, #{hashtagId}, now());
+	</insert>
+
+	<!-- 게시글 삭제 -->
+	<update id="deletePost" parameterType="com.dita.metapilot.post.dto.PostIdDto">
+		<!-- 게시글 삭제시 휴지통으로 보내기(delete => 1) -->
+		<![CDATA[
+        update post_tbl set deleted = 1 where id = #{postId};
+        ]]>
+	</update>
+
+	<!-- 해시태그로 게시글 검색 -->
+	<select id="findPostByHashtag" resultMap="postDto">
+		select
+			pt.id, pt.category_tbl_id, pt.user_tbl_id, pt.subject, pt.content, pt.type, pt.created_at,
+			ht.content as hashcontent
+		from post_tbl pt
+		left join post_hashtag_tbl pht on pt.id = pht.post_tbl_id
+		left join hashtag_tbl ht on pht.hashtag_tbl_id = ht.id
+		where
+		<foreach collection="hashtags" item="hashtag" separator=" or ">
+			ht.content = #{hashtag}
+		</foreach>
+		and pt.deleted = 0
+		group by pt.id
+	</select>
+
+	<!-- 해시태그의 id를 가져옴 -->
+	<select id="getHashtagId" parameterType="com.dita.metapilot.post.dto.HashtagDto" resultType="int">
+		select id
+		from hashtag_tbl
+		where content = #{content}
+	</select>
+
+	<!-- 게시글의 해시태그 조회 -->
+	<select id="getHashtags" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultType="com.dita.metapilot.post.dto.HashtagDto">
+		select content
+		from hashtag_tbl ht
+		left join post_hashtag_tbl pht on ht.id = pht.hashtag_tbl_id
+		where pht.post_tbl_id = #{postId}
+	</select>
+
+	<!-- 공지사항 게시글 목록 -->
+	<select id="getNotciePosts" resultMap="postEntity">
+		select distinct pt.*,
+						(
+							select count(*)
+							from post_like_tbl plt
+							where plt.post_tbl_id = pt.id
+						) as liked
+		from post_tbl pt
+		left join post_like_tbl plt on pt.id = plt.post_tbl_id
+		where pt.notice = 1 and pt.deleted = 0
+		order by
+		pt.created_at desc
+		limit 3;
+	</select>
+
+	<!-- 인기 게시글 목록 -->
+	<select id="getPopularPosts" resultMap="postEntity">
+		<![CDATA[
+		select distinct pt.*,
+						(
+							select count(*)
+							from post_like_tbl plt
+							where plt.post_tbl_id = pt.id
+						) as liked
+		from post_tbl pt
+		left join post_like_tbl plt on pt.id = plt.post_tbl_id
+		where pt.created_at >= date_sub(now(), interval 7 day)
+			and (
+						select count(*)
+						from post_like_tbl
+						where post_tbl_id = pt.id
+				) >= 3
+				and pt.deleted = 0
+		order by
+			(
+				select count(*)
+				from post_like_tbl
+				where post_tbl_id = pt.id
+			) desc,
+			pt.`count` desc,
+			pt.created_at desc
+		limit 10;
+		]]>
+	</select>
+	
+	<!-- 게시글 조회 -->
+	<select id="getPostView" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultMap="postEntity">
+		<![CDATA[
+        select pt.*, (select count(*) from post_like_tbl plt where plt.post_tbl_id = pt.id) as liked
+		from post_tbl pt
+        where id = #{postId}
+        ]]>
+	</select>
+
+	<!-- 해시태그 중복체크 -->
+	<select id="hasHashtag" resultType="java.lang.Boolean">
+		select count(*) > 0
+		from hashtag_tbl
+		where content = #{content}
+	</select>
+
+	<!-- 게시글 좋아요 상태체크 -->
+	<select id="hasLike" parameterType="com.dita.metapilot.post.dto.PostResponseDto" resultType="java.lang.Boolean">
+		<![CDATA[
+        select count(*) > 0
+        from post_like_tbl
+        where post_tbl_id = #{postId} and user_tbl_id = #{userId}
+        ]]>
+	</select>
+
+	<!-- 해시태그의 id를 가져옴 -->
+	<select id="getRecentPostId" resultType="int">
+		select max(id)
+		from post_tbl
+	</select>
+
+	<!-- 게시글 좋아요 취소 -->
+	<delete id="revokeLike" parameterType="com.dita.metapilot.post.dto.PostResponseDto">
+		<![CDATA[
+        delete from post_like_tbl
+        where post_tbl_id = #{postId}
+        ]]>
+	</delete>
+
+	<!-- 게시글 조회수 증가 -->
+	<update id="updateCount" parameterType="com.dita.metapilot.post.dto.PostIdDto" >
+		<![CDATA[
+        update post_tbl set count = count + 1 where id = #{postId};
+        ]]>
+	</update>
+
+	<!-- 게시글 수정 -->
+	<update id="updatePost" parameterType="com.dita.metapilot.post.dto.PostResponseDto">
+		<![CDATA[
+        update post_tbl
+        set
+            subject = #{subject},
+            content = #{content},
+            type = #{type}
+        where id = #{postId}
+        ]]>
+	</update>
+</mapper>
