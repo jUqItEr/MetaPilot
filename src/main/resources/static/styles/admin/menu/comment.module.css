@@ -13,15 +13,14 @@
 .pageTitle {
     padding: 10px 20px;
     /*width: calc(40% + 200px);*/
-    width: 800px;
+    width: 1000px;
 }
 
 .pageContent { 
-    width: 800px;
+    width: 1000px;
     height: 80%;
-    padding: 20px;
-    display: flex;
-    justify-content: flex-start;
+    padding: 10px;
+
 }
 .pageTitleFont {
     font-size: 24px;

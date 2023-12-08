@@ -140,3 +140,13 @@ body {
   cursor: pointer; /* 커서 스타일 변경 (선택 사항) */
   color:black;
 }
+a{
+  text-decoration: none;
+  color: inherit;
+  cursor: auto;
+}
+a:hover {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
