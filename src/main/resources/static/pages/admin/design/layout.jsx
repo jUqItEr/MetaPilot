@@ -15,7 +15,7 @@ import AdminSidebar from "../../../layout/admin/sidebar";
  * @since 2023. 12. 04.
  * @returns
  */
-export default function AdminTemp() {
+export default function AdminLayoutPage() {
     return (
         <>
             <Head>
@@ -45,7 +45,7 @@ export default function AdminTemp() {
                                 <Image src='/image/layoutImg1.png' alt='' width={400} height={300} />
                             </div>
                             <div className={styles.submitBtn}>
-                                <button type="submit" className="btn btn-primary mb-3" style={{backgroundColor: '#188ACC'}}>레이아웃 적용</button>
+                                <button type="submit" className="btn btn-primary mb-3">레이아웃 적용</button>
                             </div>
                         </div>
 

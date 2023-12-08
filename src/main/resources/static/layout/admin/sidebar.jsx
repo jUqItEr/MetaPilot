@@ -63,7 +63,6 @@ export default function AdminSidebar() {
                             <ul className={`${styles.btnToggleNav } list-unstyled fw-normal pb-1 small `} >
                                 <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">카테고리 관리</a></li>
                                 <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">댓글관리</a></li>
-                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">게시글 관리</a></li>
                                 <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">해시태그 일괄변경</a></li>
                             </ul>
                         </div>
@@ -76,8 +75,7 @@ export default function AdminSidebar() {
                         </button>
                         <div className="collapse" id="account-collapse">
                             <ul className={`${styles.btnToggleNav } list-unstyled fw-normal pb-1 small `}  >
-                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">접속 통계</a></li>
-                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">접속 유입</a></li>
+                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">조회수</a></li>
                             </ul>
                         </div>
                     </li>
