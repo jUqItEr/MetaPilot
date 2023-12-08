@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dita.metapilot.post.postFile.repository.PostFileRepository">
+    <resultMap id="postFile" type="com.dita.metapilot.post.postFile.dto.PostFileDto">
+        <result property="postId" column="post_tbl_id" />
+        <result property="name" column="name" />
+        <result property="originalName" column="original_name" />
+        <result property="extension" column="extension" />
+        <result property="filesize" column="filesize" />
+    </resultMap>
+    <!-- 게시글 첨부파일 조회 -->
+    <select id="getPostFile" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultMap="postFile">
+        <![CDATA[
+        select * from post_file_tbl
+        where post_tbl_id = #{postId}
+        ]]>
+    </select>
+
+    <!-- 게시글 첨부파일 추가 -->
+    <insert id="createFile" parameterType="list">
+        insert into post_file_tbl(post_tbl_id, name, original_name, extension, filesize)
+        values
+        <foreach collection="list" item="file" separator=",">
+            (#{file.postId}, #{file.name}, #{file.originalName}, #{file.extension}, #{file.filesize})
+        </foreach>
+    </insert>
+
+</mapper>
