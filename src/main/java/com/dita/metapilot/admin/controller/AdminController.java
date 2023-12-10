@@ -244,6 +244,34 @@ public class AdminController {
 
 
     /**
+     * <p>카테고리 제일 위로</p>
+     *
+     * @param categoryUpDownDto
+     * @since 2023. 12. 10.
+     */
+    @ResponseBody
+    @PostMapping("/updateCategoryTop")
+    public ResponseEntity<?> updateCategoryTop(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.updateCategoryTop(categoryUpDownDto));
+    }
+
+
+
+    /**
+     * <p>카테고리 제일 아래로</p>
+     *
+     * @param categoryUpDownDto
+     * @since 2023. 12. 10.
+     */
+    @ResponseBody
+    @PostMapping("/updateCategoryBottom")
+    public ResponseEntity<?> updateCategoryBottom(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.updateCategoryBottom(categoryUpDownDto));
+    }
+
+
+
+    /**
      * <p>카테고리의 헤더를 list하는 기능입니다.</p>
      *
      * @since 2023. 12. 04.
