@@ -1,0 +1,64 @@
+.wrap {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    width: 100%;
+    overflow-x: hidden;
+    padding: 20px;
+}
+.pageTitle{
+    padding : 10px 20px;
+    width: 800px;
+    border : 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.pageTitle div {
+    border:1px solid black;
+}
+.fortawesomeIcon{
+    width:10px;
+}
+.pageContent {
+    border : 1px solid black;
+    width: 800px;
+    height: 80%;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+}
+.pageTitleFont {
+    font-size: 24px;
+}
+
+.listField{
+    width: 50%;
+}
+.btnField{
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+}
+.btn{
+    border-radius: 5%;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 15px;
+    color: #188ACC;
+    border:1px solid #188ACC;
+    background-color: white;
+}
+.btn:hover{
+    padding: 3px 15px;
+    border:2px solid #188ACC;
+    color: white;
+    background-color: #188ACC;
+}
+.setting{
+    width: 50%;
+    padding-top: 45.6px;
+}
