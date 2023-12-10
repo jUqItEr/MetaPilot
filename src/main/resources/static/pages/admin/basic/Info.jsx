@@ -38,11 +38,6 @@ export default function AdminBlogInfoPage() {
                                 <label className="text-body-tertiary ps-3" htmlFor={"exampleFormControlInput1"}>한글, 영문, 숫자 혼용가능(한글 기준 25자 이내)</label>
                             </div>
                             <div className = {`${styles.setField} border-bottom`}>
-                                <label className="form-label fw-bold" htmlFor={"exampleFormControlInput2"} style={{width:'100px'}}>닉네임</label>
-                                <input type="text" className="form-control" id={"exampleFormControlInput2"} placeholder={"블로그 명을 입력하세요"} style={{width:'300px'}}/>
-                                <label className="text-body-tertiary ps-3" htmlFor={"exampleFormControlInput2"}>한글, 영문, 숫자 혼용가능(한글 기준 10자 이내)</label>
-                            </div>
-                            <div className = {`${styles.setField} border-bottom`}>
                                 <label className="form-label fw-bold" htmlFor={"float1ingTextarea1"} style={{width:'100px'}}>소개글</label>
                                 <div className="form-floating">
                                     <textarea className="form-control" placeholder={"Leave a comment here"} id={"floatingTextarea2"} style={{width:'300px',height: '120px'}}></textarea>

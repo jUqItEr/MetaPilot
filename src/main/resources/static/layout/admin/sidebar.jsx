@@ -70,7 +70,7 @@ export default function AdminSidebar() {
                     {/*구분선*/}
                     {/*<li className="border-top my-3"></li>*/}
                     <li className="mb-1">
-                        <button className={`${styles.btnToggle  }  btn d-inline-flex align-items-center rounded border-0 collapsed `} data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        <button className={`${styles.btnToggle}  btn d-inline-flex align-items-center rounded border-0 collapsed `} data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
                             내 블로그 통계
                         </button>
                         <div className="collapse" id="account-collapse">
