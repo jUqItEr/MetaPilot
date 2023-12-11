@@ -20,14 +20,14 @@ export default function LoginPage() {
 
     axios({
       headers: {
-        Authorization: "cos",
+        Authorization: 'cos',
       },
       data: {
         id: id.value,
         password: password.value,
       },
       method: "post",
-      url: "/login",
+      url: "/account/login",
     })
       .then((res) => {
         console.log(res.headers);

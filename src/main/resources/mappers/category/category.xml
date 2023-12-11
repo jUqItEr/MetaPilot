@@ -22,11 +22,12 @@
 
     <resultMap id="categoryPostEntity" type="com.dita.metapilot.category.entity.CategoryPostEntity">
         <result property="id" column="id"></result>
-        <result property="cSubject" column="cSubject"></result>
-        <result property="categoryTblRefId" column="category_tbl_ref_id"></result>
-        <result property="userTblId" column="user_tbl_id"></result>
+        <result property="categorySubject" column="category_subject"></result>
+        <result property="postId" column="post_id"></result>
+        <result property="userId" column="user_tbl_id"></result>
         <result property="subject" column="subject"></result>
         <result property="count" column="count"></result>
+        <result property="thumbnail" column="count"></result>
         <result property="createdAt" column="created_at"></result>
     </resultMap>
 
@@ -64,23 +65,24 @@
     <!-- 특정 카테고리를 클릭하면 그 카테고리에 해당된 post 글들을 list -->
     <select id="categoryPostView" parameterType="com.dita.metapilot.category.dto.CategoryPostDto" resultMap="categoryPostEntity">
         select
-
+            ct.id,
+            ct.subject as 'category_subject',
+            pt.id as 'post_id',
+            pt.user_tbl_id,
+            pt.subject,
+            pt.count,
+            pt.thumbnail,
+            pt.created_at
         from
             post_tbl as pt
-
-        select
-            c.id, c.subject as 'cSubject', c.category_tbl_ref_id, p.user_tbl_id, p.subject, p.count, p.created_at
-        from
-            category_tbl as c
-        left outer join
-            post_tbl as p
+        join
+            category_tbl as ct
         on
-            p.category_tbl_id = c.id
+            pt.category_tbl_id = ct.id
         where
-            (c.id = #{categoryId} or c.category_tbl_ref_id = #{categoryId}) and p.subject is not null and
-            p.deleted = 0
+            pt.deleted = 0
         order by
-            p.created_at desc
+            pt.created_at desc
     </select>
 
     <!-- 카테고리 생성 -->
