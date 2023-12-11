@@ -10,6 +10,9 @@ import $ from 'jquery'
 import styles from "/styles/post/post.module.css";
 import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import PostHeader from "../../../components/post/header";
+import CommentsList from "../../../components/post/comment";
+import LikesList from "../../../components/post/likes";
+// import CKEditorComponent from "../../../components/post/ckEditor";
 
 
 
@@ -54,7 +57,10 @@ const PostPage = () => {
     const [postLiked, setPostLiked] = useState(false); // 게시글에 대한 좋아요 상태
     const [postLikes, setPostLikes] = useState(28); // 게시글 좋아요 수
     const [faChevron, setFaChevron] = useState(false); // 공감수 리스트 상태
+    const [showReplyForm, setShowReplyForm] = useState(false); // 답글 폼
     const [likesVisible, setLikesVisible] = useState(false);
+    const [formVisibility, setFormVisibility] = useState({});
+
 
     // const [ post, setPost ] = useState([])
     // const router = useRouter()
@@ -79,6 +85,17 @@ const PostPage = () => {
             setFaChevron(false);
         }
         setShowComments(!showComments);
+    };
+
+    // 댓글의 답글, 답글의 답글 폼 위치 잡는 함수
+    const toggleFormVisibility = (id, type) => {
+        setFormVisibility(prevState => ({
+            ...prevState,
+            [type]: {
+                ...prevState[type],
+                [id]: !prevState[type]?.[id]
+            }
+        }));
     };
 
     // 공유하기 버튼
@@ -125,6 +142,7 @@ const PostPage = () => {
                     </main>
 
                     <footer className={styles.footerContainer}>
+                        {/* hashtag */}
                         <div className={styles.hashtagBox}>
                             <div>
                                 <Link href="">
@@ -165,66 +183,16 @@ const PostPage = () => {
                         </div>
 
                         {/* 공감자 목록 */}
-                        <div style={{display : faChevron ? "block" : "none"}}>
-                            <div className={styles.likesWrap}>
-                                이 글에 <span className={styles.likesBloger}>공감한 친구</span>
-                                <ul className={styles.likesContent}>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                </ul>
-                                {/* 페이징 */}
-                                <div className={styles.likesPageButtons}>
-                                    <button className={`${styles.likesButton} btn btn-Light`}><FontAwesomeIcon icon={faChevronLeft}/></button>
-                                    <button className={`${styles.likesButton} btn btn-Light`}><FontAwesomeIcon icon={faChevronRight}/></button>
-                                </div>
-                            </div>
-                        </div>
+                        <LikesList isVisible={faChevron}/>
 
                         {/* 댓글 목록 */}
                         {showComments && (
-                        <div className={styles.commentsWrap}>
-                            {comments.map((comment) => (
-                            <div key={comment.id} className={styles.comment}>
-                                <strong>{comment.author}</strong>
-                                <p>{comment.text}</p>
-                                <div className={styles.commentDetails}>
-                                <span>{comment.time}</span>
-                                <button className="btn btn-Light" onClick={() => toggleCommentLike(comment.id)}>
-                                    <span className={styles.likeIcon}>{comment.liked ? '❤️' : '🤍'}</span>
-                                    {comment.likes}
-                                </button>
-                                </div>
-                                {/* 답글 목록 */}
-                                {comment.replies && comment.replies.map((reply) => (
-                                <div key={reply.id} className={styles.reply}>
-                                    <strong>{reply.author}</strong>
-                                    <p>{reply.text}</p>
-                                    <div className={styles.commentDetails}>
-                                    <span>{reply.time}</span>
-                                    <button onClick={() => toggleCommentLike(reply.id, true, comment.id)}>
-                                        <span className={styles.likeIcon}>{reply.liked ? '❤️' : '🤍'}</span>
-                                        {reply.likes}
-                                    </button>
-                                    </div>
-                                </div>
-                                ))}
-                            </div>
-                            ))}
-                        </div>
+                            <CommentsList
+                                comments={comments}
+                                formVisibility={formVisibility}
+                                toggleFormVisibility={toggleFormVisibility}
+                                toggleCommentLike={toggleCommentLike}
+                            />
                         )}
 
                         {/* 광고 */}
@@ -269,7 +237,6 @@ const PostPage = () => {
                             </ul>
                         </div>
                     </footer>
-
 
 
                 </div>
