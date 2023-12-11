@@ -106,6 +106,14 @@
 		where pht.post_tbl_id = #{postId}
 	</select>
 
+	<!-- 게시글 좋아요한 유저 리스트 -->
+	<select id="getLikesList" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultType="com.dita.metapilot.post.dto.PostLikesDto">
+		select plt.post_tbl_id as postId, plt.user_tbl_id as userId, ut.nickname, ut.profile_image as image
+		from post_like_tbl plt
+		left join user_tbl ut on plt.user_tbl_id = ut.id
+		where plt.post_tbl_id = #{postId}
+	</select>
+
 	<!-- 공지사항 게시글 목록 -->
 	<select id="getNotciePosts" resultMap="postEntity">
 		select distinct pt.*,

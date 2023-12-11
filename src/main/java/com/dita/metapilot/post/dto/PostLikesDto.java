@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * <p>게시글 번호가 담긴 DTO.</p>
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostIdDto {
+public class PostLikesDto {
     private long postId;
+    private String userId;
+    private String nickName;
+    private String image;
 }

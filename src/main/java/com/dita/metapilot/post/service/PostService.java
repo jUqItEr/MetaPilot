@@ -94,6 +94,16 @@ public class PostService {
     }
 
     /**
+     * <p>게시글에 좋아요 누른 유저 목록</p>
+     *
+     * @param
+     * @return
+     */
+    public List<PostLikesDto> getLikesList(PostIdDto postIdDto) {
+        return postRepository.getLikesList(postIdDto);
+    }
+
+    /**
      * <p>공지사항 게시글 리스트를 불러오는 메서드</p>
      *
      * @return 불러온 공지사항 게시글 리스트를 반환.

@@ -72,6 +72,19 @@ public class PostController {
     }
 
     /**
+     * <p>게시글에 좋아요 누른 유저 목록을 가져오는 컨트롤러 메서드</p>
+     *
+     * @param
+     * @return
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/likesList")
+    public List<PostLikesDto> getLikesList(PostIdDto postIdDto) {
+        return postService.getLikesList(postIdDto);
+    }
+
+    /**
      * <p>공지사항 게시글 리스트를 반환하는 컨트롤러 메서드</p>
      *
      * @return 공지사항 게시글 리스트를 반환
@@ -139,16 +152,23 @@ public class PostController {
     /**
      * <p>게시글을 조회하고, 조회된 게시글 정보를 반환하는 컨트롤러.</p>
      *
-     * @param postId 게시글 번호.
+     * @param postIdDto 게시글 번호 담긴 DTO.
      * @return 조회된 게시글 정보를 반환
      * @since 2023. 11. 28.
      */
     @ResponseBody
-    @GetMapping("/postView/{postId}")
-    public ResponseEntity<PostViewDto> postView(@PathVariable int postId) {
-        PostIdDto postIdDto = new PostIdDto();
-
-        postIdDto.setPostId(postId);
+    @GetMapping("/postView")
+    public ResponseEntity<PostViewDto> postView(PostIdDto postIdDto) {
+        System.out.println(postIdDto.getPostId());
         return ResponseEntity.ok(postService.getPostView(postIdDto));
     }
+
+    /*
+    @ResponseBody
+    @PostMapping("/getPost")
+    public ResponseEntity<?> getPost(PostIdDto postIdDto) {
+        System.out.println(postIdDto.getPostId());
+        return ResponseEntity.ok(postService.getPost(postIdDto));
+    }
+    */
 }

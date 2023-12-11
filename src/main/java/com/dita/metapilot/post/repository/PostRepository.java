@@ -114,6 +114,14 @@ public interface PostRepository {
     List<HashtagDto> getHashtags(PostIdDto postIdDto);
 
     /**
+     * 게시글의 좋아요 리스트 가져오는 메서드.
+     *
+     * @param
+     * @return
+     */
+    List<PostLikesDto> getLikesList(PostIdDto postIdDto);
+
+    /**
      * 해시태그 중복을 체크하는 메서드.
      *
      * @param hashTagDto 해시태그 내용이 담긴 DTO.
