@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryPostEntity {
     private int id;
-    private String categorySubject;
-    private int postId;
+    private long postId;
     private String userId;
     private String subject;
-    private int count;
+    private long count;
     private String thumbnail;
     private String createdAt;
 }

@@ -1,24 +1,46 @@
 import axios from "axios"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
-const PostList = (props) => {
+const PostList = ({ id }) => {
+    const recentId = useRef(0)
     const [ post, setPost ] = useState([])
-    const router = useRouter()
-    const { id } = router.query
-
-    console.log(id)
 
     useEffect(() => {
+        (async () => {
+            axios({
+                header: {
+                    'Authorization': localStorage.getItem('authorization'),
+                    'Content-Type': 'application/json'
+                },
+                method: 'post',
+                data: {
+                    categoryId: id
+                },
+                url: '/api/category/recentPost'
+            })
+            .then((res) => {
+                recentId = res.data
+            })
+        })()
+
         axios({
-            data: {
-                categoryId: id  
+            header: {
+                'Authorization': localStorage.getItem('authorization'),
+                'Content-Type': 'application/json'
             },
             method: 'post',
+            data: {
+                categoryId: id,
+                postId: recentId
+            },
             url: '/api/category/postList'
         })
         .then((res) => {
             console.log(res.data)
+            setPost(res.data)
+        })
+        .catch((err) => {
+            // console.log(err)
         })
     }, [])
 

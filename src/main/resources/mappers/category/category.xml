@@ -22,7 +22,6 @@
 
     <resultMap id="categoryPostEntity" type="com.dita.metapilot.category.entity.CategoryPostEntity">
         <result property="id" column="id"></result>
-        <result property="categorySubject" column="category_subject"></result>
         <result property="postId" column="post_id"></result>
         <result property="userId" column="user_tbl_id"></result>
         <result property="subject" column="subject"></result>
@@ -30,6 +29,8 @@
         <result property="thumbnail" column="count"></result>
         <result property="createdAt" column="created_at"></result>
     </resultMap>
+
+
 
     <select id="getCategoryInfo" parameterType="int" resultMap="categoryEntity">
         select
@@ -64,25 +65,40 @@
 
     <!-- 특정 카테고리를 클릭하면 그 카테고리에 해당된 post 글들을 list -->
     <select id="categoryPostView" parameterType="com.dita.metapilot.category.dto.CategoryPostDto" resultMap="categoryPostEntity">
-        select
-            ct.id,
-            ct.subject as 'category_subject',
-            pt.id as 'post_id',
-            pt.user_tbl_id,
-            pt.subject,
-            pt.count,
-            pt.thumbnail,
-            pt.created_at
-        from
-            post_tbl as pt
-        join
-            category_tbl as ct
-        on
-            pt.category_tbl_id = ct.id
-        where
-            pt.deleted = 0
-        order by
-            pt.created_at desc
+        <![CDATA[
+            select
+                ct.id,
+                ct.subject as 'category_subject',
+                pt.id as 'post_id',
+                pt.user_tbl_id,
+                pt.subject,
+                pt.count,
+                pt.thumbnail,
+                pt.created_at
+            from
+                post_tbl as pt
+            join
+                category_tbl as ct
+            on
+                pt.category_tbl_id = ct.id
+            where
+                pt.deleted = 0
+            and
+                pt.id < ${postId}
+            order by
+                pt.created_at desc
+        ]]>
+    </select>
+
+    <select id="getRecentPostId" parameterType="com.dita.metapilot.category.dto.CategoryPostDto" resultType="long">
+        <![CDATA[
+            select
+                max(pt.id)
+            from
+                post_tbl as pt
+            where
+                pt.category_tbl_id = ${categoryId}
+        ]]>
     </select>
 
     <!-- 카테고리 생성 -->
