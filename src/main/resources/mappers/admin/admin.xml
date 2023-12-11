@@ -11,46 +11,63 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dita.metapilot.admin.repository.AdminRepository">
+    <resultMap id="cmsInfoEntity" type="com.dita.metapilot.admin.entity.CmsInfoEntity">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="profile" column="profile"/>
+        <result property="profileImage" column="profile_image"/>
+        <result property="googleAnalytics" column="google_analytics"/>
+    </resultMap>
+
     <resultMap id="categoryEntity" type="com.dita.metapilot.admin.entity.CategoryEntity">
-        <result property="id" column="id"></result>
-        <result property="categoryTblRefId" column="category_tbl_ref_id"></result>
-        <result property="subject" column="subject"></result>
-        <result property="depth" column="depth"></result>
-        <result property="pos" column="pos"></result>
-        <result property="type" column="type"></result>
-        <result property="fold" column="fold"></result>
-        <result property="visible" column="visible"></result>
-        <result property="countVisible" column="count_visible"></result>
-        <result property="listVisible" column="list_visible"></result>
-        <result property="listCount" column="list_count"></result>
-        <result property="createdAt" column="created_at"></result>
+        <result property="id" column="id"/>
+        <result property="categoryTblRefId" column="category_tbl_ref_id"/>
+        <result property="subject" column="subject"/>
+        <result property="depth" column="depth"/>
+        <result property="pos" column="pos"/>
+        <result property="type" column="type"/>
+        <result property="fold" column="fold"/>
+        <result property="visible" column="visible"/>
+        <result property="countVisible" column="count_visible"/>
+        <result property="listVisible" column="list_visible"/>
+        <result property="listCount" column="list_count"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="postCount" column="postCount"/>
     </resultMap>
 
     <resultMap id="postEntity" type="com.dita.metapilot.admin.entity.PostEntity">
-        <result property="id" column="id"></result>
-        <result property="categoryTblId" column="category_tbl_ref_id"></result>
-        <result property="userTblId" column="user_tbl_id"></result>
-        <result property="subject" column="subject"></result>
-        <result property="content" column="content"></result>
-        <result property="count" column="count"></result>
-        <result property="notice" column="notice"></result>
-        <result property="deleted" column="deleted"></result>
-        <result property="type" column="type"></result>
-        <result property="createdAt" column="created_at"></result>
+        <result property="id" column="id"/>
+        <result property="categoryTblId" column="category_tbl_ref_id"/>
+        <result property="userTblId" column="user_tbl_id"/>
+        <result property="subject" column="subject"/>
+        <result property="content" column="content"/>
+        <result property="count" column="count"/>
+        <result property="notice" column="notice"/>
+        <result property="deleted" column="deleted"/>
+        <result property="type" column="type"/>
+        <result property="createdAt" column="created_at"/>
     </resultMap>
 
     <resultMap id="commentEntity" type="com.dita.metapilot.admin.entity.CommentEntity">
-        <result property="id" column="id"></result>
-        <result property="postTblId" column="post_tbl_id"></result>
-        <result property="commentTblRefId" column="comment_tbl_ref_id"></result>
-        <result property="commentTblRootId" column="comment_tbl_root_id"></result>
-        <result property="userTblId" column="user_tbl_id"></result>
-        <result property="content" column="content"></result>
-        <result property="depth" column="depth"></result>
-        <result property="pos" column="pos"></result>
-        <result property="visible" column="visible"></result>
-        <result property="createdAt" column="created_at"></result>
+        <result property="id" column="id"/>
+        <result property="postTblId" column="post_tbl_id"/>
+        <result property="commentTblRefId" column="comment_tbl_ref_id"/>
+        <result property="commentTblRootId" column="comment_tbl_root_id"/>
+        <result property="userTblId" column="user_tbl_id"/>
+        <result property="content" column="content"/>
+        <result property="depth" column="depth"/>
+        <result property="pos" column="pos"/>
+        <result property="visible" column="visible"/>
+        <result property="createdAt" column="created_at"/>
     </resultMap>
+
+    <!-- Get CMS Information. -->
+    <select id="getCmsInfo" resultType="com.dita.metapilot.admin.entity.CmsInfoEntity">
+        select
+            bi.*
+        from
+            blog_info_tbl bi
+    </select>
 
     <!-- Block User. -->
     <insert id="blockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
@@ -66,11 +83,13 @@
     <!-- 카테고리 목록 list -->
     <select id="categoryView" resultMap="categoryEntity">
         select
-        id, category_tbl_ref_id, subject, depth, pos, type, visible, fold, count_visible, list_visible, list_count, created_at
+            (select count(*) from post_tbl p where p.category_tbl_id = c.id) as postCount
+            , c.id, c.category_tbl_ref_id, c.subject, c.depth, c.pos, c.type
+            , c.visible, c.fold, c.count_visible, c.list_visible, c.list_count, c.created_at
         from
-        category_tbl
+            category_tbl c
         order by
-        pos asc
+            pos asc;
     </select>
 
     <!-- 삭제된 게시글 목록 list -->
@@ -130,7 +149,7 @@
             where pos >= @setPos;
 
             insert into category_tbl
-            select null, @id, #{subject}, @setDepth, @setPos, #{type}, #{visible}, #{fold}, #{countVisible}, #{listVisible}, #{listCount}, now();
+            select null, @id, '게시글', @setDepth, @setPos, 1, 0, 0, 0, 0, 0, now();
         ]]>
     </insert>
 
