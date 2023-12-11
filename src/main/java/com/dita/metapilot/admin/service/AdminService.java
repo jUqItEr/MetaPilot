@@ -173,6 +173,32 @@ public class AdminService {
 
 
     /**
+     * <p>카테고리 제일 위로</p>
+     * @since 2023. 12. 10.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CategoryUpDownDto updateCategoryTop(CategoryUpDownDto categoryUpDownDto) {
+        adminRepository.updateCategoryTop(categoryUpDownDto);
+        return categoryUpDownDto;
+    }
+
+
+
+    /**
+     * <p>카테고리 제일 아래로</p>
+     * @since 2023. 12. 10.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CategoryUpDownDto updateCategoryBottom(CategoryUpDownDto categoryUpDownDto) {
+        adminRepository.updateCategoryBottom(categoryUpDownDto);
+        return categoryUpDownDto;
+    }
+
+
+
+    /**
      * <p>카테고리의 헤더를 List하는 기능</p>
      * @since 2023. 12. 04.
      * @return 카테고리의 헤더를 List에 담습니다.

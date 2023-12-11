@@ -122,6 +122,22 @@ public interface AdminRepository {
     boolean updateCategoryDown(CategoryUpDownDto categoryUpDownDto);
 
     /**
+     * <p> 카테고리 제일 위로 </p>
+     * @since 2023. 12. 10.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    boolean updateCategoryTop(CategoryUpDownDto categoryUpDownDto);
+
+    /**
+     * <p> 카테고리 제일 아래로 </p>
+     * @since 2023. 12. 10.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    boolean updateCategoryBottom(CategoryUpDownDto categoryUpDownDto);
+
+    /**
      * <p>Delete post.</p>
      *
      * @since 2023. 11. 29.
