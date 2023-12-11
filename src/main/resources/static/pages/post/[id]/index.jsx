@@ -8,7 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import $ from 'jquery'
 
 import styles from "/styles/post/post.module.css";
-import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faL } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import PostHeader from "../../../components/post/header";
+import CommentsList from "../../../components/post/comment";
+import LikesList from "../../../components/post/likes";
+// import CKEditorComponent from "../../../components/post/ckEditor";
 
 
 
@@ -53,7 +57,10 @@ const PostPage = () => {
     const [postLiked, setPostLiked] = useState(false); // 게시글에 대한 좋아요 상태
     const [postLikes, setPostLikes] = useState(28); // 게시글 좋아요 수
     const [faChevron, setFaChevron] = useState(false); // 공감수 리스트 상태
+    const [showReplyForm, setShowReplyForm] = useState(false); // 답글 폼
     const [likesVisible, setLikesVisible] = useState(false);
+    const [formVisibility, setFormVisibility] = useState({});
+
 
     // const [ post, setPost ] = useState([])
     // const router = useRouter()
@@ -78,6 +85,17 @@ const PostPage = () => {
             setFaChevron(false);
         }
         setShowComments(!showComments);
+    };
+
+    // 댓글의 답글, 답글의 답글 폼 위치 잡는 함수
+    const toggleFormVisibility = (id, type) => {
+        setFormVisibility(prevState => ({
+            ...prevState,
+            [type]: {
+                ...prevState[type],
+                [id]: !prevState[type]?.[id]
+            }
+        }));
     };
 
     // 공유하기 버튼
@@ -117,36 +135,14 @@ const PostPage = () => {
             </Head>
             <div className="wrap">
                 <div className="container">
-                    <header className="headerContainer">
-                        <div className={styles.headerPostList}>
-                            <div className="headerCate">
-                                <Link href="">
-                                    <a>
-                                        게임
-                                    </a>
-                                </Link>
-                            </div>
-                            <div className="headerList">목록열기</div>
-                        </div>
-                        <div className={styles.headerComponent}>
-                            <div className={styles.headerCompoCate}>뷰티.헤어</div>
-                            <div className={styles.headerCompoTitle}>제목이에요</div>
-                            <div className={styles.headerSubList}>
-                                <div className={styles.headerProfile}>
-                                    <div className="headerProfilePhoto">프로필사진</div>
-                                    <div className={styles.headerProfileName}>효앤민</div>
-                                    <div className="headerProfileTime">2시간전</div>
-                                </div>
-                                <div className={styles.headerSubDropdown}>
-                                    <div>목록</div>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
+                    <PostHeader/>
+
                     <main className={styles.mainContainer}>
 
                     </main>
+
                     <footer className={styles.footerContainer}>
+                        {/* hashtag */}
                         <div className={styles.hashtagBox}>
                             <div>
                                 <Link href="">
@@ -164,11 +160,12 @@ const PostPage = () => {
                                             <span className={styles.likeIcon}>{postLiked ? '❤️' : '🤍'}</span>
                                             <span className={styles.likeCount}>{postLikes} 공감해요</span>
                                         </button>
-                                        <button className={styles.faChevronButton} onClick={toggleFaChevron}>
-                                            <span className={styles.faChevronIcon}>
-                                                {faChevron ? <FontAwesomeIcon icon={ faChevronUp } size="1x"/> : <FontAwesomeIcon icon={ faChevronDown } size="1x"/>}
+                                        
+                                        <button className={`${styles.faChevronButton} btn btn-Light`} onClick={toggleFaChevron}>
+                                            <span className={styles.faChevronIcon}>{faChevron ? 
+                                                <FontAwesomeIcon icon={ faChevronUp } size="2x"/> : 
+                                                <FontAwesomeIcon icon={ faChevronDown } size="2x"/>}
                                             </span>
-                                            <FontAwesomeIcon icon={ faChevronUp } size="1x"/>
                                         </button>
 
                                     </div>
@@ -186,93 +183,16 @@ const PostPage = () => {
                         </div>
 
                         {/* 공감자 목록 */}
-                        <div style={{display : faChevron ? "block" : "none"}}>
-                            <div className={styles.likesWrap}>
-                                이 글에 <span className={styles.likesBloger}>공감한 친구</span>
-                                <ul className={styles.likesContent}>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                </ul>
-                                {/* 페이징 */}
-                                <div>
-                                    <button><FontAwesomeIcon icon={faChevronLeft}/>이전</button>
-                                    <button><FontAwesomeIcon icon={faChevronRight}/>다음</button>
-                                </div>
-                            </div>
-
-
-
-                        </div>
+                        <LikesList isVisible={faChevron}/>
 
                         {/* 댓글 목록 */}
                         {showComments && (
-                        <div className={styles.commentsWrap}>
-                            {comments.map((comment) => (
-                            <div key={comment.id} className={styles.comment}>
-                                <strong>{comment.author}</strong>
-                                <p>{comment.text}</p>
-                                <div className={styles.commentDetails}>
-                                <span>{comment.time}</span>
-                                <button className="btn btn-Light" onClick={() => toggleCommentLike(comment.id)}>
-                                    <span className={styles.likeIcon}>{comment.liked ? '❤️' : '🤍'}</span>
-                                    {comment.likes}
-                                </button>
-                                </div>
-                                {/* 답글 목록 */}
-                                {comment.replies && comment.replies.map((reply) => (
-                                <div key={reply.id} className={styles.reply}>
-                                    <strong>{reply.author}</strong>
-                                    <p>{reply.text}</p>
-                                    <div className={styles.commentDetails}>
-                                    <span>{reply.time}</span>
-                                    <button onClick={() => toggleCommentLike(reply.id, true, comment.id)}>
-                                        <span className={styles.likeIcon}>{reply.liked ? '❤️' : '🤍'}</span>
-                                        {reply.likes}
-                                    </button>
-                                    </div>
-                                </div>
-                                ))}
-                            </div>
-                            ))}
-                        </div>
+                            <CommentsList
+                                comments={comments}
+                                formVisibility={formVisibility}
+                                toggleFormVisibility={toggleFormVisibility}
+                                toggleCommentLike={toggleCommentLike}
+                            />
                         )}
 
                         {/* 광고 */}
@@ -301,7 +221,7 @@ const PostPage = () => {
                                         <a className={styles.storeLink}>진원씨_LOTTE ON</a>
                                     </Link>
                                     <button className={styles.payButton}>Pay</button>
-                                    <div class="storeDescription">
+                                    <div className={styles.storeDescription}>
                                         진원씨의 코딩실력을 판매합니다.
                                     </div>
                                 </li>
@@ -310,14 +230,13 @@ const PostPage = () => {
                                         <a className={styles.storeLink}>동의대 ON</a>
                                     </Link>
                                     <button className={styles.payButton}>Pay</button>
-                                    <div class="storeDescription">
+                                    <div className={styles.storeDescription}>
                                         그를 데리고 가고 싶다면 링크를 클릭!!
                                     </div>
                                 </li>
                             </ul>
                         </div>
                     </footer>
-
 
 
                 </div>
