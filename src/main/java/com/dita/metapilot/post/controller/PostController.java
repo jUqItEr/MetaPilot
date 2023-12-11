@@ -117,8 +117,10 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/update")
-    public ResponseEntity<Boolean> updatePost(PostDto postDto) {
-        return ResponseEntity.ok(postService.updatePost(postDto));
+    public ResponseEntity<Boolean> updatePost(@RequestPart PostDto postDto,
+                                              @RequestPart(required = false) List<String> tags,
+                                              @RequestPart(required = false) List<MultipartFile> files) {
+        return ResponseEntity.ok(postService.updatePost(postDto, tags, files));
     }
 
     /**

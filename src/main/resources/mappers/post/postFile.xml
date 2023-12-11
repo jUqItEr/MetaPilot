@@ -11,6 +11,7 @@
         <result property="extension" column="extension" />
         <result property="filesize" column="filesize" />
     </resultMap>
+
     <!-- 게시글 첨부파일 조회 -->
     <select id="getPostFile" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultMap="postFile">
         <![CDATA[
@@ -27,5 +28,18 @@
             (#{file.postId}, #{file.name}, #{file.originalName}, #{file.extension}, #{file.filesize})
         </foreach>
     </insert>
+
+    <!-- 게시글에 연결된 첨부파일 삭제 -->
+    <delete id="deletePostFile" parameterType="int">
+        delete from post_file_tbl
+        where post_tbl_id = #{postId}
+    </delete>
+
+    <!-- UUID로 원본 파일 이름 가져오기 -->
+    <select id="getOriginalName" resultType="com.dita.metapilot.post.postFile.dto.PostFileDto">
+        select original_name as originalName, extension
+        from post_file_tbl
+        where name = #{name}
+    </select>
 
 </mapper>

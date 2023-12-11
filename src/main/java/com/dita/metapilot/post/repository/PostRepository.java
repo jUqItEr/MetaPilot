@@ -52,6 +52,14 @@ public interface PostRepository {
     boolean createPostHashtag(PostTagDto postTagDto);
 
     /**
+     * 게시글에 연결된 해시태그 삭제하는 메서드.
+     *
+     * @param postId 게시글 번호.
+     * @return
+     */
+    boolean deleteHashtags(int postId);
+
+    /**
      * 게시글을 삭제하는 메서드.
      *
      * @param postIdDto 게시글 번호가 담긴 DTO.

@@ -61,6 +61,12 @@
 		values(#{postId}, #{hashtagId}, now());
 	</insert>
 
+	<!-- 게시글과 연결된 모든 해시태그 삭제 -->
+	<delete id="deleteHashtags" parameterType="int">
+		delete from post_hashtag_tbl
+		where post_tbl_id = #{postId}
+	</delete>
+
 	<!-- 게시글 삭제 -->
 	<update id="deletePost" parameterType="com.dita.metapilot.post.dto.PostIdDto">
 		<!-- 게시글 삭제시 휴지통으로 보내기(delete => 1) -->
