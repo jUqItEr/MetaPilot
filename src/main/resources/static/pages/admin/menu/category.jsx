@@ -14,7 +14,7 @@ import AdminSidebar from "../../../layout/admin/sidebar"
  * @since 2023. 12. 04.
  * @returns
  */
-export default function AdminTemp() {
+export default function AdminCatePage() {
     return (
         <>
             <Head>
@@ -30,67 +30,30 @@ export default function AdminTemp() {
                     <AdminSidebar/>
                     {/* content */}
                     <div className={styles.content} >
-                        <div className={styles.pageTitle}><span className={styles.pageTitleFont}>카테고리 관리</span></div>
-                        <div className={styles.pageContent}>
+                        <div className={`${styles.pageTitle } border-bottom`}><span className={styles.pageTitleFont}>카테고리 관리</span></div>
+                        <div className= {`${styles.pageContent } border-bottom`}>
                            <div className={styles.listField}>
                                <div className={styles.btnField}>
                                    <button type="submit"  className={`${styles.btn } btn btn-primary mb-3 `} >+ 카테고리 추가</button>
                                    <button type="submit"  className={`${styles.btn } btn btn-primary mb-3 `} >+ 구분선 추가</button>
                                    <button type="submit"  className={`${styles.btn } btn btn-primary mb-3 `} >- 삭제</button>
                                </div>
-                               <ul className={styles.list}>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}  > <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                                   <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                       <a href="#" className={styles.listA}> <div className={styles.cateName}>카테고리이름</div></a>
-                                   </li>
-                               </ul>
+                               <div  style={{maxHeight:'400px', overflowY: 'auto', width:'350px'}}>
+                                   <div className="list-group">
+                                       <button type="button" className="list-group-item list-group-item-action ">hello(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">hi(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">memo(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">hello(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">hi(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">memo(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">hello(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">hi(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">memo(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">hello(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">hi(1)</button>
+                                       <button type="button" className="list-group-item list-group-item-action">memo(1)</button>
+                                   </div>
+                               </div>
                            </div>
                            <div className={styles.setting}>
                                <div className={styles.setField}>

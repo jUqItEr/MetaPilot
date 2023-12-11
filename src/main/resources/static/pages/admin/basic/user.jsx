@@ -3,7 +3,6 @@ import Image from 'next/image'
 import axios from 'axios'
 import $ from 'jquery'
 import styles from '../../../styles/admin/basic/user.module.css'
-import logoImg from '../../../image/profileEXImg.png'
 import AdminHeader from "../../../layout/admin/header";
 import AdminSidebar from "../../../layout/admin/sidebar";
 import {useEffect} from "react"
@@ -16,7 +15,7 @@ import {useEffect} from "react"
  * @since 2023. 12. 04.
  * @returns
  */
-export default function AdminBlockUser() {
+export default function AdminBlockUserPage() {
     useEffect(() => {
         $(function () {
             $('.xclk').on('click', function () {
@@ -40,8 +39,8 @@ export default function AdminBlockUser() {
                     <AdminSidebar/>
                     {/* content */}
                     <div className={styles.content} >
-                        <div className={styles.pageTitle}><span className={styles.pageTitleFont}>차단설정</span></div>
-                        <div className={styles.pageContent}>
+                        <div className={`${styles.pageTitle } border-bottom`}><span className={styles.pageTitleFont}>차단설정</span></div>
+                        <div className={`${styles.pageContent } border-bottom`}>
                             <div className={styles.pageSubTitle}>사용자 차단</div>
                             <div className={styles.searchField}>
                                 <form className={styles.formTarget}>
@@ -49,7 +48,7 @@ export default function AdminBlockUser() {
                                         <input type="text" className="form-control" id="blockId" placeholder="차단할 사용자 아이디"/>
                                     </div>
                                     <div className="col-4">
-                                        <button type="submit" className="btn btn-primary mb-3"  style={{backgroundColor: '#188ACC'}}>차단하기</button>
+                                        <button type="submit" className={`btn btn-primary mb-3`} >차단하기</button>
                                     </div>
                                 </form>
                             </div>

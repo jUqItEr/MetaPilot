@@ -2,7 +2,7 @@ import Head from "next/head"
 import Image from 'next/image'
 import axios from 'axios'
 import styles from '../../styles/admin/layout/header.module.css'
-import logoImg from '../../image/profileEXImg.png'
+import logoImg from '../../public/image/profileEXImg.png'
 /**
  * Rendering the login page.
  *

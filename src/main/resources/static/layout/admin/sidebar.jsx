@@ -63,7 +63,6 @@ export default function AdminSidebar() {
                             <ul className={`${styles.btnToggleNav } list-unstyled fw-normal pb-1 small `} >
                                 <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">카테고리 관리</a></li>
                                 <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">댓글관리</a></li>
-                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">게시글 관리</a></li>
                                 <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">해시태그 일괄변경</a></li>
                             </ul>
                         </div>
@@ -71,13 +70,12 @@ export default function AdminSidebar() {
                     {/*구분선*/}
                     {/*<li className="border-top my-3"></li>*/}
                     <li className="mb-1">
-                        <button className={`${styles.btnToggle  }  btn d-inline-flex align-items-center rounded border-0 collapsed `} data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        <button className={`${styles.btnToggle}  btn d-inline-flex align-items-center rounded border-0 collapsed `} data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
                             내 블로그 통계
                         </button>
                         <div className="collapse" id="account-collapse">
                             <ul className={`${styles.btnToggleNav } list-unstyled fw-normal pb-1 small `}  >
-                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">접속 통계</a></li>
-                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">접속 유입</a></li>
+                                <li><a href="#" className="link-body-emphasis d-inline-flex text-decoration-none rounded">조회수</a></li>
                             </ul>
                         </div>
                     </li>

@@ -25,8 +25,8 @@ export function TopMenu() {
                 <a className='nav-link'>홈</a>
             </Link>
             {header?.map((menu) => (
-                <Link href='/category/[id]' as={`/category/${menu['id']}`} key={menu['id']}>
-                    <a className='nav-link'>{menu['subject']}</a>
+                <Link href='/category/[id]' as={`/category/${menu.id}`} key={menu.id}>
+                    <a className='nav-link'>{menu.subject}</a>
                 </Link>
             ))}
 
