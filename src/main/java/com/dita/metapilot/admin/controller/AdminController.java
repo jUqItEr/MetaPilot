@@ -1,8 +1,8 @@
 package com.dita.metapilot.admin.controller;
 
+import com.dita.metapilot.admin.dto.*;
 import com.dita.metapilot.admin.entity.CategoryEntity;
 import com.dita.metapilot.admin.service.AdminService;
-import com.dita.metapilot.admin.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import javax.validation.Valid;
  * */
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
     /**
@@ -50,9 +50,39 @@ public class AdminController {
      *      createdAt : 카테고리 작성일
      */
     @ResponseBody
-    @GetMapping("/api/list")
+    @GetMapping("/list")
     public ResponseEntity<?> list() {
         return ResponseEntity.ok(adminService.categoryView());
+    }
+
+
+
+    /**
+     * <p>삭제된 게시글을 list하는 기능입니다.</p>
+     *
+     * @since 2023. 12. 07.
+     *
+     * @return ResponseEntity
+     */
+    @ResponseBody
+    @PostMapping("/postDeletedList")
+    public ResponseEntity<?> postDeletedView(PostDeletedDto postDeletedDto) {
+        return ResponseEntity.ok(adminService.postDeletedView(postDeletedDto));
+    }
+
+
+
+    /**
+     * <p>특정 id의 댓글을 list하는 기능입니다.</p>
+     *
+     * @since 2023. 12. 08.
+     *
+     * @return ResponseEntity
+     */
+    @ResponseBody
+    @PostMapping("/commentList")
+    public ResponseEntity<?> commentView(CommentDto commentDto) {
+        return ResponseEntity.ok(adminService.commentView(commentDto));
     }
 
 
@@ -74,7 +104,7 @@ public class AdminController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/api/createCategory")
+    @PostMapping("/createCategory")
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.createCategory(categoryDto));
     }
@@ -90,9 +120,9 @@ public class AdminController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/api/createCategoryLine")
-    public ResponseEntity<?> createCategoryLine(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
-        return ResponseEntity.ok(adminService.createCategoryLine(categoryDto));
+    @PostMapping("/createCategoryLine")
+    public ResponseEntity<?> createCategoryLine(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.createCategoryLine(categoryUpDownDto));
     }
 
 
@@ -107,9 +137,56 @@ public class AdminController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/api/deleteCategory")
+    @PostMapping("/deleteCategory")
     public ResponseEntity<?> deleteCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.deleteCategory(categoryDto));
+    }
+
+
+
+    /**
+     * <p>부모 카테고리와 해당 카테고리의 자식들까지 전부 삭제</p>
+     * @since 2023. 12. 08.
+     *
+     * @param categoryDto
+     */
+    @ResponseBody
+    @PostMapping("/deleteCategoryRef")
+    public ResponseEntity<?> deleteCategoryRef(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.deleteCategoryRef(categoryDto));
+    }
+
+
+
+    /**
+     * <p>게시글 삭제</p>
+     * @since 2023. 12. 08.
+     *
+     * @param postDto
+     *
+     *      id : 카테고리의 id. 이 값과 일치하는 카테고리를 삭제.
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    @ResponseBody
+    @PostMapping("/deletePost")
+    public ResponseEntity<?> deletePost(@Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.deletePost(postDto));
+    }
+
+
+
+    /**
+     * <p>댓글 삭제</p>
+     * @since 2023. 12. 08.
+     *
+     * @param commentDto
+     *
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    @ResponseBody
+    @PostMapping("/deleteComment")
+    public ResponseEntity<?> deleteComment(@Valid @RequestBody CommentDto commentDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.deleteComment(commentDto));
     }
 
 
@@ -131,9 +208,65 @@ public class AdminController {
      * @since 2023. 11. 30.
      */
     @ResponseBody
-    @PostMapping("/api/updateCategory")
+    @PostMapping("/updateCategory")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.updateCategory(categoryDto));
+    }
+
+
+
+    /**
+     * <p>카테고리 한 칸 위로</p>
+     *
+     * @param categoryUpDownDto
+     * @since 2023. 12. 07.
+     */
+    @ResponseBody
+    @PostMapping("/updateCategoryUp")
+    public ResponseEntity<?> updateCategoryUp(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.updateCategoryUp(categoryUpDownDto));
+    }
+
+
+
+    /**
+     * <p>카테고리 한 칸 밑으로</p>
+     *
+     * @param categoryUpDownDto
+     * @since 2023. 12. 07.
+     */
+    @ResponseBody
+    @PostMapping("/updateCategoryDown")
+    public ResponseEntity<?> updateCategoryDown(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.updateCategoryDown(categoryUpDownDto));
+    }
+
+
+
+    /**
+     * <p>카테고리 제일 위로</p>
+     *
+     * @param categoryUpDownDto
+     * @since 2023. 12. 10.
+     */
+    @ResponseBody
+    @PostMapping("/updateCategoryTop")
+    public ResponseEntity<?> updateCategoryTop(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.updateCategoryTop(categoryUpDownDto));
+    }
+
+
+
+    /**
+     * <p>카테고리 제일 아래로</p>
+     *
+     * @param categoryUpDownDto
+     * @since 2023. 12. 10.
+     */
+    @ResponseBody
+    @PostMapping("/updateCategoryBottom")
+    public ResponseEntity<?> updateCategoryBottom(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.updateCategoryBottom(categoryUpDownDto));
     }
 
 
@@ -146,7 +279,7 @@ public class AdminController {
      * @return ResponseEntity
      */
     @ResponseBody
-    @GetMapping("/api/categoryHeader")
+    @GetMapping("/categoryHeader")
     public ResponseEntity<?> categoryHeader() {
         return ResponseEntity.ok(adminService.categoryHeader());
     }

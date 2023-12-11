@@ -1,0 +1,54 @@
+.wrap {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+.content {
+    width: 100%;
+    overflow-x: hidden;
+    padding: 20px;
+}
+.pageTitle {
+    padding: 10px 20px;
+    /*width: calc(40% + 200px);*/
+    width: 800px;
+    border-bottom: 1px solid darkgray;
+}
+.pageContent {
+    width: 800px;
+    height: 80%;
+    padding: 20px;
+}
+.pageTitleFont {
+    font-size: 24px;
+}
+.listField{
+    width: 50%;
+}
+.btnField{
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+}
+.btn{
+    border-radius: 5%;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 15px;
+    color: #188ACC;
+    border:1px solid #188ACC;
+    background-color: white;
+}
+.btn:hover{
+    padding: 3px 15px;
+    border:2px solid #188ACC;
+    color: white;
+    background-color: #188ACC;
+ }
+.setField{
+    width:100%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}

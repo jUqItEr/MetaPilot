@@ -23,7 +23,7 @@ const IndexHeader = () => {
     
     return (
         <>
-            <header className='navbar navbar-expand-lg bg-light border-bottom'>
+            <header className='navbar navbar-expand-lg border-bottom'>
                 <div className='container-fluid'>
                     <Link href='/'>
                         <a className='navbar-brand'>{info['title']}</a>
@@ -44,7 +44,6 @@ const IndexHeader = () => {
                 <h1>한글 테스트</h1>
                 <ThemeSwitcher />
             </nav>
-            
         </>
     )
 }

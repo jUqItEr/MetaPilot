@@ -26,6 +26,32 @@
         <result property="createdAt" column="created_at"></result>
     </resultMap>
 
+    <resultMap id="postEntity" type="com.dita.metapilot.admin.entity.PostEntity">
+        <result property="id" column="id"></result>
+        <result property="categoryTblId" column="category_tbl_ref_id"></result>
+        <result property="userTblId" column="user_tbl_id"></result>
+        <result property="subject" column="subject"></result>
+        <result property="content" column="content"></result>
+        <result property="count" column="count"></result>
+        <result property="notice" column="notice"></result>
+        <result property="deleted" column="deleted"></result>
+        <result property="type" column="type"></result>
+        <result property="createdAt" column="created_at"></result>
+    </resultMap>
+
+    <resultMap id="commentEntity" type="com.dita.metapilot.admin.entity.CommentEntity">
+        <result property="id" column="id"></result>
+        <result property="postTblId" column="post_tbl_id"></result>
+        <result property="commentTblRefId" column="comment_tbl_ref_id"></result>
+        <result property="commentTblRootId" column="comment_tbl_root_id"></result>
+        <result property="userTblId" column="user_tbl_id"></result>
+        <result property="content" column="content"></result>
+        <result property="depth" column="depth"></result>
+        <result property="pos" column="pos"></result>
+        <result property="visible" column="visible"></result>
+        <result property="createdAt" column="created_at"></result>
+    </resultMap>
+
     <!-- Block User. -->
     <insert id="blockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
         <![CDATA[
@@ -40,40 +66,71 @@
     <!-- 카테고리 목록 list -->
     <select id="categoryView" resultMap="categoryEntity">
         select
-            id, category_tbl_ref_id, subject, depth, pos, type, visible, fold, count_visible, list_visible, list_count, created_at
+        id, category_tbl_ref_id, subject, depth, pos, type, visible, fold, count_visible, list_visible, list_count, created_at
         from
-            category_tbl
+        category_tbl
         order by
-            pos asc
+        pos asc
+    </select>
+
+    <!-- 삭제된 게시글 목록 list -->
+    <select id="postDeletedView" resultMap="postEntity">
+        <![CDATA[
+            set @userId = #{userTblId};
+
+            select id, category_tbl_id, user_tbl_id, subject, content, count, notice, deleted, type, created_at
+            from post_tbl
+            where user_tbl_id = @userId and deleted = 1
+            order by created_at desc;
+        ]]>
+    </select>
+
+    <!-- 댓글 list -->
+    <select id="commentView" resultMap="commentEntity">
+        <![CDATA[
+            set @id = #{id};
+
+            select id, post_tbl_id, comment_tbl_ref_id, comment_tbl_root_id, user_tbl_id, content, depth, pos, visible, created_at
+            from comment_tbl
+            where id = @id
+            order by created_at desc;
+        ]]>
     </select>
 
     <!-- 카테고리 생성 -->
     <insert id="createCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
         <![CDATA[
             set @id = #{id};
-            set @inputType = #{type};
-            set @maxPos = if(@id=1, (SELECT COALESCE(MAX(pos), 0) FROM category_tbl)
-            ,(SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id));
-            set @refId = (SELECT category_tbl_ref_id FROM category_tbl where id = @id);
-            set @type = (SELECT type FROM category_tbl where id = @id);
-            set @depth = (SELECT depth FROM category_tbl where id = @id);
+            set @refId = (select category_tbl_ref_id from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
+            set @depth = (select depth from category_tbl where id = @id);
 
-            set @gain = if(@depth = 1, 0, 1);
-            set @setDepth = if(@id = 1 or @refId = 1, 0, 1);
+            set @topPos = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
 
-            set @maxPos = if(@type = 0, (SELECT pos from category_tbl where id = @id), @maxPos);
+            set @setPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl) + 1;
+            set @setDepth = 0;
+
+            set @logic = if(@id = 1, 1, 0);
+
+            set @logic = if(@id != 1 and @depth = 0 and @topPos = 0, 2, @logic);
+
+            set @logic = if(@id != 1 and @depth = 0 and @topPos != 0, 3, @logic);
+            set @setPos = if(@logic = 3, @bottomPos + 1, @setPos);
+
+            set @logic = if(@depth = 1, 4, @logic);
+            set @setPos = if(@logic = 2 or @logic = 4, @pos + 1, @setPos);
+
+            set @setDepth = if(@logic != 1, 1, @setDepth);
+
+            set @id = if(@logic = 4, @refId, @id);
 
             update category_tbl
-            set pos = pos + @gain
-            where (pos > @maxPos);
-
-            set @refId = if(@type = 0, @refId, @id);
-            set @setDepth = if(@refId = 1, 0, 1);
-            set @type = @inputType;
+            set pos = pos + 1
+            where pos >= @setPos;
 
             insert into category_tbl
-            select null, @refId, #{subject}, @setDepth, @maxPos+1, @type, #{visible}, #{fold}, #{countVisible}, #{listVisible}, #{listCount}, now()
-            where @depth !=1;
+            select null, @id, #{subject}, @setDepth, @setPos, #{type}, #{visible}, #{fold}, #{countVisible}, #{listVisible}, #{listCount}, now();
         ]]>
     </insert>
 
@@ -81,42 +138,96 @@
     <insert id="createCategoryLine" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
         <![CDATA[
             set @id = #{id};
-            set @refId = if(@id = 1, 1, (select category_tbl_ref_id from category_tbl where id = @id));
+            set @refId = (select category_tbl_ref_id from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
             set @depth = (select depth from category_tbl where id = @id);
-            set @maxPos = if(@id = 1, (SELECT COALESCE(MAX(pos), 0) FROM category_tbl), (select pos from category_tbl where id = @id));
+            set @type = (select type from category_tbl where id = @id);
 
-            set @setDepth = if(@id != 1 and @depth = 0, 1, @depth);
-            set @refId = if(@id != 1 and @depth = 0, @id, @refId);
-            set @maxPos = if(@id != 1 and @depth = 0, (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id), @maxPos);
+            set @topPos = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
 
-            select subject, @id, @refId, @depth, @setDepth, @maxPos
-            from category_tbl
-            where id = @id;
+            set @setPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl) + 1;
+            set @setDepth = 1;
+
+            set @logic = if(@id = 1, 1, 0);
+
+            set @logic = if(@id != 1 and @depth = 0 and @topPos = 0, 2, @logic);
+
+            set @logic = if(@id != 1 and @depth = 0 and @topPos != 0, 3, @logic);
+            set @setPos = if(@logic = 3, @bottomPos + 1, @setPos);
+
+            set @logic = if(@depth = 1, 4, @logic);
+            set @setPos = if(@logic = 2 or @logic = 4, @pos + 1, @setPos);
+
+            set @logic = if(@refId = 1 and @depth = 0 and @type = 0, 5, @logic);
+
+            set @setDepth = if(@logic = 1 or @logic = 5, 0, @setDepth);
+
+            set @id = if(@logic = 4 or @logic = 5, @refId, @id);
 
             update category_tbl
             set pos = pos + 1
-            where (pos > @maxPos);
+            where pos >= @setPos;
 
             insert into category_tbl
-            select null, @refId, '-----', @setDepth, @maxPos+1, 0, 0, 0, 0, 0, 0, now();
+            select null, @id, '-----', @setDepth, @setPos, 0, 0, 0, 0, 0, 0, now();
         ]]>
     </insert>
 
     <!-- 카테고리 삭제 -->
     <delete id="deleteCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
-        SET @target_pos = (SELECT pos FROM category_tbl WHERE id = #{id});
+        <![CDATA[
+            set @id = #{id};
 
-        UPDATE
-            category_tbl
-        SET
-            pos = pos - 1
-        WHERE
-            pos > @target_pos;
+            set @depth = (select depth from category_tbl where id = @id);
+            set @type = (select type from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
 
-        DELETE FROM
-            category_tbl
-        WHERE
-            id = #{id};
+            set @logic = if(@depth = 0 and @bottomPos != 0, 1, 0);
+
+            UPDATE category_tbl
+            SET pos = pos - 1
+            WHERE pos > @pos;
+
+            DELETE FROM category_tbl
+            WHERE id = @id;
+
+            update category_tbl
+            set depth = if(@logic = 1, 0, depth)
+            where category_tbl_ref_id = @id;
+
+            update category_tbl
+            set category_tbl_ref_id = if(@logic = 1, 1, category_tbl_ref_id)
+            where category_tbl_ref_id = @id;
+        ]]>
+    </delete>
+
+    <!-- 부모 카테고리와 해당 카테고리의 자식들까지 전부 삭제 -->
+    <delete id="deleteCategoryRef" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
+        <![CDATA[
+            set @id = #{id};
+
+            set @depth = (select depth from category_tbl where id = @id);
+            set @type = (select type from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+
+            set @changePos = (select pos
+            from (select * from category_tbl where category_tbl_ref_id = 1) as t
+            where pos > @pos
+            order by pos
+            limit 1);
+
+            set @difPos = @changePos - @pos;
+
+            delete from category_tbl
+            where pos >= @pos and pos <= 8;
+
+            update category_tbl
+            set pos = pos - @difPos
+            where pos > @pos;
+        ]]>
     </delete>
 
     <!-- Delete comment. -->
@@ -155,51 +266,289 @@
     </update>
 
     <!-- 선택한 카테고리 한 칸 올리기 -->
-    <update id="updateCategoryUp" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
-        UPDATE
-        category_tbl
-        SET
-        pos = #{pos}+100
-        WHERE
-        pos = #{pos}-1;
+    <update id="updateCategoryUp" parameterType="com.dita.metapilot.admin.dto.CategoryUpDownDto">
+        <![CDATA[
+            set @id = #{id};
+            set @refId = (select category_tbl_ref_id from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
+            set @depth = (select depth from category_tbl where id = @id);
 
-        UPDATE
-        category_tbl
-        SET
-        pos = #{pos}-1
-        WHERE
-        pos = #{pos};
+            set @topPos = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
 
-        UPDATE
-        category_tbl
-        SET
-        pos = #{pos}
-        WHERE
-        pos = #{pos}+100;
+            set @changePos = (select pos
+            from (select * from category_tbl where category_tbl_ref_id = 1) as t
+            where pos < @pos
+            order by pos DESC
+            limit 1);
+
+            set @difPos = @pos - @changePos;
+
+            set @changeId = (select id
+            from (select * from category_tbl where category_tbl_ref_id = 1) as t
+            where pos < @pos
+            order by pos DESC
+            limit 1);
+
+            set @topPos2 = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @changeId);
+            set @bottomPos2 = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @changeId);
+
+            set @difPos2 = @bottomPos - @pos + 1;
+
+            set @logic = if(@pos = 2, 1, 0);
+            set @logic = if(@depth = 0 and @topPos = 0 and @topPos2 = 0, 2, @logic);
+            set @logic = if(@depth = 0 and @topPos != 0 and @topPos2 = 0 and @pos != 2, 3, @logic);
+            set @logic = if(@depth = 0 and @topPos != 0 and @topPos2 != 0, 4, @logic);
+            set @logic = if(@depth = 0 and @topPos = 0 and @topPos2 != 0, 5, @logic);
+            set @logic = if(@depth = 1 and @difPos = 1, 6, @logic);
+            set @logic = if(@depth = 1 and @difPos != 1, 7, @logic);
+
+            update category_tbl
+            set pos = if(@logic = 7, pos + 1, pos)
+            where pos = @pos - 1;
+
+            update category_tbl
+            set pos = if(@logic = 7, pos - 1, pos)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 6, @changePos, pos)
+            where id = @id;
+
+            update category_tbl
+            set category_tbl_ref_id = if(@logic = 6, 1, category_tbl_ref_id)
+            where id = @id;
+
+            update category_tbl
+            set depth = if(@logic = 6, 0, depth)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 6, @pos, pos)
+            where id = @changeId;
+
+            update category_tbl
+            set category_tbl_ref_id = if(@logic = 5, @changeId, category_tbl_ref_id)
+            where id = @id;
+
+            update category_tbl
+            set depth = if(@logic = 5, 1, depth)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 4, pos - @difPos, pos)
+            where id = @id or category_tbl_ref_id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 4, pos + @difPos2, pos)
+            where id = @changeId or category_tbl_ref_id = @changeId;
+
+            update category_tbl
+            set pos = if(@logic = 3, pos - 1, pos)
+            where pos >= @pos and pos <= @bottomPos;
+
+            update category_tbl
+            set pos = if(@logic = 3, @bottomPos, pos)
+            where id = @changeId;
+
+            update category_tbl
+            set pos = if(@logic = 2, pos - 1, pos)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 2, @pos, pos)
+            where id = @changeId;
+        ]]>
     </update>
 
     <!-- 선택한 카테고리 한 칸 내리기 -->
-    <update id="updateCategoryDown" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
-        UPDATE
-        category_tbl
-        SET
-        pos = #{pos}+100
-        WHERE
-        pos = #{pos}+1;
+    <update id="updateCategoryDown" parameterType="com.dita.metapilot.admin.dto.CategoryUpDownDto">
+        <![CDATA[
+            set @id = #{id};
+            set @refId = (select category_tbl_ref_id from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
+            set @depth = (select depth from category_tbl where id = @id);
 
-        UPDATE
-        category_tbl
-        SET
-        pos = #{pos}+1
-        WHERE
-        pos = #{pos};
+            set @topPos = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
 
-        UPDATE
-        category_tbl
-        SET
-        pos = #{pos}
-        WHERE
-        pos = #{pos}+100;
+            set @changePos = (select pos
+            from (select * from category_tbl where category_tbl_ref_id = 1) as t
+            where pos > @pos
+            order by pos
+            limit 1);
+
+            set @difPos = @changePos - @pos;
+
+            set @changeId = (select id
+            from (select * from category_tbl where category_tbl_ref_id = 1) as t
+            where pos > @pos
+            order by pos
+            limit 1);
+
+            set @topPos2 = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @changeId);
+            set @bottomPos2 = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @changeId);
+
+            set @difPos2 = @bottomPos2 - @changePos + 1;
+
+            set @lastPos = if(@depth = 0, (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where depth = 0)
+            , (SELECT COALESCE(MAX(pos), 0) FROM category_tbl));
+
+            set @logic = if(@pos = @lastPos, 1, 0);
+            set @logic = if(@depth = 0 and @topPos = 0 and @topPos2 = 0 and @pos != @lastPos, 2, @logic);
+            set @logic = if(@depth = 0 and @topPos != 0 and @topPos2 = 0 and @pos != @lastPos, 3, @logic);
+            set @logic = if(@depth = 0 and @topPos != 0 and @topPos2 != 0, 4, @logic);
+            set @logic = if(@depth = 0 and @topPos = 0 and @topPos2 != 0, 5, @logic);
+            set @logic = if(@depth = 1 and @difPos != 1, 7, @logic);
+            set @logic = if(@depth = 1 and (@difPos = 1 or @pos = @lastPos), 6, @logic);
+
+            update category_tbl
+            set category_tbl_ref_id = if(@logic = 6, 1, category_tbl_ref_id)
+            where id = @id;
+
+            update category_tbl
+            set depth = if(@logic = 6, 0, depth)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 7, pos - 1, pos)
+            where pos = @pos + 1;
+
+            update category_tbl
+            set pos = if(@logic = 7, pos + 1, pos)
+            where id = @id;
+
+            update category_tbl
+            set category_tbl_ref_id = if(@logic = 5, @changeId, category_tbl_ref_id)
+            where id = @id;
+
+            update category_tbl
+            set depth = if(@logic = 5, 1, depth)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 5, pos + 1, pos)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 5, pos - 1, pos)
+            where id = @changeId;
+
+            update category_tbl
+            set pos = if(@logic = 4, pos + @difPos2, pos)
+            where id = @id or category_tbl_ref_id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 4, pos - @difPos, pos)
+            where id = @changeId or category_tbl_ref_id = @changeId;
+
+            update category_tbl
+            set pos = if(@logic = 3, pos + 1, pos)
+            where pos >= @pos and pos <= @bottomPos;
+
+            update category_tbl
+            set pos = if(@logic = 3, @pos, pos)
+            where id = @changeId;
+
+            update category_tbl
+            set pos = if(@logic = 2, pos + 1, pos)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 2, @pos, pos)
+            where id = @changeId;
+        ]]>
+    </update>
+
+    <!-- 선택한 카테고리 제일 위로 -->
+    <update id="updateCategoryTop" parameterType="com.dita.metapilot.admin.dto.CategoryUpDownDto">
+        <![CDATA[
+            set @id = #{id};
+            set @refId = (select category_tbl_ref_id from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
+            set @depth = (select depth from category_tbl where id = @id);
+
+            set @topPos = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+
+            set @difPos = @pos - 2;
+            set @length = @bottomPos - @pos + 1;
+
+            set @logic = if(@pos = 2, 1, 0);
+            set @logic = if(@depth = 0 and @topPos = 0 and @pos != 2, 2, @logic);
+            set @logic = if(@depth = 1, 3, @logic);
+            set @logic = if(@depth = 0 and @topPos != 0, 4, @logic);
+
+            update category_tbl
+            set pos = if(@logic = 4, pos + @length, pos)
+            where pos < @pos and pos != 1;
+
+            update category_tbl
+            set pos = if(@logic = 4, pos - @difPos, pos)
+            where id = @id or category_tbl_ref_id = @id;
+
+            update category_tbl
+            set depth = if(@logic = 3, 0, depth)
+            where id = @id;
+
+            update category_tbl
+            set category_tbl_ref_id = if(@logic = 3, 1, category_tbl_ref_id)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 2 or @logic = 3, pos + 1, pos)
+            where pos < @pos and pos != 1;
+
+            update category_tbl
+            set pos = if(@logic = 2 or @logic = 3, 2, pos)
+            where id = @id;
+        ]]>
+    </update>
+
+    <!-- 선택한 카테고리 제일 아래로 -->
+    <update id="updateCategoryBottom" parameterType="com.dita.metapilot.admin.dto.CategoryUpDownDto">
+        <![CDATA[
+            set @id = #{id};
+            set @refId = (select category_tbl_ref_id from category_tbl where id = @id);
+            set @pos = (select pos from category_tbl where id = @id);
+            set @depth = (select depth from category_tbl where id = @id);
+
+            set @topPos = (SELECT COALESCE(MIN(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+            set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
+
+            set @length = @bottomPos - @pos + 1;
+            set @lastPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl);
+            set @difPos = @lastPos - @bottomPos;
+
+            set @logic = if(@pos = @lastPos, 1, 0);
+            set @logic = if(@depth = 0 and @topPos = 0 and @pos != @lastPos, 2, @logic);
+            set @logic = if(@depth = 1, 3, @logic);
+            set @logic = if(@depth = 0 and @topPos != 0, 4, @logic);
+
+            update category_tbl
+            set pos = if(@logic = 4, pos - @length, pos)
+            where pos > @bottomPos;
+
+            update category_tbl
+            set pos = if(@logic = 4, pos + @difPos, pos)
+            where id = @id or category_tbl_ref_id = @id;
+
+            update category_tbl
+            set depth = if(@logic = 3, 0, depth)
+            where id = @id;
+
+            update category_tbl
+            set category_tbl_ref_id = if(@logic = 3, 1, category_tbl_ref_id)
+            where id = @id;
+
+            update category_tbl
+            set pos = if(@logic = 2 or @logic = 3, pos - 1, pos)
+            where pos > @pos;
+
+            update category_tbl
+            set pos = if(@logic = 2 or @logic = 3, @lastPos, pos)
+            where id = @id;
+        ]]>
     </update>
 
     <!-- 카테고리 헤더 list -->

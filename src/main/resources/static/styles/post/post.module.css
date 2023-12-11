@@ -1,0 +1,249 @@
+/* --------------header---------------- */
+.headerComponent {
+    height: 250px;
+    position: relative;
+    border: 1px solid black;
+}
+
+.headerCompoCate {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.headerCompoTitle {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+}
+
+.headerPostList {
+    display: flex;
+    justify-content: space-between;
+}
+
+.headerSubList {
+    display: flex;
+}
+
+.headerProfile {
+    display: flex;
+    position: absolute;
+    left: 5%;
+    bottom: 10%;
+}
+
+.headerProfileName {
+    margin: 0 10px;
+}
+
+.headerSubDropdown {
+    position: absolute;
+    right: 5%;
+    bottom: 10%;
+}
+/* --------------footer---------------- */
+.mainContainer {
+    width: 100%;
+    height: 500px;
+    border: 1px solid black;
+}
+
+.footerContainer {
+    border: 1px solid black;
+    height: 1000px;
+}
+.footerBtnContainer {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    margin-top: 30px;
+    width: 90%;
+}
+
+.hashtagBox {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    margin-top: 30px;
+    width: 90%;
+
+}
+
+.hashtag {
+    padding: 2px 9px;
+    background-color: var(--bs-secondary-bg-subtle);
+    border-radius: 10%;
+    margin: 0 2px;
+}
+
+.footerBtnList {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footerLikeComment {
+
+    display: flex;
+}
+
+.footerLikesBox {
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--bs-gray-100);
+}
+
+.likeButton {
+    border: none;
+    background-color: var(--bs-gray-100);
+}
+
+  .likeIcon {
+    color: var(--bs-red);
+    margin-right: 5px;
+  }
+
+  .likeCount {
+    margin-right: 5px;
+  }
+
+  .dropdownArrow {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .likesWrap {
+    margin: 0 auto;
+    border: 1px solid black;
+    width: 90%;
+    padding: 20px;
+  }
+
+  .likesContent{
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+  }
+
+  .likesBloger {
+    color: red;
+    height: 10%;
+  }
+
+  .likesList {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 이미지와 텍스트 사이의 간격 */
+    width: 272px;
+  }
+
+  .likesUserImage {
+    border-radius: 50%;
+  }
+
+  .likesUsername {
+    margin: auto 0;
+  }
+
+  .likesPageButtons {
+    text-align: center;
+  }
+
+  .likesButton {
+    width: 20px;       /* 버튼의 너비 */
+    height: 20px;      /* 버튼의 높이 */
+    padding: 5px;      /* 버튼 내부의 여백 */
+    display: flex;
+    align-items: center; /* 세로 축에서 중앙 정렬 */
+  }
+
+  .faChevronLeft, .faChevronRight {
+    font-size: 10px;  
+  } 
+
+  .commentsWrap {
+    padding-left: 20px;
+    margin-top: 10px;
+  }
+
+  .comment {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+  }
+
+  .reply {
+    border-left: 2px solid #eee;
+    margin-left: 20px;
+    padding: 4px 0;
+  }
+
+  .commentDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  .footerLinkList {
+    display: flex;
+  }
+
+  .footerAdList {
+    border: 1px solid black;
+    width: 90%;
+    height: 300px;
+    margin: 0 auto;
+    margin-top: 50px;
+  }
+
+  .footerAdContent {
+    margin: 0 auto;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .footerAdDivisor {
+    margin: 0 auto;
+    width: 95%;
+  }
+
+  .storeList {
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 95%;
+    list-style: none;
+    padding: 0;
+  }
+
+  .storeItem {
+    margin-top: 10px;
+  }
+
+  .storeLink {
+    color: var(--bs-blue);
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .storeDescription {
+    color: #333;
+    font-size: 0.9em;
+  }
+
+  .payButton {
+    margin-left: 5px;
+    background-color: var(--bs-teal);
+    color: white;
+    border: none;
+    padding: 2px 5px;
+    font-size: 0.7em;
+    cursor: pointer;
+  }

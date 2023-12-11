@@ -20,7 +20,7 @@ const MyApp = ({ Component, pageProps }) => {
             <Head>
                 <link rel='shortcut icon' href='/favicon.ico' />
             </Head>
-            <ThemeProvider enableSystem={false}>
+            <ThemeProvider enableSystem={false} attribute='data-bs-theme'>
                 <Component { ...pageProps } />
             </ThemeProvider>
         </>

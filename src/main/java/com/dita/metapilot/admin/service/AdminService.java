@@ -1,8 +1,10 @@
 package com.dita.metapilot.admin.service;
 
+import com.dita.metapilot.admin.dto.*;
+import com.dita.metapilot.admin.entity.CommentEntity;
+import com.dita.metapilot.admin.entity.PostEntity;
 import com.dita.metapilot.admin.repository.AdminRepository;
 import com.dita.metapilot.admin.entity.CategoryEntity;
-import com.dita.metapilot.admin.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +35,23 @@ public class AdminService {
         return adminRepository.categoryView();
     }
 
+    /**
+     * <p>삭제된 게시글을 List하는 기능</p>
+     * @since 2023. 11. 28.
+     * @return 삭제된 게시글을 List에 담습니다.
+     */
+    public List<PostEntity> postDeletedView(PostDeletedDto postDeletedDto) {
+        return adminRepository.postDeletedView(postDeletedDto);
+    }
 
+    /**
+     * <p>댓글을 List하는 기능</p>
+     * @since 2023. 11. 28.
+     * @return 특정 id의 댓글을 List에 담습니다.
+     */
+    public List<CommentEntity> commentView(CommentDto commentDto) {
+        return adminRepository.commentView(commentDto);
+    }
 
     /**
      * <p>카테고리 생성</p>
@@ -51,12 +69,12 @@ public class AdminService {
     /**
      * <p>카테고리 구분선 생성</p>
      * @since 2023. 11. 29.
-     * @param categoryDto 카테고리 데이터를 전송하는 객체
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
-    public CategoryDto createCategoryLine(CategoryDto categoryDto) {
-        adminRepository.createCategoryLine(categoryDto);
-        return categoryDto;
+    public CategoryUpDownDto createCategoryLine(CategoryUpDownDto categoryUpDownDto) {
+        adminRepository.createCategoryLine(categoryUpDownDto);
+        return categoryUpDownDto;
     }
 
 
@@ -75,6 +93,47 @@ public class AdminService {
 
 
     /**
+     * <p>부모 카테고리와 해당 카테고리의 자식들까지 전부 삭제</p>
+     * @since 2023. 12. 08.
+     * @param categoryDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CategoryDto deleteCategoryRef(CategoryDto categoryDto) {
+        adminRepository.deleteCategoryRef(categoryDto);
+        return categoryDto;
+    }
+
+
+
+    /**
+     * <p>게시글 삭제</p>
+     * @since 2023. 12. 08.
+     * @param postDto 게시글 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public PostDto deletePost(PostDto postDto) {
+        adminRepository.deletePost(postDto);
+        return postDto;
+    }
+
+
+
+    /**
+     * <p>댓글 삭제</p>
+     * @since 2023. 12. 08.
+     * @param commentDto 댓글 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CommentDto deleteComment(CommentDto commentDto) {
+        adminRepository.deleteComment(commentDto);
+        return commentDto;
+    }
+
+
+
+
+
+    /**
      * <p>카테고리 수정</p>
      * @since 2023. 11. 30.
      * @param categoryDto 카테고리 데이터를 전송하는 객체
@@ -83,6 +142,58 @@ public class AdminService {
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         adminRepository.updateCategory(categoryDto);
         return categoryDto;
+    }
+
+
+
+    /**
+     * <p>카테고리 한 칸 위로</p>
+     * @since 2023. 12. 07.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CategoryUpDownDto updateCategoryUp(CategoryUpDownDto categoryUpDownDto) {
+        adminRepository.updateCategoryUp(categoryUpDownDto);
+        return categoryUpDownDto;
+    }
+
+
+
+    /**
+     * <p>카테고리 한 칸 밑으로</p>
+     * @since 2023. 12. 07.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CategoryUpDownDto updateCategoryDown(CategoryUpDownDto categoryUpDownDto) {
+        adminRepository.updateCategoryDown(categoryUpDownDto);
+        return categoryUpDownDto;
+    }
+
+
+
+    /**
+     * <p>카테고리 제일 위로</p>
+     * @since 2023. 12. 10.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CategoryUpDownDto updateCategoryTop(CategoryUpDownDto categoryUpDownDto) {
+        adminRepository.updateCategoryTop(categoryUpDownDto);
+        return categoryUpDownDto;
+    }
+
+
+
+    /**
+     * <p>카테고리 제일 아래로</p>
+     * @since 2023. 12. 10.
+     * @param categoryUpDownDto 카테고리 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public CategoryUpDownDto updateCategoryBottom(CategoryUpDownDto categoryUpDownDto) {
+        adminRepository.updateCategoryBottom(categoryUpDownDto);
+        return categoryUpDownDto;
     }
 
 
