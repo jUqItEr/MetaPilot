@@ -8,7 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import $ from 'jquery'
 
 import styles from "/styles/post/post.module.css";
-import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faL } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import PostHeader from "../../../components/post/header";
 
 
 
@@ -117,35 +118,12 @@ const PostPage = () => {
             </Head>
             <div className="wrap">
                 <div className="container">
-                    <header className="headerContainer">
-                        <div className={styles.headerPostList}>
-                            <div className="headerCate">
-                                <Link href="">
-                                    <a>
-                                        게임
-                                    </a>
-                                </Link>
-                            </div>
-                            <div className="headerList">목록열기</div>
-                        </div>
-                        <div className={styles.headerComponent}>
-                            <div className={styles.headerCompoCate}>뷰티.헤어</div>
-                            <div className={styles.headerCompoTitle}>제목이에요</div>
-                            <div className={styles.headerSubList}>
-                                <div className={styles.headerProfile}>
-                                    <div className="headerProfilePhoto">프로필사진</div>
-                                    <div className={styles.headerProfileName}>효앤민</div>
-                                    <div className="headerProfileTime">2시간전</div>
-                                </div>
-                                <div className={styles.headerSubDropdown}>
-                                    <div>목록</div>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
+                    <PostHeader/>
+
                     <main className={styles.mainContainer}>
 
                     </main>
+
                     <footer className={styles.footerContainer}>
                         <div className={styles.hashtagBox}>
                             <div>
@@ -164,11 +142,12 @@ const PostPage = () => {
                                             <span className={styles.likeIcon}>{postLiked ? '❤️' : '🤍'}</span>
                                             <span className={styles.likeCount}>{postLikes} 공감해요</span>
                                         </button>
-                                        <button className={styles.faChevronButton} onClick={toggleFaChevron}>
-                                            <span className={styles.faChevronIcon}>
-                                                {faChevron ? <FontAwesomeIcon icon={ faChevronUp } size="1x"/> : <FontAwesomeIcon icon={ faChevronDown } size="1x"/>}
+                                        
+                                        <button className={`${styles.faChevronButton} btn btn-Light`} onClick={toggleFaChevron}>
+                                            <span className={styles.faChevronIcon}>{faChevron ? 
+                                                <FontAwesomeIcon icon={ faChevronUp } size="2x"/> : 
+                                                <FontAwesomeIcon icon={ faChevronDown } size="2x"/>}
                                             </span>
-                                            <FontAwesomeIcon icon={ faChevronUp } size="1x"/>
                                         </button>
 
                                     </div>
@@ -206,40 +185,13 @@ const PostPage = () => {
                                         </Link>
                                         <span className={styles.likesUsername}>유저닉네임</span>
                                     </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
-                                    <li className={styles.likesList}>
-                                        <Link href="/">
-                                            <a>
-                                                <Image className={styles.likesUserImage} src="/image/logo-kakao.png" alt="" width={20} height={20}/>
-                                            </a>
-                                        </Link>
-                                        <span className={styles.likesUsername}>유저닉네임</span>
-                                    </li>
                                 </ul>
                                 {/* 페이징 */}
-                                <div>
-                                    <button><FontAwesomeIcon icon={faChevronLeft}/>이전</button>
-                                    <button><FontAwesomeIcon icon={faChevronRight}/>다음</button>
+                                <div className={styles.likesPageButtons}>
+                                    <button className={`${styles.likesButton} btn btn-Light`}><FontAwesomeIcon icon={faChevronLeft}/></button>
+                                    <button className={`${styles.likesButton} btn btn-Light`}><FontAwesomeIcon icon={faChevronRight}/></button>
                                 </div>
                             </div>
-
-
-
                         </div>
 
                         {/* 댓글 목록 */}
@@ -301,7 +253,7 @@ const PostPage = () => {
                                         <a className={styles.storeLink}>진원씨_LOTTE ON</a>
                                     </Link>
                                     <button className={styles.payButton}>Pay</button>
-                                    <div class="storeDescription">
+                                    <div className={styles.storeDescription}>
                                         진원씨의 코딩실력을 판매합니다.
                                     </div>
                                 </li>
@@ -310,7 +262,7 @@ const PostPage = () => {
                                         <a className={styles.storeLink}>동의대 ON</a>
                                     </Link>
                                     <button className={styles.payButton}>Pay</button>
-                                    <div class="storeDescription">
+                                    <div className={styles.storeDescription}>
                                         그를 데리고 가고 싶다면 링크를 클릭!!
                                     </div>
                                 </li>
