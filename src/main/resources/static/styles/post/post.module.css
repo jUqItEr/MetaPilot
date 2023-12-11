@@ -122,7 +122,6 @@
     margin: 0 auto;
     border: 1px solid black;
     width: 90%;
-    height: 400px;
     padding: 20px;
   }
 
@@ -152,6 +151,22 @@
   .likesUsername {
     margin: auto 0;
   }
+
+  .likesPageButtons {
+    text-align: center;
+  }
+
+  .likesButton {
+    width: 20px;       /* 버튼의 너비 */
+    height: 20px;      /* 버튼의 높이 */
+    padding: 5px;      /* 버튼 내부의 여백 */
+    display: flex;
+    align-items: center; /* 세로 축에서 중앙 정렬 */
+  }
+
+  .faChevronLeft, .faChevronRight {
+    font-size: 10px;  
+  } 
 
   .commentsWrap {
     padding-left: 20px;
