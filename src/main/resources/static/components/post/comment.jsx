@@ -20,12 +20,19 @@ const CommentsList = ({ comments, formVisibility, toggleFormVisibility, toggleCo
                             </button>
                         </div>
                     </div>
-                    {formVisibility.comments?.[comment.id] && (
+                    {formVisibility === comment.id && (
                         <div className={styles.commentForm}>
                             {/* 폼 내용 또는 자식 컴포넌트 */}
-                            <strong>닉네임</strong> 답글
-                            <div class="input-group mb-3">
-                                <textarea type="text" className={styles.commentTextarea} placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"/>
+                            <div className={styles.commentHandlerForm}>
+                                <strong>닉네임</strong> 답글
+                                <div className={`${styles.commentInputGroup} input-group mb-3`}>
+                                    <textarea type="text" className={`${styles.commentTextarea} form-control`} />
+                                </div>
+                            </div>
+                            <div className={styles.editorForm}>  
+                                <div>
+
+                                </div>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button">Button</button>
                                 </div>
@@ -49,11 +56,23 @@ const CommentsList = ({ comments, formVisibility, toggleFormVisibility, toggleCo
                                     </button>
                                 </div>
                             </div>
-                            {formVisibility.replies?.[reply.id] && (
-                                <div className="reply-form">
-                                    답글의 답글 폼 내용
-                                    {/* 폼 내용 또는 자식 컴포넌트 */}
+                            {formVisibility === reply.id && (
+                                <div className={styles.replyForm}>
+                                    <div className={styles.commentHandlerForm}>
+                                    <strong>닉네임</strong> 답글
+                                    <div className={`${styles.commentInputGroup} input-group mb-3`}>
+                                        <textarea type="text" className={`${styles.commentTextarea} form-control`} />
+                                    </div>
                                 </div>
+                                <div className={styles.editorForm}>  
+                                    <div>
+
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button">Button</button>
+                                    </div>
+                                </div>
+                            </div>
                             )}
                         </div>
                     ))}

@@ -54,7 +54,6 @@
 
 .footerContainer {
     border: 1px solid black;
-    height: 1000px;
 }
 .footerBtnContainer {
     display: flex;
@@ -110,6 +109,44 @@
 
   .likeCount {
     margin-right: 5px;
+    color: black;
+  }
+
+  .commentForm {
+    margin-left: 20px;
+    border-left: 2px solid #eee;
+    padding: 4px 0;
+    width: 95%;
+    border: 1px solid black;
+  }
+
+  .commentHandlerForm {
+    margin: 0 auto;
+    width: 95%;
+    margin-top: 10px;
+  }
+
+  .replyForm {
+    border-left: 2px solid #eee;
+    padding: 4px 0;
+    width: 97%;
+    border: 1px solid black;
+  }
+
+  .commentInputGroup {
+    margin: 0 auto;
+  }
+
+  .commentTextarea {
+    height: 100px; /* 높이 설정 */
+    line-height: 100px; /* 내부 텍스트의 세로 정렬을 위해 */
+  }
+
+  .editorForm {
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
   }
 
   .dropdownArrow {
@@ -153,20 +190,31 @@
   }
 
   .likesPageButtons {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
   }
 
   .likesButton {
+    display: flex;
+    align-items: center; /* 세로 축에서 중앙 정렬 */
     width: 20px;       /* 버튼의 너비 */
     height: 20px;      /* 버튼의 높이 */
     padding: 5px;      /* 버튼 내부의 여백 */
-    display: flex;
-    align-items: center; /* 세로 축에서 중앙 정렬 */
   }
 
   .faChevronLeft, .faChevronRight {
     font-size: 10px;  
   } 
+
+  .faChevronIcon {
+    width: 15px;  /* 원하는 너비 */
+    height: 15px; /* 원하는 높이 */
+    display: flex; /* 아이콘을 flex 아이템으로 만들기 */
+    justify-content: center; /* 가로 방향 중앙 정렬 */
+    align-items: center; /* 세로 방향 중앙 정렬 */
+  }
 
   .commentsWrap {
     padding-left: 20px;
@@ -191,13 +239,16 @@
     font-size: 0.8rem;
   }
 
+  .commentDetailsButtons {
+    margin-right: 30px;
+  }
+
   .footerLinkList {
     display: flex;
   }
 
   .footerAdList {
-    border: 1px solid black;
-    width: 90%;
+    width: 100%;
     height: 300px;
     margin: 0 auto;
     margin-top: 50px;
@@ -234,7 +285,6 @@
   }
 
   .storeDescription {
-    color: #333;
     font-size: 0.9em;
   }
 
