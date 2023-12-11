@@ -50,6 +50,17 @@ public class CategoryService {
         return categoryRepository.categoryPostView(categoryPostDto);
     }
 
+    /**
+     * <p>특정 카테고리를 선택하면 해당 카테고리에 포함된 게시글들을 List에 담습니다. </p>
+     * @since 2023. 11. 28.
+     * @param categoryPostDto 카테고리 데이터를 전송하는 객체
+     * @return 모든 카테고리를 List에 담습니다.
+     */
+    public Long getRecentPostId(CategoryPostDto categoryPostDto) {
+        System.out.println(categoryPostDto.getCategoryId());
+        return categoryRepository.getRecentPostId(categoryPostDto);
+    }
+
 
 
     /**

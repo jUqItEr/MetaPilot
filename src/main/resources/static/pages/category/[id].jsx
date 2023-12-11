@@ -4,7 +4,9 @@ import { useEffect, useState } from "react"
 import IndexHeader from "../../layout/home/header"
 import PostList from "../../components/common/list"
 
-export const getServerSideProps = async ({ query: { id } }) => {
+export const getServerSideProps = async context => {
+    const { id } = context.params
+
     return {
         props: {
             id: id
@@ -12,15 +14,12 @@ export const getServerSideProps = async ({ query: { id } }) => {
     }
 }
 
-const CategoryPage = (props) => {
+const CategoryPage = ({ id }) => {
     const [ category, setCategory ] = useState([])
     const [ info, setInfo ] = useState([])
-    const id = props.id
-
-    console.log('아이디!' + id)
 
     useEffect(() => {
-        const getCategory = async () => {
+        const getCategory = () => {
             axios({
                 data: {
                     id: id
@@ -33,7 +32,7 @@ const CategoryPage = (props) => {
             })
         }
         
-        const getInfo = async () => {
+        const getInfo = () => {
             axios({
                 method: 'get',
                 url: '/api/info'
@@ -45,7 +44,7 @@ const CategoryPage = (props) => {
 
         getCategory()
         getInfo()
-    }, [props.id])
+    }, [id])
 
     return (
         <>
@@ -53,7 +52,7 @@ const CategoryPage = (props) => {
                 <title>{`${category.subject} - ${info.title}`}</title>
             </Head>
             <IndexHeader/>
-            <PostList/>
+            {category.id && (<PostList id={`${category.id}`}/>)}
         </>
     )
 }

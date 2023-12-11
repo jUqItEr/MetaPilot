@@ -27,7 +27,7 @@ export default function LoginPage() {
         password: password.value,
       },
       method: "post",
-      url: "/account/login",
+      url: "/login",
     })
       .then((res) => {
         console.log(res.headers);

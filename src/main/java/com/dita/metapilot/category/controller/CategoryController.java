@@ -82,8 +82,17 @@ public class CategoryController {
      */
     @ResponseBody
     @PostMapping("/postList")
-    public ResponseEntity<?> listPost(@Valid @RequestBody CategoryPostDto categoryPostDto, BindingResult bindingResult) {
+    public ResponseEntity<?> listPost(@Valid @RequestBody CategoryPostDto categoryPostDto) {
+        System.out.println(categoryPostDto.getCategoryId());
+
         return ResponseEntity.ok(categoryService.categoryPostView(categoryPostDto));
+    }
+
+    @ResponseBody
+    @PostMapping("/recentPost")
+    public ResponseEntity<?> getRecentPostId(@Valid @RequestBody CategoryPostDto categoryPostDto) {
+        System.out.println("Controller: " + categoryPostDto.getCategoryId());
+        return ResponseEntity.ok(categoryService.getRecentPostId(categoryPostDto));
     }
 
 
