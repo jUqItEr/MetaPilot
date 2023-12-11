@@ -20,4 +20,5 @@ public class CategoryEntity {
     private int listVisible;
     private int listCount;
     private String createdAt;
+    private int postCount;
 }

@@ -1,10 +1,11 @@
 package com.dita.metapilot.admin.service;
 
 import com.dita.metapilot.admin.dto.*;
+import com.dita.metapilot.admin.entity.CategoryEntity;
+import com.dita.metapilot.admin.entity.CmsInfoEntity;
 import com.dita.metapilot.admin.entity.CommentEntity;
 import com.dita.metapilot.admin.entity.PostEntity;
 import com.dita.metapilot.admin.repository.AdminRepository;
-import com.dita.metapilot.admin.entity.CategoryEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
+
+    /**
+     * <p>블로그 Info를 List하는 기능</p>
+     * @since 2023. 12. 11.
+     * @return 모든 정보를 List에 담습니다.
+     */
+    public List<CmsInfoEntity>  getBlogInfo(){return adminRepository.getCmsInfo();}
 
     /**
      * 카테고리 Repository를 불러옵니다.
