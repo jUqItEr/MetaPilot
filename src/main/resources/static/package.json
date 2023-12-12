@@ -5,6 +5,7 @@
   "main": "index.jsx",
   "description": "Metapilot Project on Next.js",
   "dependencies": {
+    "@draft-js-plugins/editor": "^4.1.4",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",

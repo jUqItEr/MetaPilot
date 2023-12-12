@@ -1,8 +1,11 @@
 {import('next').NextConfig}
 
 const nextConfig = {
-    reactStrictMode: false,
+    reactStrictMode: true,
     swcMinify: true,
+    images: {
+        domains: ['i.imgur.com', 'localhost']
+    },
     async rewrites() {
         if (process.env.NODE_ENV === 'package') {
             return [
