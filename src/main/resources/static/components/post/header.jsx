@@ -14,7 +14,7 @@ const PostHeader = () => {
     axios({
       method: "get",
       params: {
-        postId: 20,
+        postId: 68,
       },
       url: "/api/post/postView",
     }).then((res) => {

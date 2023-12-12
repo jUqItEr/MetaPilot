@@ -48,7 +48,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")){
             oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
         } else {
-            System.out.println("우리는 구글과 페이스북만 지원해요 ㅎㅎ");//TODO
+            System.out.println("우리는 구글과 네이버만 지원해요 ㅎㅎ");//TODO
         }
 
         Optional<UserEntity> userOptional =
