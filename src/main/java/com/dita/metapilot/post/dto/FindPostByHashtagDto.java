@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindPostByHashtagDto {
-    private int postId;
+    private long postId;
     private int categoryId;
     private String userId;
     private String subject;

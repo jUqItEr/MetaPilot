@@ -14,6 +14,7 @@
 		<result property="count" column="count"></result>
 		<result property="notice" column="notice"></result>
 		<result property="categoryId" column="category_tbl_id"></result>
+		<result property="thumbnail" column="thumbnail"></result>
 		<result property="deleted" column="deleted"></result>
 		<result property="type" column="type"></result>
 		<result property="likeCount" column="liked"></result>
@@ -36,7 +37,7 @@
 	<insert id="createHashtag" parameterType="com.dita.metapilot.post.dto.HashtagDto">
 		insert into hashtag_tbl(content)
 		values(#{content})
-		<selectKey resultType="int" keyProperty="hashtagId" order="AFTER">
+		<selectKey resultType="long" keyProperty="hashtagId" order="AFTER">
 			select max(id) from hashtag_tbl
 		</selectKey>
 	</insert>
@@ -51,8 +52,8 @@
 
 	<!-- 게시글 작성 -->
 	<insert id="createPost" parameterType="com.dita.metapilot.post.dto.PostDto">
-		insert into post_tbl(category_tbl_id ,user_tbl_id, subject, content, count, deleted, type, created_at)
-		values(#{catergoryId}, #{userId}, #{subject}, #{content}, 0, 0, #{type}, now())
+		insert into post_tbl(category_tbl_id, user_tbl_id, type)
+		values(#{categoryId}, #{userId}, 2)
 	</insert>
 
 	<!-- 게시글에 해시태그 추가 -->
@@ -62,7 +63,7 @@
 	</insert>
 
 	<!-- 게시글과 연결된 모든 해시태그 삭제 -->
-	<delete id="deleteHashtags" parameterType="int">
+	<delete id="deleteHashtags" parameterType="com.dita.metapilot.post.dto.PostIdDto">
 		delete from post_hashtag_tbl
 		where post_tbl_id = #{postId}
 	</delete>
@@ -92,7 +93,7 @@
 	</select>
 
 	<!-- 해시태그의 id를 가져옴 -->
-	<select id="getHashtagId" parameterType="com.dita.metapilot.post.dto.HashtagDto" resultType="int">
+	<select id="getHashtagId" parameterType="com.dita.metapilot.post.dto.HashtagDto" resultType="long">
 		select id
 		from hashtag_tbl
 		where content = #{content}
@@ -176,6 +177,13 @@
 		where content = #{content}
 	</select>
 
+	<!-- 게시글과 연결된 해시태그 중복확인 -->
+	<select id="hasPostHashtag" resultType="java.lang.Boolean">
+		select count(*) > 0
+		from post_hashtag_tbl
+		where post_tbl_id = #{postId} and hashtag_tbl_id = #{hashtagId}
+	</select>
+
 	<!-- 게시글 좋아요 상태체크 -->
 	<select id="hasLike" parameterType="com.dita.metapilot.post.dto.PostResponseDto" resultType="java.lang.Boolean">
 		<![CDATA[
@@ -186,7 +194,7 @@
 	</select>
 
 	<!-- 해시태그의 id를 가져옴 -->
-	<select id="getRecentPostId" resultType="int">
+	<select id="getRecentPostId" resultType="long">
 		select max(id)
 		from post_tbl
 	</select>
@@ -207,13 +215,16 @@
 	</update>
 
 	<!-- 게시글 수정 -->
-	<update id="updatePost" parameterType="com.dita.metapilot.post.dto.PostResponseDto">
+	<update id="updatePost" parameterType="com.dita.metapilot.post.dto.PostDto">
 		<![CDATA[
         update post_tbl
         set
             subject = #{subject},
             content = #{content},
-            type = #{type}
+            notice = #{notice},
+            thumbnail = #{thumbnail},
+            type = #{type},
+            created_at = ifnull(created_at, now())
         where id = #{postId}
         ]]>
 	</update>

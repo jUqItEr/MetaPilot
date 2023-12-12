@@ -4,13 +4,11 @@ import com.dita.metapilot.post.dto.*;
 import com.dita.metapilot.post.entity.PostEntity;
 import com.dita.metapilot.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.text.BreakIterator;
 import java.util.List;
 
 
@@ -32,17 +30,14 @@ public class PostController {
     /**
      * <p>게시글을 작성하고 성공 여부를 반환하는 컨트롤러 메서드</p>
      *
-     * @param postDto 게시글 작성에 필요한 정보를 담은 DTO.
-     * @param tags 게시글에 추가될 해시태그 리스트
-     * @return 게시글 작성 성공 시 true, 실패 시 false를 반환
+     * @param postDto 게시글 번호를 담은 DTO.
+     * @return 게시글 작성 성공 시 postIdDto return, 실패 시 false를 반환
      * @since 2023. 11. 28.
      */
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<Boolean> createPost(@RequestPart PostDto postDto,
-                                              @RequestPart(required = false) List<String> tags,
-                                              @RequestPart(required = false) List<MultipartFile> files) {
-        return ResponseEntity.ok(postService.createPost(postDto, tags, files));
+    public ResponseEntity<Boolean> createPost(@RequestBody PostDto postDto) {
+        return ResponseEntity.ok(postService.createPost(postDto));
     }
 
     /**
@@ -130,7 +125,7 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/update")
-    public ResponseEntity<Boolean> updatePost(@RequestPart PostDto postDto,
+    public ResponseEntity<Boolean> updatePost(@RequestPart(required = false) PostDto postDto,
                                               @RequestPart(required = false) List<String> tags,
                                               @RequestPart(required = false) List<MultipartFile> files) {
         return ResponseEntity.ok(postService.updatePost(postDto, tags, files));
@@ -144,7 +139,7 @@ public class PostController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/updatelike")
+    @PostMapping("/updateLike")
     public ResponseEntity<Boolean> updateLike(PostResponseDto postResponseDto) {
         return ResponseEntity.ok(postService.updateLike(postResponseDto));
     }

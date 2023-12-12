@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostResponseDto {
-    private int postId;
+    private long postId;
     private String userId;
 }

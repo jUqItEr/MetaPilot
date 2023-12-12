@@ -28,7 +28,7 @@ public interface PostFileRepository {
      * @param postId 첨부파일을 삭제할 게시글의 ID.
      * @return 첨부파일 삭제 성공 여부를 반환.
      */
-    boolean deletePostFile(int postId);
+    boolean deletePostFile(PostIdDto postId);
 
     /**
      * 게시글에 연결된 첨부파일을 조회하는 메서드.

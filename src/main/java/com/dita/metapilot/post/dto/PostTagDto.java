@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostTagDto {
-    private int postId;
-    private int hashtagId;
+    private long postId;
+    private long hashtagId;
     private String cratedAt;
 }

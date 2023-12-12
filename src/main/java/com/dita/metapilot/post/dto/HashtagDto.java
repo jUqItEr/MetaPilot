@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HashtagDto {
-    private int hashtagId;
+    private long hashtagId;
     private String content;
 }
