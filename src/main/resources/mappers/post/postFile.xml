@@ -32,7 +32,7 @@
     <!-- 게시글에 연결된 첨부파일 삭제 -->
     <delete id="deletePostFile" parameterType="long">
         delete from post_file_tbl
-        where post_tbl_id = #{postId}
+        where post_tbl_id = #{postId} and type = 0
     </delete>
 
     <!-- UUID로 원본 파일 이름 가져오기 -->
