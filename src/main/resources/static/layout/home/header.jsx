@@ -10,7 +10,7 @@ const IndexHeader = ({ info }) => {
             <header className='navbar navbar-expand-lg border-bottom'>
                 <div className='container-fluid'>
                     <Link href='/'>
-                        <a className='navbar-brand'>{info.title}</a>
+                        <a className='navbar-brand'>{info?.title}</a>
                     </Link>
                     <button className='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarNavAltMarkup'
                         aria-controls='navbarNavAltMarkup' aria-expanded='false' aria-label='Toggle navigation'>
