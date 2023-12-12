@@ -33,6 +33,14 @@
 		</collection>
 	</resultMap>
 
+	<resultMap id="postPopularDto" type="com.dita.metapilot.post.dto.PostPopularDto">
+		<result property="id" column="id"/>
+		<result property="categoryId" column="category_id"/>
+		<result property="categorySubject" column="category_subject"/>
+		<result property="thumbnail" column="thumbnail"/>
+		<result property="subject" column="subject"/>
+	</resultMap>
+
 	<!-- 해시태그 생성 -->
 	<insert id="createHashtag" parameterType="com.dita.metapilot.post.dto.HashtagDto">
 		insert into hashtag_tbl(content)
@@ -59,7 +67,7 @@
 	<!-- 게시글에 해시태그 추가 -->
 	<insert id="createPostHashtag" parameterType="com.dita.metapilot.post.dto.PostTagDto">
 		insert into post_hashtag_tbl(post_tbl_id, hashtag_tbl_id, created_at)
-		values(#{postId}, #{hashtagId}, now());
+		values(#{postId}, #{hashtagId}, now())
 	</insert>
 
 	<!-- 게시글과 연결된 모든 해시태그 삭제 -->
@@ -72,7 +80,7 @@
 	<update id="deletePost" parameterType="com.dita.metapilot.post.dto.PostIdDto">
 		<!-- 게시글 삭제시 휴지통으로 보내기(delete => 1) -->
 		<![CDATA[
-        update post_tbl set deleted = 1 where id = #{postId};
+        update post_tbl set deleted = 1 where id = #{postId}
         ]]>
 	</update>
 
@@ -128,36 +136,47 @@
 		where pt.notice = 1 and pt.deleted = 0
 		order by
 		pt.created_at desc
-		limit 3;
+		limit 3
 	</select>
 
 	<!-- 인기 게시글 목록 -->
-	<select id="getPopularPosts" resultMap="postEntity">
+	<select id="getPopularPosts" resultMap="postPopularDto">
 		<![CDATA[
-		select distinct pt.*,
-						(
-							select count(*)
-							from post_like_tbl plt
-							where plt.post_tbl_id = pt.id
-						) as liked
-		from post_tbl pt
-		left join post_like_tbl plt on pt.id = plt.post_tbl_id
-		where pt.created_at >= date_sub(now(), interval 7 day)
-			and (
-						select count(*)
-						from post_like_tbl
-						where post_tbl_id = pt.id
-				) >= 3
-				and pt.deleted = 0
-		order by
-			(
-				select count(*)
-				from post_like_tbl
-				where post_tbl_id = pt.id
-			) desc,
-			pt.`count` desc,
-			pt.created_at desc
-		limit 10;
+			select
+				pt.id,
+				pt.subject,
+				pt.thumbnail,
+				ct.id as category_id,
+				ct.subject as category_subject,
+				(
+					select
+						count(*)
+					from
+						post_like_tbl plt
+					where
+						plt.post_tbl_id = pt.id
+				) as liked
+			from
+				post_tbl pt
+			join
+				category_tbl ct
+			on
+				pt.category_tbl_id = ct.id
+			where
+				pt.created_at >= date_sub(now(), interval 7 day)
+			and
+				pt.deleted = 0
+			and
+				pt.count >= 50
+			and
+				pt.type = 0
+			having
+				liked >= 3
+			order by
+				liked desc,
+				pt.count desc,
+				pt.created_at desc
+			limit 10
 		]]>
 	</select>
 	
@@ -210,7 +229,7 @@
 	<!-- 게시글 조회수 증가 -->
 	<update id="updateCount" parameterType="com.dita.metapilot.post.dto.PostIdDto" >
 		<![CDATA[
-        update post_tbl set count = count + 1 where id = #{postId};
+        update post_tbl set count = count + 1 where id = #{postId}
         ]]>
 	</update>
 

@@ -99,7 +99,7 @@ public class PostController {
      */
     @ResponseBody
     @GetMapping("/popular")
-    public List<PostEntity> getPopularPosts() {
+    public List<PostPopularDto> getPopularPosts() {
         return postService.getPopularPosts();
     }
 

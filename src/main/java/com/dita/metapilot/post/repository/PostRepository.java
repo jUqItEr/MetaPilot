@@ -87,7 +87,7 @@ public interface PostRepository {
      *
      * @return 인기 게시글 리스트를 반환
      */
-    List<PostEntity> getPopularPosts();
+    List<PostPopularDto> getPopularPosts();
 
     /**
      * 게시글을 조회하는 메서드.

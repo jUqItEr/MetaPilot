@@ -3,10 +3,11 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import IndexHeader from '../layout/home/header';
 import IndexSidebar from '../layout/home/sidebar';
+import TrendPost from '../components/common/trend';
+
 
 
 const IndexPage = () => {
-    const [category, setCategory] = useState([])
     const [info, setInfo] = useState([])
     
     /**
@@ -24,17 +25,10 @@ const IndexPage = () => {
         .then((res) => {
             setInfo(res.data !== undefined ? res.data.data : null)
         })
-
-        axios({
-            method: 'get',
-            url: '/api/category/list'
-        })
-        .then((res) => {
-            setCategory(res.data)
-        })
     }
 
     useEffect(() => {
+        console.log(localStorage.getItem('user'))
         getInfo()
     }, [])
 
@@ -43,8 +37,9 @@ const IndexPage = () => {
             <Head>
                 <title>{info.title}</title>
             </Head>
-            <IndexHeader info={info} />
-            <IndexSidebar category={category} />
+            <IndexHeader/>
+            <IndexSidebar/>
+            <TrendPost/>
         </>
     )
 }
