@@ -45,6 +45,19 @@ public class AdminController {
 
 
     /**
+     * <p>blog info 수정</p>
+
+     * @since 2023. 12. 12.
+     */
+    @ResponseBody
+    @PostMapping("/updateBlogInfo")
+    public ResponseEntity<?> updateBlogInfo(CmsInfoDto dto) {
+        return ResponseEntity.ok(adminService.updateBlogInfo(dto));
+    }
+
+
+
+    /**
      * <p>카테고리를 list하는 기능입니다.</p>
      *
      * @since 2023. 11. 30.

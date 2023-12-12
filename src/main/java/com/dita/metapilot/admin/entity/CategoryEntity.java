@@ -21,4 +21,5 @@ public class CategoryEntity {
     private int listCount;
     private String createdAt;
     private int postCount;
+    private int refCount;
 }
