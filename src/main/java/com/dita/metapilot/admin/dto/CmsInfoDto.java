@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CmsInfoDto {
+    private int  id;
     private String title;
     private String profile;
     private String profileImage;
