@@ -1,12 +1,8 @@
 package com.dita.metapilot.user.repository;
 
-import com.dita.metapilot.user.dto.RegisterDto;
-import com.dita.metapilot.user.dto.SocialRegisterDto;
-import com.dita.metapilot.user.entity.SocialUserEntity;
 import com.dita.metapilot.user.entity.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.Optional;
 
 @Mapper
 public interface SocialRepository {
@@ -16,6 +12,4 @@ public interface SocialRepository {
     UserEntity checkDuplicate(UserEntity user); // 소셜 아이디 체크, email 체크
 
     UserEntity findUserBySocialId(String socialId);
-
-
 }

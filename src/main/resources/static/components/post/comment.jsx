@@ -31,7 +31,7 @@ const CommentsList = ({ comments, formVisibility, toggleFormVisibility, toggleCo
                             </div>
                             <div className={styles.editorForm}>  
                                 <div>
-
+                                    <input class="form-control form-control-sm" id="formFileSm" type="file"/>
                                 </div>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button">Button</button>
@@ -66,7 +66,7 @@ const CommentsList = ({ comments, formVisibility, toggleFormVisibility, toggleCo
                                 </div>
                                 <div className={styles.editorForm}>  
                                     <div>
-
+                                        <input class="form-control form-control-sm" id="formFileSm" type="file"/>
                                     </div>
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button">Button</button>
@@ -75,11 +75,32 @@ const CommentsList = ({ comments, formVisibility, toggleFormVisibility, toggleCo
                             </div>
                             )}
                         </div>
+                        
                     ))}
+                    
                 </div>
             ))}
+            <div className={styles.postCommentForm}>
+                {/* 폼 내용 또는 자식 컴포넌트 */}
+                <div className={styles.commentHandlerForm}>
+                    <strong>닉네임</strong> 답글
+                    <div className={`${styles.commentInputGroup} input-group mb-3`}>
+                        <textarea type="text" className={`${styles.commentTextarea} form-control`} />
+                    </div>
+                </div>
+                <div className={styles.editorForm}>  
+                    <div>
+                        <input class="form-control form-control-sm" id="formFileSm" type="file"/>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button">Button</button>
+                    </div>
+                </div>
+            </div>
         </div>
+        
     );
+    
 };
 
 export default CommentsList;

@@ -30,8 +30,8 @@ const nextConfig = {
                     destination: process.env.LOCAL_JAVA_SERVER_URL + '/login/:path*'
                 },
                 {
-                    source: '/oauth/:path*',
-                    destination: process.env.LOCAL_JAVA_SERVER_URL + '/oauth/:path*'
+                    source: '/oauth2/:path*',
+                    destination: process.env.LOCAL_JAVA_SERVER_URL + '/oauth2/:path*'
                 }
             ]
         }

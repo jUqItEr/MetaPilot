@@ -112,6 +112,15 @@
     color: black;
   }
 
+  .postCommentForm {
+    margin: 0 auto;
+    margin-top: 50px;
+    border-left: 2px solid #eee;
+    padding: 4px 0;
+    width: 100%;
+    border: 1px solid black;
+  }
+
   .commentForm {
     margin-left: 20px;
     border-left: 2px solid #eee;
