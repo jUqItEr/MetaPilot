@@ -81,7 +81,7 @@ public class PostService {
      *
      * @return 불러온 인기 게시글 리스트를 반환.
      */
-    public List<PostEntity> getPopularPosts() {
+    public List<PostPopularDto> getPopularPosts() {
         return postRepository.getPopularPosts();
     }
 

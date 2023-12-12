@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
-import Image from "next/image";
 import { useState } from "react";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
