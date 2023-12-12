@@ -7,7 +7,7 @@
 
     <resultMap id="categoryEntity" type="com.dita.metapilot.category.entity.CategoryEntity">
         <result property="id" column="id"></result>
-        <result property="categoryTblRefId" column="category_tbl_ref_id"></result>
+        <result property="refId" column="category_tbl_ref_id"></result>
         <result property="subject" column="subject"></result>
         <result property="depth" column="depth"></result>
         <result property="pos" column="pos"></result>

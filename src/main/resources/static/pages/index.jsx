@@ -6,6 +6,7 @@ import IndexSidebar from '../layout/home/sidebar';
 
 
 const IndexPage = () => {
+    const [category, setCategory] = useState([])
     const [info, setInfo] = useState([])
     
     /**
@@ -23,6 +24,14 @@ const IndexPage = () => {
         .then((res) => {
             setInfo(res.data !== undefined ? res.data.data : null)
         })
+
+        axios({
+            method: 'get',
+            url: '/api/category/list'
+        })
+        .then((res) => {
+            setCategory(res.data)
+        })
     }
 
     useEffect(() => {
@@ -34,8 +43,8 @@ const IndexPage = () => {
             <Head>
                 <title>{info.title}</title>
             </Head>
-            <IndexHeader/>
-            <IndexSidebar/>
+            <IndexHeader info={info} />
+            <IndexSidebar category={category} />
         </>
     )
 }
