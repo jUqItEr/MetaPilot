@@ -1,5 +1,6 @@
 package com.dita.metapilot.post.postFile.controller;
 
+import com.dita.metapilot.post.dto.PostIdDto;
 import com.dita.metapilot.post.postFile.dto.PostFileDto;
 import com.dita.metapilot.post.postFile.service.PostFileService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -32,6 +33,12 @@ public class PostFileController {
 
     private final PostFileService postFileService;
 
+    @ResponseBody
+    @PostMapping("/upload")
+    public ResponseEntity<?> createFiles(@RequestPart PostIdDto postIdDto, @RequestPart(required = false) List<MultipartFile> files) {
+        return ResponseEntity.ok(postFileService.createFiles(postIdDto ,files));
+    }
+
     /**
      * <p>파일 다운로드를 처리하는 컨트롤러 메서드</p>
      *
@@ -44,6 +51,7 @@ public class PostFileController {
      * @param fileName 다운로드할 파일의 이름
      * @return HTTP 응답을 담은 ResponseEntity 객체
      */
+    @ResponseBody
     @GetMapping("/download")
     public ResponseEntity<byte[]> downloadFile(@RequestParam String fileName) {
         try {

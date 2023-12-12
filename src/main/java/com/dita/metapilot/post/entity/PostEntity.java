@@ -9,14 +9,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostEntity {
-    private int postId;
+    private long postId;
     private int categoryId;
     private String userId;
     private String subject;
     private String content;
-    private int count;
+    private long count;
     private int notice;
     private int deleted;
+    private String thumbnail;
     private int type;
     private String createdAt;
     private int likeCount;

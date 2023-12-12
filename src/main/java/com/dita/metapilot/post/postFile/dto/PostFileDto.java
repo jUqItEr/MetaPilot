@@ -6,9 +6,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostFileDto {
-    private int postId;
+    private long postId;
     private String name;
     private String originalName;
     private String extension;
-    private int filesize;
+    private long fileSize;
+    private int type;
 }

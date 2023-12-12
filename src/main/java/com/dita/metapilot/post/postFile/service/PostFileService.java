@@ -1,26 +1,15 @@
 
 package com.dita.metapilot.post.postFile.service;
 
-import com.dita.metapilot.exception.CustomValidationException;
 import com.dita.metapilot.post.dto.PostIdDto;
 import com.dita.metapilot.post.postFile.dto.PostFileDto;
 import com.dita.metapilot.post.postFile.repository.PostFileRepository;
-import com.dita.metapilot.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -44,12 +33,13 @@ public class PostFileService {
      * <p>5. PostFileDto 객체를 생성후 해당 파일의 정보를 입력 한 후 목록에 추가</p>
      * <p>6. postFileRepository.createFile 메서드로 파일 정보를 DB에 저장</p>
      *
-     * @param postId 게시글 번호
+     * @param postIdDto 게시글 번호가 담긴 DTO.
      * @param files 업로드할 첨부파일 목록
      * @return 성공적으로 파일을 업로드했을 때 true 반환
      */
-    public boolean createFiles(int postId, List<MultipartFile> files) {
+    public boolean createFiles(PostIdDto postIdDto, List<MultipartFile> files) {
         List<PostFileDto> postFiles = new ArrayList<>();
+        long postId = postIdDto.getPostId();
 
         try {
             Resource resource = new ClassPathResource("assets/");
@@ -65,13 +55,13 @@ public class PostFileService {
                 String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
                 String name = UUID.randomUUID().toString().replaceAll("-", "");
                 String uuidName = name + "." + extension;
-                int filesize = files.size();
+                long fileSize = files.size();
 
                 try {
                     Path filePath = uploadPath.resolve(uuidName);
                     Files.write(filePath, file.getBytes());
 
-                    PostFileDto postFileDto = new PostFileDto(postId, name, originalName, extension, filesize);
+                    PostFileDto postFileDto = new PostFileDto(postId, name, originalName, extension, fileSize, 0);
                     postFiles.add(postFileDto);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -146,7 +136,7 @@ public class PostFileService {
                     String fullFileName = file.getFileName().toString();
 
                     // 파일명과 fileName이 일치하는 경우 파일의 전체 이름을 반환
-                    if (removeExtension(fullFileName).equals(fileName)) {
+                    if (deleteExtension(fullFileName).equals(fileName)) {
                         return fullFileName;
                     }
                 }
@@ -166,7 +156,7 @@ public class PostFileService {
      * @param fileName 확장자를 제외하고자 하는 파일명
      * @return 확장자를 제외한 파일명 반환
      */
-    public String removeExtension(String fileName) {
+    public String deleteExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf('.');
         if (lastDotIndex != -1) {
             return fileName.substring(0, lastDotIndex);
@@ -182,10 +172,11 @@ public class PostFileService {
      * <p>3. 해당 이름의 파일이 존재하면 파일 저장소에서 삭제</p>
      * <p>4. DB에서의 해당 파일 삭제 메서드 리턴</p>
      *
-     * @param postId 삭제할 첨부파일이 연결된 게시글 번호
+     * @param postIdDto) 삭제할 첨부파일이 연결된 게시글 번호 DTO.
      * @return 삭제 성공시 true, 실패시 false 반환
      */
-    public boolean deletePostFile(int postId) {
+    public boolean deletePostFile(PostIdDto postIdDto) {
+        long postId = postIdDto.getPostId();
         try {
             List<PostFileDto> files = getPostFile(new PostIdDto(postId));
 
@@ -206,7 +197,7 @@ public class PostFileService {
                     throw new RuntimeException("Failed to delete : " + fileName, e);
                 }
             }
-            return postFileRepository.deletePostFile(postId);
+            return postFileRepository.deletePostFile(postIdDto);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete file and data for postId : " + postId, e);

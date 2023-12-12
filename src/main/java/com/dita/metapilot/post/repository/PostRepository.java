@@ -38,8 +38,8 @@ public interface PostRepository {
     /**
      * 게시글을 작성하는 메서드.
      *
-     * @param postDto 사용자가 작성한 게시글 정보를 담은 DTO.
-     * @return 게시글을 성공적으로 작성하면 true, 그렇지 않으면 false를 반환.
+     * @param postDto
+     * @return
      */
     boolean createPost(PostDto postDto);
 
@@ -54,10 +54,10 @@ public interface PostRepository {
     /**
      * 게시글에 연결된 해시태그 삭제하는 메서드.
      *
-     * @param postId 게시글 번호.
-     * @return
+     * @param postIdDto 게시글 번호가 담긴 DTO.
+     * @return 게시글과 연결된 해시태그를 삭제
      */
-    boolean deleteHashtags(int postId);
+    void deleteHashtags(PostIdDto postIdDto);
 
     /**
      * 게시글을 삭제하는 메서드.
@@ -103,7 +103,7 @@ public interface PostRepository {
      * @param hashtagDto 해시태그 ID가 담긴 DTO.
      * @return 해당 해시태그가 존재하면 id, 존재하지 않으면 0을 반환.
      */
-    int getHashtagId(HashtagDto hashtagDto);
+    long getHashtagId(HashtagDto hashtagDto);
 
     /**
      * 게시글의 해시태그를 조회하는 메서드.
@@ -130,6 +130,14 @@ public interface PostRepository {
     boolean hasHashtag(HashtagDto hashTagDto);
 
     /**
+     * 게시글과 연결된 해시태그 중복을 체크하는 메서드.
+     *
+     * @param postTagDto 게시글과 연결된 해시태그 정보가 담긴 DTO.
+     * @return 해당 해시태그 내용이 존재하면 true, 그렇지 않으면 false를 반환.
+     */
+    boolean hasPostHashtag(PostTagDto postTagDto);
+
+    /**
      * 게시글에 좋아요가 있는지를 체크하는 메서드.
      *
      * @param postResponseDto 게시글 번호와 사용자의 ID를 담은 DTO.
@@ -142,7 +150,7 @@ public interface PostRepository {
      *
      * @return 최근에 작성된 게시글 번호를 반환.
      */
-    int getRecentPostId();
+    long getRecentPostId();
 
     /**
      * 게시글에 연결된 좋아요를 취소하는 메서드.

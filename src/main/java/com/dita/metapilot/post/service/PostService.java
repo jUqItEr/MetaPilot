@@ -29,50 +29,14 @@ public class PostService {
     private final PostFileService postFileService;
 
     /**
-     * <p>게시글을 작성하는 메서드</p>
-     *
-     * <p>1. 게시글을 작성하고, 해당 게시글의 번호를 가져옴</p>
-     * <p>2. 각 해시태그 중복 여부 확인을 위해 post.Repository.hasHashtag 메서드 호출</p>
-     * <p>3. 해시태그 중복이 있을 경우 hashtag_tbl에서 해시태그를 가져옴</p>
-     * <p>4. 해시태그 중복이 없을 경우 postRepository.createHashtag 메서드를 사용하여 해당 해시태그 생성</p>
-     * <p>5. 첨부파일이 있을 경우 postFileService.createFiles 메서드를 사용하여 첨부파일 업로드</p>
-     * <p>5. 게시글과 해시태그를 연결하는 메서드 실행</p>
+     * <p>게시글을 작성하는 메서드(작성페이지 넘어갈때 postDto 반환)</p>
      *
      * @param postDto 사용자가 작성한 게시글 정보를 담은 DTO.
-     * @param tags 게시글에 포함된 해시태그들 목록
-     * @param files 게시글에 포함된 파일들 목록
      * @return 성공적으로 게시글을 작성했을 때 true 반환
      */
-    public boolean createPost(PostDto postDto, List<String> tags, List<MultipartFile> files) {
-        boolean result = false;
-
-        result = postRepository.createPost(postDto);
-        int postId = postRepository.getRecentPostId();
-
-        if (tags != null) {
-            for (String tag : tags) {
-                HashtagDto hashtag = new HashtagDto(-1, tag);
-                boolean hasTag = postRepository.hasHashtag(hashtag);
-                int id = -1;
-
-                if (hasTag) {
-                    // 해시태그가 있으면 hashtag_tbl에서 가져올 것
-                    id = postRepository.getHashtagId(hashtag);
-                } else {
-                    // 해시태그가 없으면 hashtag_tbl에 추가할 것
-                    postRepository.createHashtag(hashtag);
-                    id = hashtag.getHashtagId();
-                }
-                PostTagDto dto = new PostTagDto(postId, id, null);
-                result &= postRepository.createPostHashtag(dto);
-            }
-        }
-        if (files != null) {
-            result &= postFileService.createFiles(postId, files);
-        }
-        return result;
+    public boolean createPost(PostDto postDto) {
+        return postRepository.createPost(postDto);
     }
-
     /**
      * <p>게시글을 삭제하는 메서드</p>
      *
@@ -183,55 +147,55 @@ public class PostService {
     }
 
     /**
-     * <p>게시글을 수정하는 메서드</p>
+     * <p>게시글을 작성, 수정하는 메서드</p>
      *
-     * <p>1. 게시글 수정 메서드 실행</p>
-     * <p>2. 연결된 해시태그가 있으면 기존에 연결된 해시태그를 삭제 하고 새로운 해시태그 생성함 </p>
-     * <p>3. 연결된 첨부파일이 있으면 기존에 첨부된 파일을 삭제하고 새로운 첨부파일 업로드</p>
+     * <p>1. 게시글 작성, 수정 메서드 실행</p>
+     * <p>2. 게시글 수정 인경우 연결된 해시태그와 첨부파일 삭제
+     * <p>3. 해시태그 중복 메서드를 체크한 후 해시태그 생성</p>
+     * <p>4. 첨부파일이 있을 경우 새로운 첨부파일 업로드</p>
      *
      * @param postDto 사용자가 작성한 게시글 정보를 담은 DTO.
      * @param tags 게시글에 연결된 태그들
      * @param files 게시글에 연결된 파일들
      *
-     * @return 성공적으로 게시글을 수정했을 때 true 반환, 그렇지 않으면 false 반환
+     * @return 성공적으로 게시글을 작성, 수정했을 때 true 반환, 그렇지 않으면 false 반환
      */
     public boolean updatePost(PostDto postDto, List<String> tags, List<MultipartFile> files) {
-        boolean result = false;
-        int postId = postDto.getPostId();
+        // 게시글 작성 or 수정 체크
+        boolean isPostNew = (postDto.getCreatedAt() == null || postDto.getCreatedAt().isEmpty());
+        boolean result = postRepository.updatePost(postDto);
+        long postId = postDto.getPostId();
+        PostIdDto postIdDto = new PostIdDto(postId);
 
-        // 1. 게시글 수정
-        result = postRepository.updatePost(postDto);
+        // 게시글 수정 인경우
+        if (!isPostNew) {
+            postRepository.deleteHashtags(postIdDto);
+            postFileService.deletePostFile(postIdDto);
+        }
 
-        // 2. 연결된 해시태그 수정
         if (tags != null) {
-            // 기존 게시글에 연결된 해시태그들 삭제
-            result &= postRepository.deleteHashtags(postId);
-
-            // 새로 수정된 해시태그 연결
             for (String tag : tags) {
                 HashtagDto hashtag = new HashtagDto(-1, tag);
-                boolean hasTag = postRepository.hasHashtag(hashtag);
-                int id = -1;
-
+                boolean hasTag = postRepository.hasHashtag(hashtag); //True
+                long id = -1;
                 if (hasTag) {
                     // 해시태그가 있으면 hashtag_tbl에서 가져올 것
-                    id = postRepository.getHashtagId(hashtag);
+                    id = postRepository.getHashtagId(hashtag); //아이디만
                 } else {
                     // 해시태그가 없으면 hashtag_tbl에 추가할 것
-                    postRepository.createHashtag(hashtag);
-                    id = hashtag.getHashtagId();
+                    postRepository.createHashtag(hashtag); //없으면 추가
+                    id = hashtag.getHashtagId(); //추가한 아이디
                 }
                 PostTagDto dto = new PostTagDto(postId, id, null);
-                result &= postRepository.createPostHashtag(dto);
+                // 게시글과 연결된 해시태그가 없다면
+                if (!postRepository.hasPostHashtag(dto)) {
+                    postRepository.createPostHashtag(dto);
+                }
             }
         }
-
-        // 3. 첨부파일 수정
         if (files != null) {
-            result &= postFileService.deletePostFile(postId);
-            result &= postFileService.createFiles(postId, files);
+            postFileService.createFiles(postIdDto, files);
         }
-
         return result;
     }
 }
