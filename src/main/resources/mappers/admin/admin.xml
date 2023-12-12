@@ -69,6 +69,20 @@
             blog_info_tbl bi
     </select>
 
+    <!-- blog info 수정 -->
+    <update id="updateBlogInfo" parameterType="com.dita.metapilot.admin.dto.CmsInfoDto">
+        update
+        blog_info_tbl
+        set
+        title = #{title},
+        profile = #{profile},
+        profile_image = #{profileImage},
+        google_analytics = #{googleAnalytics}
+        where
+        id = #{id}
+    </update>
+
+
     <!-- Block User. -->
     <insert id="blockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
         <![CDATA[
@@ -82,14 +96,17 @@
 
     <!-- 카테고리 목록 list -->
     <select id="categoryView" resultMap="categoryEntity">
-        select
-            (select count(*) from post_tbl p where p.category_tbl_id = c.id) as postCount
-            , c.id, c.category_tbl_ref_id, c.subject, c.depth, c.pos, c.type
-            , c.visible, c.fold, c.count_visible, c.list_visible, c.list_count, c.created_at
-        from
-            category_tbl c
-        order by
-            pos asc;
+        <![CDATA[
+            select
+                (select count(*) from post_tbl p where p.category_tbl_id = c.id) as postCount
+                , (select count(*) from category_tbl where category_tbl_ref_id = c.id) as refCount
+                , c.id, c.category_tbl_ref_id, c.subject, c.depth, c.pos, c.type
+                , c.visible, c.fold, c.count_visible, c.list_visible, c.list_count, c.created_at
+            from
+                category_tbl c
+            order by
+                pos asc;
+        ]]>
     </select>
 
     <!-- 삭제된 게시글 목록 list -->
@@ -149,7 +166,7 @@
             where pos >= @setPos;
 
             insert into category_tbl
-            select null, @id, '게시글', @setDepth, @setPos, 1, 0, 0, 0, 0, 0, now();
+            select null, @id, '게시글', @setDepth, @setPos, 1, 1, 1, 1, 1, 1, now();
         ]]>
     </insert>
 
@@ -189,7 +206,7 @@
             where pos >= @setPos;
 
             insert into category_tbl
-            select null, @id, '-----', @setDepth, @setPos, 0, 0, 0, 0, 0, 0, now();
+            select null, @id, '-----', @setDepth, @setPos, 0, 1, 1, 1, 1, 1, now();
         ]]>
     </insert>
 
@@ -204,13 +221,14 @@
             set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
 
             set @logic = if(@depth = 0 and @bottomPos != 0, 1, 0);
+            set @logic = if(@id = 1, 2, @logic);
 
             UPDATE category_tbl
-            SET pos = pos - 1
+            SET pos = if(@logic = 2, pos, pos - 1)
             WHERE pos > @pos;
 
             DELETE FROM category_tbl
-            WHERE id = @id;
+            WHERE id = if(@logic = 2, null, @id);
 
             update category_tbl
             set depth = if(@logic = 1, 0, depth)
@@ -275,8 +293,6 @@
             category_tbl
         set
             subject = #{subject},
-            category_tbl_ref_id = #{categoryTblRefId},
-            pos = #{pos},
             type = #{type},
             visible = #{visible},
             count_visible = #{countVisible}
