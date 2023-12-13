@@ -73,6 +73,54 @@
             blog_info_tbl bi
     </select>
 
+    <select id="readTag" parameterType="com.dita.metapilot.admin.dto.HashtagSearchDto" resultType="com.dita.metapilot.admin.entity.HashtagEntity">
+        if (type = 0) {
+            select
+                *
+            from
+                hashtag_tbl
+            <if test="type == 0">
+                order by
+                    content asc
+            </if>
+            <if test="type == 1">
+                order by
+                    (select
+                        count(*)
+                    from
+                        post_hashtag_tbl pht
+                    where
+                        ht.id = pht.hashtag_tbl_id
+                    ) desc
+            </if>
+        }
+    </select>
+
+    <delete id="deleteTag" parameterType="com.dita.metapilot.admin.dto.HashtagDto">
+        delete from
+            hashtag_tbl
+        where
+            id = #{id}
+    </delete>
+
+    <update id="updateTag" parameterType="com.dita.metapilot.admin.entity.HashtagEntity">
+        update
+            hashtag_tbl
+        set
+            content = #{content}
+        where
+            id = #{id}
+    </update>
+
+    <select id="isTagExist" parameterType="com.dita.metapilot.admin.dto.HashtagDto" resultType="boolean">
+        select
+            if (count(*) = 1, 1, 0)
+        from
+            hashtag_tbl
+        where
+            content = #{content}
+    </select>
+
     <!-- blog info 수정 -->
     <update id="updateBlogInfo" parameterType="com.dita.metapilot.admin.dto.CmsInfoDto">
         update
