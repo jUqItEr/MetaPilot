@@ -74,33 +74,31 @@
     </select>
 
     <select id="readTag" parameterType="com.dita.metapilot.admin.dto.HashtagSearchDto" resultType="com.dita.metapilot.admin.entity.HashtagEntity">
-        if (type = 0) {
-            select
-                *
+        select
+        *
+        from
+            hashtag_tbl ht
+        <if test="type == 0">
+            order by
+                ht.content asc
+        </if>
+        <if test="type == 1">
+            order by
+            (select
+                count(*)
             from
-                hashtag_tbl
-            <if test="type == 0">
-                order by
-                    content asc
-            </if>
-            <if test="type == 1">
-                order by
-                    (select
-                        count(*)
-                    from
-                        post_hashtag_tbl pht
-                    where
-                        ht.id = pht.hashtag_tbl_id
-                    ) desc
-            </if>
-        }
+                post_hashtag_tbl pht
+            where
+                ht.id = pht.hashtag_tbl_id
+            ) desc
+        </if>
     </select>
 
     <delete id="deleteTag" parameterType="com.dita.metapilot.admin.dto.HashtagDto">
         delete from
             hashtag_tbl
         where
-            id = #{id}
+            content = #{content}
     </delete>
 
     <update id="updateTag" parameterType="com.dita.metapilot.admin.entity.HashtagEntity">
