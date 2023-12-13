@@ -52,17 +52,38 @@
     </div>
     </div> */}
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from '/styles/sidebar.module.css'
+
+import SidebarMenu from 'react-bootstrap-sidebar-menu'
+import { faCookie } from '@fortawesome/free-solid-svg-icons'
 
 
 const IndexSidebar = ({ category }) => {
     console.log(category)
 
     return (
-        <div className='d-flex flex-column flex-shrink-0 p-3'
-            style={{width: 280}}>
-            
-        </div>
+        <>
+            <SidebarMenu>
+                <SidebarMenu.Header>
+                    <SidebarMenu.Brand>
+                    </SidebarMenu.Brand>
+                    <SidebarMenu.Toggle />
+                </SidebarMenu.Header>
+                <SidebarMenu.Body>
+                    <SidebarMenu.Nav>
+                        <SidebarMenu.Nav.Link>
+                            <SidebarMenu.Nav.Icon>
+                                
+                            </SidebarMenu.Nav.Icon>
+                            <SidebarMenu.Nav.Title>
+                                Test
+                            </SidebarMenu.Nav.Title>
+                        </SidebarMenu.Nav.Link>
+                    </SidebarMenu.Nav>
+                </SidebarMenu.Body>
+            </SidebarMenu>
+        </>
     )
 }
 

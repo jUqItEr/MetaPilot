@@ -1,22 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "/styles/post/post.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
-const PostHeader = () => {
+const PostHeader = ({ pid }) => {
   const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
   const router = useRouter();
-  const { postId } = router.query;
 
   useEffect(() => {
     axios({
       method: "get",
       params: {
-        postId: 68,
+        postId: pid,
       },
-      url: "/api/post/postView",
+      url: "/api/post/view",
     }).then((res) => {
       setData(res.data);
       console.log(res.data);
@@ -35,13 +35,20 @@ const PostHeader = () => {
           <div className="headerList">목록열기</div>
         </div>
         <div className={styles.headerComponent}>
-          <div className={styles.headerCompoCate}></div>
+          <div className={styles.headerCompoCate}>{data.post?.categorySubject}</div>
           <div className={styles.headerCompoTitle}>{data.post?.subject}</div>
           <div className={styles.headerSubList}>
             <div className={styles.headerProfile}>
-              <div className="headerProfilePhoto">유저 프로필사진</div>
-              <div className={styles.headerProfileName}></div>
-              <div className="headerProfileTime">{data.post?.createdAt}</div>
+
+              <Image
+                className={styles.headerProfile}
+                src={data.post?.profileImage || "/image/profile.png"}
+                alt={"image"}
+                width={40}
+                height={40}
+              />
+              <div className={styles.headerProfileName}><span className={styles.profileNickname}>{data.post?.nickName}</span></div>
+              <div className="headerProfileTime"><span className={styles.profileNickname}>{data.post?.createdView}</span></div>
             </div>
             <div className={styles.headerSubDropdown}>
               <div>목록</div>

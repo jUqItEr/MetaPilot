@@ -1,29 +1,37 @@
 import { EditorState } from "draft-js"
-import { useState } from "react"
-import { Editor } from "react-draft-wysiwyg"
+import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
+import { stateFromHTML } from 'draft-js-import-html'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
-const DraftEditor = () => {
-    const editorStyle = {
-        cursor: 'pointer',
-        width: '100%',
-        minHeight: '20rem',
-        border: '2px solid rgba(209, 213, 219, var(--tw-border-opacity))',
+const Editor = dynamic(
+    () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+    { loading: () => null, ssr: false }
+)
+
+function RichTextEditor({ initialData }) {
+    const [editorState, setEditorState] = useState()
+
+    const onEditorStateChange = editorState => {
+        setEditorState(editorState)
     }
 
-    const [state, setState] = useState(EditorState.createEmpty())
-
-    const onStateChange = state => {
-        setState(state)
-    }
+    useEffect(() => {
+        setEditorState(
+            EditorState.createWithContent(
+                stateFromHTML(initialData)
+            )
+        )
+    }, [initialData])
 
     return (
-        <div style={ editorStyle }>
+        <>
             <Editor
                 wrapperClassName='wrapper-class'
                 editorClassName='editor'
                 toolbarClassName='toolbar-class'
                 toolbar={{
+                    options: ['fontFamily', 'fontSize', 'inline', 'textAlign', 'history', 'list', 'link', 'image'],
                     list: {
                         inDropdown: true
                     },
@@ -41,11 +49,10 @@ const DraftEditor = () => {
                 localization={{
                     locale: 'ko',
                 }}
-                editorState={state}
-                onEditorStateChange={onStateChange}
-            />
-        </div>
+                editorState={editorState}
+                onEditorStateChange={onEditorStateChange} />
+        </>
     )
 }
 
-export default DraftEditor
+export default RichTextEditor

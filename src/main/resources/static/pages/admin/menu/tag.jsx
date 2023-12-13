@@ -20,17 +20,34 @@ export default function AdminHashTagPage() {
     const [originalTag, setOriginalTag] = useState()
 
     const changeTag = component => {
+        const id = $('#tag-name').data('id')
+
         axios({
             method: 'post',
             params: {
+                id: id,
                 content: component
             },
-            url: '/api/admin/'
+            url: '/api/admin/updateTag'
+        })
+        .then((res) => {
+            if (res.data) {
+                alert('해시태그가 성공적으로 변경되었습니다.')
+                $(`button[data-id=${id}]`).text(component)
+                $('#tag-name').attr('readOnly', true)
+                $('#tag-name').val('')
+                $('#tag-name').data('id', null)
+                setOriginalTag(null)
+            }
+        })
+        .catch((err) => {
+            console.log(err)
         })
     }
 
     const moveTag = component => {
-        const tag = component.content
+        const tag = $(`button[data-id=${component.id}]`).text()
+        $('#tag-name').data('id', component.id)
         $('#tag-name').val(tag)
         $('#tag-name').attr('readOnly', false)
         setOriginalTag(tag)
@@ -52,6 +69,7 @@ export default function AdminHashTagPage() {
                 if (!res.data) {
                     changeTag(tag)
                 } else {
+                    $('#tag-name').val(originalTag)
                     alert('이미 사용 중인 해시태그입니다.')
                 }
             })
@@ -60,8 +78,69 @@ export default function AdminHashTagPage() {
         }
     }
 
-    const removeTag = () => {
+    const orderByAlphabet = () => {
+        axios({
+            method: 'get',
+            params: {
+                type: 0
+            },
+            url: '/api/admin/readTag'
+        })
+        .then((res) => {
+            setTag(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
 
+    const orderByCount = () => {
+        axios({
+            method: 'get',
+            params: {
+                type: 1
+            },
+            url: '/api/admin/readTag'
+        })
+        .then((res) => {
+            setTag(res.data)
+            console.log("here : ",res)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+    const removeTag = () => {
+        const tag = $('#tag-name').val()
+        const isInitial = originalTag === tag
+
+        if (isInitial) {
+            axios({
+                method: 'post',
+                params: {
+                    content: tag
+                },
+                url: '/api/admin/deleteTag'
+            })
+            .then((res) => {
+                if (res.data) {
+                    const id = $('#tag-name').data('id')
+                    alert('해시태그를 삭제하였습니다.')
+                    $(`button[data-id=${id}]`).remove()
+                    $('#tag-name').attr('readOnly', true)
+                    $('#tag-name').val('')
+                    $('#tag-name').data('id', null)
+                } else {
+                    alert('해시태그를 삭제하지 못했습니다.')
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        } else {
+            alert('해시태그를 수정한 상태에선 삭제가 불가능합니다.')
+        }
     }
     
     useEffect(() => {        
@@ -104,7 +183,7 @@ export default function AdminHashTagPage() {
                                         {
                                             tag?.map((mapper) => (
                                                 <button className="list-group-item list-group-item-action" type="button"
-                                                    key={mapper.content} onClick={() => moveTag(mapper)}>{mapper.content}</button>
+                                                    key={mapper.content} data-id={mapper.id} onClick={() => moveTag(mapper)}>{mapper.content}</button>
                                             ))
                                         }
                                     </div>
@@ -113,15 +192,15 @@ export default function AdminHashTagPage() {
                             <div className={styles.setting} >
                                 <label className="pb-3">태그 정렬</label>
                                 <div className="input-group mb-5">
-                                    <button className="btn btn-primary ps-5 pe-5 " type="button" id="btnOrderUse" style={{border:'1px solid white'}} >사용순</button>
-                                    <button className="btn btn-primary ps-5 pe-5" type="button" id="btnOrderABC"style={{border:'1px solid white'}} >가나다순</button>
+                                    <button className="btn btn-primary ps-5 pe-5 " type="button" id="btnOrderUse" style={{border:'1px solid white'}} onClick={orderByCount}>사용순</button>
+                                    <button className="btn btn-primary ps-5 pe-5" type="button" id="btnOrderABC"style={{border:'1px solid white'}} onClick={orderByAlphabet}>가나다순</button>
 
                                 </div>
                                 <label className="pb-3 mt-5">태그 수정, 삭제</label>
                                 <div className="input-group">
                                     <input className="form-control" id="tag-name" type="text" placeholder="수정할 해시태그명을 입력하세요." aria-describedby="button-addon2" readOnly/>
                                     <button className="btn btn-primary ps-3 pe-3" type="button" id="btnUpdate" style={{border:'1px solid white'}} onClick={modifyTag}>수정</button>
-                                    <button className="btn btn-primary ps-3 pe-3" type="button" id="btnDelete" style={{border:'1px solid white'}} onClick={removeTag}>삭제</button>
+                                    <button className="btn btn-danger ps-3 pe-3" type="button" id="btnDelete" style={{border:'1px solid white'}} onClick={removeTag}>삭제</button>
                                 </div>
                             </div>
                         </div>

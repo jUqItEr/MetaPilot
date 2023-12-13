@@ -21,4 +21,10 @@ public class PostEntity {
     private int type;
     private String createdAt;
     private int likeCount;
+    private int commentCount;
+    private String createdDate;
+    private String nickName;
+    private String profileImage;
+    private String categorySubject;
+    private String createdView;
 }

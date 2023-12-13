@@ -34,10 +34,15 @@
     position: absolute;
     left: 5%;
     bottom: 10%;
+    border-radius: 50%;
 }
 
 .headerProfileName {
     margin: 0 10px;
+}
+
+.profileNickname {
+  font-size: 24px;
 }
 
 .headerSubDropdown {
@@ -166,7 +171,6 @@
 
   .likesWrap {
     margin: 0 auto;
-    border: 1px solid black;
     width: 90%;
     padding: 20px;
   }
@@ -187,7 +191,7 @@
     display: flex;
     align-items: center;
     gap: 10px; /* 이미지와 텍스트 사이의 간격 */
-    width: 272px;
+    width: 150px;
   }
 
   .likesUserImage {

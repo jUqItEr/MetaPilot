@@ -26,6 +26,6 @@ public interface FileRepository {
      * @since 2023. 12. 11.
      * @version 1.0.0
      */
-    int createFile(FileDto file);
+    int createFile(FileDto fileDto);
 
 }

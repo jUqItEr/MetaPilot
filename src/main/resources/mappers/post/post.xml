@@ -6,30 +6,36 @@
 <mapper namespace="com.dita.metapilot.post.repository.PostRepository">
 
 	<resultMap id="postEntity" type="com.dita.metapilot.post.entity.PostEntity">
-		<result property="postId" column="id"></result>
-		<result property="subject" column="subject"></result>
-		<result property="content" column="content"></result>
-		<result property="userId" column="user_tbl_id"></result>
-		<result property="createdAt" column="created_at"></result>
-		<result property="count" column="count"></result>
-		<result property="notice" column="notice"></result>
-		<result property="categoryId" column="category_tbl_id"></result>
-		<result property="thumbnail" column="thumbnail"></result>
-		<result property="deleted" column="deleted"></result>
-		<result property="type" column="type"></result>
-		<result property="likeCount" column="liked"></result>
+		<result property="postId" column="id"/>
+		<result property="subject" column="subject"/>
+		<result property="content" column="content"/>
+		<result property="userId" column="user_tbl_id"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="count" column="count"/>
+		<result property="notice" column="notice"/>
+		<result property="categoryId" column="category_tbl_id"/>
+		<result property="thumbnail" column="thumbnail"/>
+		<result property="deleted" column="deleted"/>
+		<result property="type" column="type"/>
+		<result property="likeCount" column="liked"/>
+		<result property="commentCount" column="comment_count"/>
+		<result property="createdDate" column="created_date"/>
+		<result property="nickName" column="nickname"/>
+		<result property="profileImage" column="profile_image"/>
+		<result property="createdView" column="created_view"/>
+		<result property="categorySubject" column="category_subject"/>
 	</resultMap>
 
 	<resultMap id="postDto" type="com.dita.metapilot.post.dto.FindPostByHashtagDto">
-		<id property="postId" column="id" />
-		<result property="categoryId" column="category_tbl_id" />
-		<result property="userId" column="user_tbl_id" />
-		<result property="subject" column="subject" />
-		<result property="content" column="content" />
-		<result property="type" column="type" />
-		<result property="createdAt" column="created_at" />
+		<id property="postId" column="id"/>
+		<result property="categoryId" column="category_tbl_id"/>
+		<result property="userId" column="user_tbl_id"/>
+		<result property="subject" column="subject"/>
+		<result property="content" column="content"/>
+		<result property="type" column="type"/>
+		<result property="createdAt" column="created_at"/>
 		<collection property="hashtags" ofType="com.dita.metapilot.post.dto.HashtagDto">
-			<result property="content" column="hashcontent" />
+			<result property="content" column="hashcontent"/>
 		</collection>
 	</resultMap>
 
@@ -143,7 +149,7 @@
 					comment_tbl ct
 				where
 					ct.post_tbl_id = pt.id
-			) as commented
+			) as comment_count
 		from
 			post_tbl pt
 		where
@@ -197,9 +203,32 @@
 	<!-- 게시글 조회 -->
 	<select id="getPostView" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultMap="postEntity">
 		<![CDATA[
-        select pt.*, (select count(*) from post_like_tbl plt where plt.post_tbl_id = pt.id) as liked
-		from post_tbl pt
-        where id = #{postId}
+        	select
+        		pt.*,
+        		ut.nickname,
+        		ut.profile_image,
+        		ct.subject as category_subject,
+        		substring(pt.created_at, 1, 16) as created_view,
+				(
+					select
+						count(*)
+					from
+						post_like_tbl plt
+					where
+						plt.post_tbl_id = pt.id
+				) as liked
+			from
+				post_tbl pt
+			join
+				category_tbl ct
+			on
+				pt.category_tbl_id = ct.id
+			join
+				user_tbl ut
+			on
+				pt.user_tbl_id = ut.id
+			where
+				pt.id = #{postId}
         ]]>
 	</select>
 
@@ -226,6 +255,33 @@
         ]]>
 	</select>
 
+	<!-- 게시글 페이징 -->
+	<select id = "getPagingView" parameterType="com.dita.metapilot.post.dto.PagingDto" resultType="com.dita.metapilot.post.entity.PostEntity">
+		select
+			subject,
+			created_at as createdAt,
+			substring(pt.created_at, 1, 10) as createdDate,
+			(select
+				count(*)
+			from
+				comment_tbl ct
+			where
+				ct.post_tbl_id  = pt.id
+			) as commentCount,
+			(select
+				count(*)
+			from
+				post_tbl
+			) as postCount
+		from
+			post_tbl pt
+		order by
+			created_at desc
+		<if test='limit == "Y"'>
+			limit #{index}, #{count};
+		</if>
+	</select>
+
 	<!-- 해시태그의 id를 가져옴 -->
 	<select id="getRecentPostId" resultType="long">
 		select max(id)
@@ -236,7 +292,7 @@
 	<delete id="revokeLike" parameterType="com.dita.metapilot.post.dto.PostResponseDto">
 		<![CDATA[
         delete from post_like_tbl
-        where post_tbl_id = #{postId}
+        where post_tbl_id = #{postId} and user_tbl_id = #{userId}
         ]]>
 	</delete>
 

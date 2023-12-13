@@ -59,6 +59,7 @@ public class AdminController {
     @ResponseBody
     @GetMapping("/readTag")
     public ResponseEntity<?> readTag(HashtagSearchDto hashtagSearchDto) {
+        System.out.println(hashtagSearchDto.getType());
         return ResponseEntity.ok(adminService.readTag(hashtagSearchDto));
     }
 

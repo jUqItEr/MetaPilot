@@ -1,82 +1,109 @@
 .wrap {
-    width: 100%;
-    
-    min-width: 744px;
-    height: 315px;
-    overflow: scroll;
-    overflow-y: auto;
-    white-space: nowrap;
+  width: 100%;
+
+  min-width: 744px;
+  height: 315px;
+  overflow: scroll;
+  overflow-y: auto;
+  white-space: nowrap;
 }
 
 .popularPost {
-    margin: 0 auto;
-    width: 640px;
-    padding: 15px 0;
+  margin: 0 auto;
+  width: 640px;
+  padding: 15px 0;
 }
 
 .popularPostTitle {
-    font-size: 18px;
-    font-weight: 600;
+  font-size: 18px;
+  font-weight: 600;
 }
-
-@media (min-width: 744px) {
-    .popularPostContainer {
-        padding-left: calc(50% - 320px);
-        scroll-padding-left: calc(50% - 320px);
-    }
-
-    .popularPostBox:last-child {
-        padding-right: calc(50% - 170px);
-    }
-}
-
 
 .popularPostList {
-    display: flex;
-    list-style-type: none;
-    margin: 0;
-    padding: 0 10px 0;
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0 10px 0;
 }
 
 .popularPostContent {
-    display: flex;
-    flex-wrap: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .popularImageBox {
-    width: 150px;
-    height: 220px;
-    padding-bottom: 15px;
-    margin-right: 10px;
+  width: 150px;
+  height: 220px;
+  padding-bottom: 15px;
+  margin-right: 10px;
 }
 
 .popularImageLink {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
 
 .popularImageLink:visited {
-    color: inherit; 
+  color: inherit;
 }
 
 .popularImage {
-    border-radius: 5px;
+  border-radius: 5px;
 }
 
 .popularImageTitle {
-    width: 150px;
-    padding: 8px 0 8px 0;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
+  width: 150px;
+  padding: 8px 0 8px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .popularSubject {
-    font-size: 14px;
-    font-weight: 600;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .popularCategoryName {
-    font-size: 10px;
-    color: darkgray;
+  font-size: 10px;
+  color: var(--bs--darkgrey);
+}
+
+@media (min-width: 744px) {
+  .popularPostContainer {
+    padding-left: calc(50% - 320px);
+    scroll-padding-left: calc(50% - 320px);
+  }
+
+  .popularPostBox:last-child {
+    padding-right: calc(50% - 170px);
+  }
+}
+
+
+@media (max-width: 420px) {
+  .wrap {
+      min-width: 0; 
+      height: auto; 
+      overflow-x: scroll;
+      overflow-y: hidden;
+      white-space: nowrap;
+  }
+
+  .popularPost {
+      width: 100%; 
+      padding: 15px 0; 
+      box-sizing: border-box;
+  }
+
+  .popularImageBox {
+      max-width: 150px;
+      height: auto;
+      margin-right: 10px;
+  }
+
+  .popularImageTitle {
+      width: 150px;
+      padding: 8px 0;
+  }
 }

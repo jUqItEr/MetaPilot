@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { TopMenu } from '../../components/home/menu';
 import { ThemeSwitcher } from '../../components/home/switcher';
 
-const IndexHeader = ({ info }) => {    
+const IndexHeader = ({ info }) => {
     return (
         <>
             <header className='navbar navbar-expand-lg border-bottom'>

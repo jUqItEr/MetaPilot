@@ -158,6 +158,12 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostView(postIdDto));
     }
 
+    @ResponseBody
+    @GetMapping("/page/view")
+    public ResponseEntity<List<PostEntity>> postPageView(PagingDto pagingDto) {
+        return ResponseEntity.ok(postService.getPostPageView(pagingDto));
+    }
+
     /*
     @ResponseBody
     @PostMapping("/getPost")

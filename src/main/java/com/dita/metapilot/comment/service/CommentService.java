@@ -1,10 +1,8 @@
 package com.dita.metapilot.comment.service;
 
-import com.dita.metapilot.comment.dto.CommentDto;
-import com.dita.metapilot.comment.dto.LikeDto;
-import com.dita.metapilot.comment.dto.PostCommentDto;
-import com.dita.metapilot.comment.dto.RefCommentDto;
+import com.dita.metapilot.comment.dto.*;
 import com.dita.metapilot.comment.entity.CommentEntity;
+import com.dita.metapilot.comment.file.dto.FileIdDto;
 import com.dita.metapilot.comment.repository.CommentRepository;
 import com.dita.metapilot.comment.file.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -51,10 +49,10 @@ public class CommentService {
         boolean result = false;
 
         result = commentRepository.saveComment(commentDto);
-        int commentId = commentRepository.getRecentCommentId();
+        long commentId = commentRepository.getRecentCommentId();
         MultipartFile file = null;
         if (file != null) {
-            result &= fileService.createFile(commentId, file);
+            result &= fileService.createFile(file, new FileIdDto(commentId));
         }
 
         return result;
@@ -83,12 +81,10 @@ public class CommentService {
      * @since 2023. 12. 11.
      * @version 1.0.0
      */
-    public boolean deleteComment(CommentDto commentDto) {
+    public boolean deleteComment(CommentIdDto commentIdDto) {
         try {
-            // CommentDto에서 ID를 가져와서 사용
-            long commentId = commentDto.getId();
             // 주어진 ID를 사용하여 댓글을 삭제하는 데이터베이스 조작 메서드 호출
-            return commentRepository.deleteComment(commentId) > 0;
+            return commentRepository.deleteComment(commentIdDto);
         } catch (Exception e) {
             // 예외 발생 시 로깅하고 삭제 실패로 처리
             System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
@@ -106,9 +102,10 @@ public class CommentService {
      * @version 1.0.0
      */
 
-    public List<CommentEntity> listCommentsByPostId(Long postId) {
-        return commentRepository.findByPostId(postId);
+    public List<CommentEntity> listCommentsByPostId(PostIdDto postIdDto) {
+        return commentRepository.findByPostId(postIdDto);
     }
+
 
 
 
@@ -121,16 +118,18 @@ public class CommentService {
      * @since 2023. 12. 11.
      * @version 1.0.0
      */
-    public boolean deleteCommentById(long id) {
+    /*
+    public boolean deleteCommentById(CommentIdDto commentIdDto) {
         try {
             // 주어진 ID를 사용하여 댓글을 삭제하는 데이터베이스 조작 메서드 호출
-            return commentRepository.deleteComment(id) > 0;
+            return commentRepository.deleteComment(commentIdDto);
         } catch (Exception e) {
             // 예외 발생 시 로깅하고 삭제 실패로 처리
             System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
             return false;
         }
     }
+    */
 
     /*
      * 댓글을 저장하고 파일을 첨부하는 메서드
@@ -149,11 +148,11 @@ public class CommentService {
         result = commentRepository.saveComment(commentDto);
 
         // 저장된 댓글의 ID 가져오기
-        int commentId = commentRepository.getRecentCommentId();
+        long commentId = commentRepository.getRecentCommentId();
 
         // 파일 서비스를 사용하여 파일 저장
         if (file != null && !file.isEmpty()) {
-            result &= fileService.createFile(commentId, file);
+            result &= fileService.createFile(file, new FileIdDto(commentId));
         }
         return result;
     }
@@ -188,6 +187,14 @@ public class CommentService {
     public RefCommentDto createComment(RefCommentDto refCommentDto) {
         commentRepository.createComment(refCommentDto);
         return refCommentDto;
+    }
+
+    public boolean updateCommentRootId(RefCommentDto refCommentDto) {
+        return commentRepository.updateCommentRoot(refCommentDto);
+    }
+
+    public long getRecentCommentId() {
+        return commentRepository.getRecentCommentId();
     }
 
     /*

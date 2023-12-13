@@ -34,7 +34,7 @@
 }
 
 .postListSubject {
-    color: gray;
+    color: var(--bs--gray);
 }
 
 .postListTitle {
@@ -45,10 +45,132 @@
 }
 
 .postListCommentCount {
-    color: red;
+    color: var(--bs--red);
 }
+
+
 
 .postListTitles {
     margin-right: 10px;
 }
 
+.postListSelectGroup {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.searchGroup {
+    display: flex;
+    justify-content: space-between;
+}
+
+.searchGroupInput {
+    display: flex;
+}
+
+.pageController {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pageNumbers {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.pageLink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0px 5px;
+    border: 1px solid black;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+
+    font-weight: 600;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.pageLink:hover {
+    background-color: var(--bs-gray-400);
+}
+
+.disabled {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0px 5px;
+    border: 1px solid black;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+
+    font-weight: 600;
+    font-size: 12px;
+
+    cursor: default;
+    text-decoration: none;
+}
+
+@media (max-width: 420px) {
+    .postListWrap {
+        width: 100%; 
+        padding: 0 15px; 
+        box-sizing: border-box; 
+    }
+
+    .postListHeader,
+    .postListSubHeader,
+    .postListTitle {
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+
+    .postListGroup,
+    .postListSelectGroup,
+    .searchGroup {
+        flex-wrap: wrap; 
+    }
+
+    .postListToggle,
+    .postListTitles,
+    .postListCommentCount {
+        margin-right: 0; 
+    }
+
+    .postListSelectGroup,
+    .searchGroup {
+        justify-content: space-between; 
+    }
+
+    .searchGroupInput {
+        flex-direction: column; 
+    }
+
+    .pageController {
+        flex-wrap: wrap; 
+    }
+
+    /* .pageLink,
+    .disabled {
+        margin: 5px; 
+        width: auto; 
+    } */
+
+    .pageLink,
+    .disabled {
+        margin: 5px; 
+        width: auto; 
+        height: 40px; 
+        font-size: 14px; 
+        padding: 0 10px; 
+        box-sizing: border-box; 
+    }
+}
