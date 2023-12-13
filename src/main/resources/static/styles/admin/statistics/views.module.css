@@ -11,20 +11,17 @@
 }
 .pageTitle{
     padding : 10px 20px;
-    width: 800px;
-    border : 1px solid black;
+    width: 800px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.pageTitle div {
-    border:1px solid black;
+.pageTitle div { 
 }
 .fortawesomeIcon{
     width:10px;
 }
-.pageContent {
-    border : 1px solid black;
+.pageContent { 
     width: 800px;
     height: 80%;
     padding: 20px;

@@ -1,11 +1,12 @@
 import Head from "next/head"
-import Image from 'next/image'
 import axios from 'axios'
 import $ from 'jquery'
 import styles from '../../../styles/admin/basic/user.module.css'
 import AdminHeader from "../../../layout/admin/header";
 import AdminSidebar from "../../../layout/admin/sidebar";
-import {useEffect} from "react"
+import {useEffect,useState} from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
 
 /**
@@ -16,13 +17,91 @@ import {useEffect} from "react"
  * @returns
  */
 export default function AdminBlockUserPage() {
+    const [isMobile, setIsMobile] = useState(false);
+    const [block, setBlock] = useState([]);
+
+    const createBlock = () => {
+        const userId = $('#blockId').val()
+        
+        if (userId !== '') {
+            axios({
+                params: {
+                    userId: userId
+                },
+                method: 'post',
+                url: '/api/admin/createBlockUser'
+            })
+            .then((res) => {
+                if (res.data) {
+                    setBlock([...block, { userId: userId }])
+                } else {
+                    alert("차단한 사용자를 찾을 수 없습니다.")
+                    $('#blockId').val('')
+                }
+            })
+            .catch((err) => {
+                console.error('Request error:', err);
+            })   
+        } else {
+            alert("차단할 사용자 아이디를 입력하세요.")
+        }
+    }
+
+    const deleteBlock = userId => {
+        axios({
+            params: {
+                userId: userId
+            },
+            method: 'post',
+            url: '/api/admin/deleteBlockUser'
+        })
+        .then((res) => { 
+            if (res.data) {
+                $(`li[data-id=${userId}]`).remove()
+            }   
+        })
+        .catch((err) => {
+            console.error('Request error:', err);
+        })
+    };
+
+
     useEffect(() => {
-        $(function () {
-            $('.xclk').on('click', function () {
-                const itemId = $(this).closest('li').attr('id');
-                console.log(` ${itemId}`);
-            });
-        });
+        axios({
+            method: 'get',
+            url: '/api/admin/readBlockUser'
+        })
+        .then((res) => {
+            setBlock(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+
+
+        
+        const handleResize = () => {
+            const mobile = window.innerWidth <= 768;
+            setIsMobile(mobile);
+
+            const list = document.querySelector(`.${styles.list}`); 
+            const blockInfo = document.querySelector(`.${styles.blockInfo}`);
+
+            if (mobile) {
+                list.style.width ='200px';
+                blockInfo.style.fontSize = '10px';
+            }
+ 
+            if (!mobile) {  
+
+            }
+        };
+        window.addEventListener("resize", handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+
     }, []);
     return (
         <>
@@ -47,33 +126,23 @@ export default function AdminBlockUserPage() {
                                     <div className="col-7">
                                         <input type="text" className="form-control" id="blockId" placeholder="차단할 사용자 아이디"/>
                                     </div>
-                                    <div className="col-4">
-                                        <button type="submit" className={`btn btn-primary mb-3`} >차단하기</button>
+                                    <div className="col-5">
+                                        <button className={`btn btn-primary mb-3`} type="button" onClick={() => createBlock()}>차단하기</button>
                                     </div>
                                 </form>
                             </div>
 
                             <ul className={styles.list}>
-                                <li id="List_ITEM1" className={`${styles.listItem} `}>
-                                    <div className={styles.blockUserId}>sadfsdfasdfasdf</div>
-                                    <a href="#" className="xclk">x</a>
-                                </li>
-                                <li id="List_ITEM2" className={`${styles.listItem} `}>
-                                    <div className={styles.blockUserId}>sadfsdfasdfasdf</div>
-                                    <a href="#" className="xclk">x</a>
-                                </li>
-                                <li id="List_ITEM3" className={`${styles.listItem} `}>
-                                    <div className={styles.blockUserId}>sadfsdfasdfasdf</div>
-                                    <a href="#" className="xclk">x</a>
-                                </li>
-                                <li id="List_ITEM4" className={`${styles.listItem} `}>
-                                    <div className={styles.blockUserId}>sadfsdfasdfasdf</div>
-                                    <a href="#" className="xclk">x</a>
-                                </li>
-                                <li id="List_ITEM5" className={`${styles.listItem} `}>
-                                    <div className={styles.blockUserId}>sadfsdfasdfasdf</div>
-                                    <a href="#" className="xclk">x</a>
-                                </li>
+                                {
+                                    block?.map((mapper) => (
+                                        <li className={`${styles.listItem}`} key={mapper.userId} data-id={mapper.userId}>
+                                            <div className={styles.blockUserId}>{mapper.userId}</div>
+                                            <button className={styles.xclk} type="button" onClick={()=> deleteBlock(`${mapper.userId}`)}>
+                                                <FontAwesomeIcon icon={faX} style={{color:'black',width:'7px'}}/>
+                                            </button>
+                                        </li>       
+                                    ))
+                                }
                             </ul>
 
 

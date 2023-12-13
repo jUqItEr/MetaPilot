@@ -25,6 +25,12 @@ public interface AdminRepository {
     List<HashtagEntity> readTag(HashtagSearchDto hashtagSearchDto);
 
     boolean isTagExist(HashtagDto hashtagDto);
+    /**
+     * <p>blog info tbl 레이아웃 수정</p>
+     * @since 2023. 12. 12.
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    boolean updateLayout(CmsInfoEntity cmsInfoEntity);
 
     boolean deleteTag(HashtagDto hashtagDto);
 

@@ -48,6 +48,34 @@
     background-color: var(--bs-tertiary-bg);
 }
 
-.sidebar{
+.sidebar {
+    height:calc(100vh - 70px);
+    overflow-x: hidden;
+    border-right:1px solid lightgray;
+    margin: 0;
+    padding:0; 
+    background-color: white; 
+}
 
+
+.fortawesomeIcon{
+    width : 15px;
+}
+.barbtn{
+    background-color: white;
+    border: none;
+    padding-left: 15px; 
+}
+
+.openbar{
+    text-align : right;
+    padding: 10px 20px 0 0;
+    cursor: pointer;
+    border-right:1px solid gray;
+    width:50px;
+    height:calc(100vh - 70px); 
+}
+.sidebarlist{
+    margin:20px 0 0 5px;
+    text-align: left;
 }

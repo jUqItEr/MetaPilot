@@ -1,23 +1,23 @@
-.wrap {
-    overflow-x: hidden;
+.wrap { 
     margin: 0;
-    padding: 0;
-}
-.content {
-    width: 100%;
+    padding: 0; 
+} 
+.content { 
+    border:1px solid black;
     overflow-x: hidden;
     padding: 20px;
 }
 .pageTitle {
     padding: 10px 20px;
-    /*width: calc(40% + 200px);*/
+    /* width: calc(40% + 200px); */
     width: 800px;
+    /* width:37.5%; */
+    /* width: 95%; */
     border-bottom: 1px solid darkgray;
 }
 .pageContent {
-    width: 800px;
-    height: 80%;
-    padding: 20px;
+    /* width: 95%; */
+    /* height: 80%; */ 
 }
 .pageTitleFont {
     font-size: 24px;
@@ -48,7 +48,15 @@
 .setField{
     width:100%;
     padding: 10px 20px;
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-start; */
+} 
+
+.label{ 
 }
+
+.profileImgField{
+
+}
+.googleTitle{}

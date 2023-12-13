@@ -26,6 +26,15 @@ public class AdminService {
      */
     public List<CmsInfoEntity>  getBlogInfo(){return adminRepository.getCmsInfo();}
 
+    /**
+     * <p>blog info 수정</p>
+     * @since 2023. 12. 12.
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public boolean updateLayout(CmsInfoEntity cmsInfoEntity) {
+        return adminRepository.updateLayout(cmsInfoEntity);
+    }
+
     public List<HashtagEntity> readTag(HashtagSearchDto hashtagSearchDto){
         return adminRepository.readTag(hashtagSearchDto);
     }
