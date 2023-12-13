@@ -1,10 +1,7 @@
 package com.dita.metapilot.comment.repository;
 
-import com.dita.metapilot.comment.dto.CommentDto;
-import com.dita.metapilot.comment.dto.PostCommentDto;
-import com.dita.metapilot.comment.dto.RefCommentDto;
+import com.dita.metapilot.comment.dto.*;
 import com.dita.metapilot.comment.entity.CommentEntity;
-import com.dita.metapilot.comment.dto.LikeDto;
 import org.apache.ibatis.annotations.Mapper;
 
 
@@ -27,10 +24,11 @@ import java.util.List;
 public interface CommentRepository {
     boolean saveComment(CommentDto commentDto);
     long updateComment(CommentDto commentDto);
-    long deleteComment(long commentId);
-    List<CommentEntity> findByPostId(Long postId);
-    int getRecentCommentId();
+    boolean deleteComment(CommentIdDto commentIdDto);
+    List<CommentEntity> findByPostId(PostIdDto postIdDto);
+    long getRecentCommentId();
 
+    /*
     default void deleteById(long id) {
         try {
             String query = "DELETE FROM comment_tbl WHERE id = ?";
@@ -38,10 +36,14 @@ public interface CommentRepository {
             System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
         }
     }
+    */
+
     // 댓글 추가
     boolean addComment(PostCommentDto postCommentDto);
 
     boolean updateCommentReference(PostCommentDto postCommentDto);
+
+    boolean updateCommentRoot(RefCommentDto refCommentDto);
 
     boolean createComment(RefCommentDto refCommentDto);
     // 댓글 조회
@@ -78,5 +80,5 @@ public interface CommentRepository {
      * @since 2023. 12. 11.
      * @version 1.0.0
      */
-    boolean hasLike(LikeDto likeDto);
+    boolean hasLike(LikeDto LikeDto);
 }

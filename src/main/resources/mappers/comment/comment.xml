@@ -5,6 +5,20 @@
 
 <mapper namespace="com.dita.metapilot.comment.repository.CommentRepository">
 
+    <resultMap id="comments" type="com.dita.metapilot.comment.entity.CommentEntity">
+        <result property="id" column="id"/>
+        <result property="postId" column="post_tbl_id"/>
+        <result property="commentRefId" column="comment_tbl_ref_id"/>
+        <result property="commentRootId" column="comment_tbl_root_id"/>
+        <result property="userId" column="user_tbl_id"/>
+        <result property="content" column="content"/>
+        <result property="depth" column="depth"/>
+        <result property="pos" column="pos"/>
+        <result property="visible" column="visible"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="nickname" column="nickname"/>
+        <result property="likeCount" column="liked"/>
+    </resultMap>
     <!-- Insert a new comment -->
     <!--
      * <p> 'comment_tbl' 테이블에 새로운 댓글을 추가하는 쿼리 </p>
@@ -14,9 +28,9 @@
      * @since 2023. 11. 28.
      * @version 1.0.0
      -->
-    <insert id="saveComment" parameterType="com.dita.metapilot.comment.dto.CommentDto" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveComment" parameterType="com.dita.metapilot.comment.entity.CommentEntity" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO comment_tbl (post_tbl_id, comment_tbl_ref_id, comment_tbl_root_id, user_tbl_id, content, depth, pos, visible, created_at)
-        VALUES (#{postId}, #{commentRefId}, #{commentRootId}, #{userId}, #{content}, null,null, null, now())
+        VALUES (#{postId}, #{commentRefId}, #{commentRootId}, #{userId}, #{content}, 0, 0, 1, now())
     </insert>
 
 
@@ -43,7 +57,7 @@
      * @since 2023. 11. 28.
      * @version 1.0.0
      -->
-    <delete id="deleteComment" parameterType="com.dita.metapilot.comment.dto.CommentDto">
+    <delete id="deleteComment" parameterType="com.dita.metapilot.comment.dto.CommentIdDto">
         DELETE FROM comment_tbl
         WHERE id = #{id}
     </delete>
@@ -56,9 +70,31 @@
      * @since 2023. 11. 28.
      * @version 1.0.0
      -->
-    <select id="findByPostId" resultType="com.dita.metapilot.comment.entity.CommentEntity" parameterType="Long">
-        SELECT * FROM comment_tbl
-        WHERE post_tbl_Id = #{postId}
+    <select id="findByPostId" resultMap="comments" parameterType="com.dita.metapilot.comment.dto.PostIdDto">
+        SELECT
+            ct.*,
+            ut.nickname,
+            (
+                select
+                    count(*)
+                from
+                    comment_like_tbl clt
+                where
+                    clt.comment_tbl_id = ct.id
+            ) as liked
+        FROM
+            comment_tbl ct
+        JOIN
+            user_tbl ut
+        on
+            ct.user_tbl_id = ut.id
+        WHERE
+            ct.post_tbl_id = #{postId}
+        and
+            ct.visible = 0
+        order by
+            comment_tbl_root_id asc,
+            id asc
     </select>
 
     <!-- Get the ID of the most recent comment -->
@@ -68,7 +104,7 @@
      * @since 2023. 11. 28.
      * @version 1.0.0
      -->
-    <select id="getRecentCommentId" resultType="int">
+    <select id="getRecentCommentId" resultType="long">
         select max(id)
         from comment_tbl
     </select>
@@ -119,6 +155,22 @@
         set comment_tbl_root_id = #{id}
         where id = #{id}
     </update>
+
+
+    <!-- Update the comment reference -->
+    <!--
+     * 특정 댓글의 참조를 업데이트하는 쿼리입니다.
+     * @param id 댓글의 ID
+     * @param comment_tbl_root_id 업데이트할 참조 댓글의 ID
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <update id="updateCommentRoot" parameterType="com.dita.metapilot.comment.dto.RefCommentDto">
+        update comment_tbl
+        set comment_tbl_root_id = #{id}
+        where id = #{id}
+    </update>
+
 
     <!-- Find replies to a comment -->
     <!--

@@ -22,46 +22,13 @@ export const getServerSideProps = async context => {
 }
 
 const PostPage = ({ postId }) => {
-    const [comments, setComments] = useState([
-        {
-            id: 1,
-            author: '소라카미',
-            text: '컨텐츠가 가득한 좋은 페이지 좋은 정보 감사합니다. 드롭다운 구현하면서 참고해야겠어요. ^^',
-            time: '2023.12.10. 08:51',
-            likes: 5,
-            replies: [
-                {
-                    id: 2,
-                    author: '답글',
-                    text: '네, 컨텐츠가 가득한 곳에 있고, 좋은 정보를 얻을 수 있습니다.',
-                    time: '2023.12.10. 09:19',
-                    likes: 0,
-                },
-            ],
-        },
-        {
-            id: 3,
-            author: '헤케맨',
-            text: '자주 오던 음식점이 가족소유로 바뀌어 방문이 기대됩니다',
-            time: '2023.12.10. 09:09',
-            likes: 0,
-            replies: [
-                {
-                    id: 4,
-                    author: '답글',
-                    text: '네, 그렇습니다.',
-                    time: '2023.12.10. 09:20',
-                    likes: 0,
-                },
-            ],
-        },
-    ]) //초기 댓글 데이터
+    const [comments, setComments] = useState([]) //초기 댓글 데이터
     const [likes, setLikes] = useState([])
     const [user, setUser] = useState([])
     const [showComments, setShowComments] = useState(false)
     const [postLiked, setPostLiked] = useState(false) // 게시글에 대한 좋아요 상태
     const [faChevron, setFaChevron] = useState(false) // 공감수 리스트 상태
-    const [formVisibility, setFormVisibility] = useState({})
+    const [commentLiked, setCommentLiked] = useState(false) // 댓글에 대한 좋아요 상태
 
     // 공감수 토글
     const toggleFaChevron = () => {
@@ -104,9 +71,6 @@ const PostPage = ({ postId }) => {
     //         [type]: prevState[type] === id ? null : id
     //     }))
     // }
-    const toggleFormVisibility = (id) => {
-        setFormVisibility((prevState) => (prevState === id ? null : id))
-    }
 
     // 공유하기 버튼
     const handleShareClick = () => {
@@ -120,37 +84,12 @@ const PostPage = ({ postId }) => {
             })
     }
 
-    // 댓글, 답글 좋아요
-    const toggleCommentLike = (
-        commentId,
-        isReply = false,
-        parentCommentId = null
-    ) => {
-        setComments(
-            comments.map((comment) => {
-                if (isReply && comment.id === parentCommentId) {
-                    return {
-                        ...comment,
-                        replies: comment.replies.map((reply) => {
-                            if (reply.id === commentId) {
-                                return { ...reply, liked: !reply.liked }
-                            }
-                            return reply
-                        }),
-                    }
-                } else if (!isReply && comment.id === commentId) {
-                    return { ...comment, liked: !comment.liked }
-                }
-                return comment
-            })
-        )
-    }
-
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))
 
         console.log(postId)
-
+        
+        // 게시글 좋아요 리스트
         axios({
             method: 'get',
             params: {
@@ -161,7 +100,19 @@ const PostPage = ({ postId }) => {
             setLikes(res.data)
         })
 
-        // 로그인 되어 있으면 좋아요 여부 체크
+        // 댓글 리스트
+        axios({
+            method: 'get',
+            params: {
+                postId: postId, // postId를 prop으로부터 받아오도록 수정했습니다.
+            },
+            url: '/api/comment/comments',
+        }).then((res) => {
+            console.log(res.data)
+            setComments(res.data)
+        })
+
+        // 로그인 되어 있으면 게시글 좋아요 여부 체크
         axios({
             method: 'post',
             params: {
@@ -172,7 +123,20 @@ const PostPage = ({ postId }) => {
         }).then((res) => {
             setPostLiked(res.data)
         })
-    }, [postId, postLiked, user?.id])
+
+        // 로그인 되어 있으면 댓글 좋아요 여부 체크
+        axios({
+            method: 'post',
+            params: {
+                userId: user?.id,
+                commentId: comments.id,
+            },
+            url: '/api/comment/hasLike',
+        }).then((res) => {
+            console.log(res.data)
+            setCommentLiked(res.data)
+        })
+    }, [postId, postLiked, commentLiked, user?.id])
 
     return (
         <>
@@ -216,7 +180,7 @@ const PostPage = ({ postId }) => {
                                         </button>
 
                                         <button
-                                            className={`${styles.faChevronButton} btn btn-Light`}
+                                            className={`${styles.faChevronButton} btn btn-light`}
                                             onClick={toggleFaChevron}
                                         >
                                             <span className={styles.faChevronIcon}>
@@ -230,7 +194,7 @@ const PostPage = ({ postId }) => {
                                     </div>
                                     {/* 댓글 버튼 */}
                                     <button
-                                        className={`${styles.commentButton} btn btn-Light`}
+                                        className={`${styles.commentButton} btn btn-light`}
                                         onClick={toggleComments}
                                     >
                                         {showComments ? '댓글 숨기기' : '댓글 보기'}
@@ -255,10 +219,9 @@ const PostPage = ({ postId }) => {
                         {/* 댓글 목록 */}
                         {showComments && (
                             <CommentsList
+                                postId={postId}
                                 comments={comments}
-                                formVisibility={formVisibility}
-                                toggleFormVisibility={toggleFormVisibility}
-                                toggleCommentLike={toggleCommentLike}
+                                setComments={setComments}
                             />
                         )}
 

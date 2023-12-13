@@ -22,7 +22,7 @@
      -->
     <insert id="createLike" parameterType="com.dita.metapilot.comment.dto.LikeDto">
         INSERT INTO comment_like_tbl(comment_tbl_id, user_tbl_id)
-        VALUES (#{comment_tbl_id}, #{user_tbl_id})
+        VALUES (#{commentId}, #{userId})
     </insert>
 
     <!-- Revoke a like -->
@@ -35,7 +35,7 @@
      -->
     <delete id="revokeLike" parameterType="com.dita.metapilot.comment.dto.LikeDto">
         DELETE FROM comment_like_tbl
-        WHERE comment_tbl_id = #{comment_tbl_id} AND user_tbl_id = #{user_tbl_id}
+        WHERE comment_tbl_id = #{commentId} AND user_tbl_id = #{userId}
     </delete>
 
     <!-- Check if a like exists -->
@@ -48,9 +48,9 @@
      * @version 1.0.0
      -->
     <select id="hasLike" resultType="boolean" parameterType="com.dita.metapilot.comment.dto.LikeDto">
-        SELECT EXISTS (
-        SELECT 1 FROM comment_like_tbl WHERE comment_tbl_id = #{comment_tbl_id} AND user_tbl_id = #{user_tbl_id}
-        )
+        select count(*) > 0
+        from comment_like_tbl
+        where comment_tbl_id = #{commentId} and user_tbl_id = #{userId}
     </select>
 
 

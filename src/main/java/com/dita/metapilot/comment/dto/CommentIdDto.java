@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class LikeDto {
+@NoArgsConstructor
+public class CommentIdDto {
     private long id;
-    private long commentId;
-    private String userId;
 }
