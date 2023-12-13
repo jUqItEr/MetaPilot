@@ -107,10 +107,10 @@ const PostList = () => {
                     </div>
                     <div className={styles.postListSelectGroup}>
                         <div>
-                            <button type="button" className={`${styles.postAdminButton} btn btn-outline-secondary`} 
+                            <button type="button" className="btn btn-secondary"
                                 onClick={toggleCheckboxVisibility}>글관리</button>
                         </div>
-                        <div className="form-group">
+                        <div class="form-group">
                             <select class="form-control mb-3">
                                 <option value="5">5줄 보기</option>
                                 <option value="10">10줄 보기</option>
@@ -120,26 +120,7 @@ const PostList = () => {
                             </select>
                         </div>
                     </div>
-                    <div className={styles.searchGroup}>
-                        <div></div>
-                        <div className={`${styles.searchGroupInput} form-group`}>
-                            <div>
-                                <select class="form-control mb-3">
-                                    <option value="all">전체조회</option>
-                                    <option value="title">게시글 제목</option>
-                                    <option value="nickname">작성자</option>
-                                    <option value="hashtag">해쉬태그</option>
-                                    <option value="content">내용</option>
-                                </select>
-                            </div>
-                            <div className="input-group mb-3">
-                                <input type="text" className="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1"/>
-                                <div className="input-group-prepend">
-                                    <button className="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div className={styles.pageController}>
                         <Link href="/">
                             <a className={styles.disabled}>이전</a>

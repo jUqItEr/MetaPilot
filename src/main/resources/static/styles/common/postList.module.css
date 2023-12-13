@@ -119,7 +119,7 @@
     text-decoration: none;
 }
 
-@media (max-width: 375px) {
+@media (max-width: 420px) {
     .postListWrap {
         width: 100%; 
         padding: 0 15px; 
@@ -158,9 +158,19 @@
         flex-wrap: wrap; 
     }
 
+    /* .pageLink,
+    .disabled {
+        margin: 5px; 
+        width: auto; 
+    } */
+
     .pageLink,
     .disabled {
         margin: 5px; 
         width: auto; 
+        height: 40px; 
+        font-size: 14px; 
+        padding: 0 10px; 
+        box-sizing: border-box; 
     }
 }
