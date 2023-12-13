@@ -2,6 +2,16 @@ import axios from "axios";
 import { useEffect } from "react";
 
 const Auth = () => {
+    const isValidJSON = ctx => {
+        let result = false
+
+        try {
+            JSON.parse(ctx)
+        } catch (e) {
+            
+        }
+        return result
+    }
 
     useEffect(() => {
         axios({
@@ -12,8 +22,12 @@ const Auth = () => {
             url: '/api/user/principal'
         })
         .then((res) => {
-            localStorage.setItem('user', JSON.stringify(res.data))
-            console.log(res)
+            if (isValidJSON(res.data)) {
+                localStorage.setItem('user', JSON.stringify(res.data))
+            }
+        })
+        .catch((err) => {
+            
         })
     }, [])
 

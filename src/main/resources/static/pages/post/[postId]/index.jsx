@@ -184,7 +184,7 @@ const PostPage = ({ postId }) => {
     }).then((res) => {
       setPostLiked(res.data);
     });
-  }, [postId, postLiked, user.id]);
+  }, [postId, postLiked, user?.id]);
 
   return (
     <>

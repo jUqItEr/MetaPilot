@@ -54,15 +54,15 @@
 
 import styles from '/styles/sidebar.module.css'
 
+import { SidebarMenu } from 'react-bootstrap-sidebar-menu'
+
 
 const IndexSidebar = ({ category }) => {
     console.log(category)
 
     return (
-        <div className='d-flex flex-column flex-shrink-0 p-3'
-            style={{width: 280}}>
-            
-        </div>
+        <>
+        </>
     )
 }
 

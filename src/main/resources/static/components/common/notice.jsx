@@ -21,7 +21,7 @@ const NoticePost = () => {
     <>
       <div className={styles.noticeWrap}>
         <hr />
-        {notice.map((notice) => (
+        {notice?.map((notice) => (
           <div key={notice.postId} className={styles.noticeContainer}>
             <div className={styles.noticeContent}>
               <span className={styles.notice}>공지</span>
@@ -30,7 +30,7 @@ const NoticePost = () => {
                   <span className={styles.postTitle}>{notice.subject}</span>
                 </a>
               </Link>
-              <span className={styles.commentCount}>({notice.commented})</span>
+              <span className={styles.commentCount}>({notice.commentCount})</span>
             </div>
             <div>
               <span className={styles.commentDate}>{notice.createdDate}</span>
