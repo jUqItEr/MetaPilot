@@ -29,6 +29,8 @@ public class AdminService {
      */
     public List<CmsInfoEntity>  getBlogInfo(){return adminRepository.getCmsInfo();}
 
+
+
     /**
      * <p>blog info 수정</p>
      * @since 2023. 12. 12.
@@ -39,10 +41,45 @@ public class AdminService {
         return dto;
     }
 
+
+
+    /**
+     * <p>create block user</p>
+     * @since 2023. 12. 12.
+     * @return 유저 차단
+     */
+    public boolean createBlockUser(UserDto dto) {
+        boolean result = false;
+
+        try {
+            result = adminRepository.createBlockUser(dto);
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
+
+
     /**
      * 카테고리 Repository를 불러옵니다.
      */
     private final AdminRepository adminRepository;
+
+
+
+
+    /**
+     * <p>read block user</p>
+     * @since 2023. 12. 12.
+     * @return 차단된 유저 아이디 정보를 List에 담습니다.
+     */
+    public List<UserDto> readBlockUser() {
+        return adminRepository.readBlockUser();
+    }
+
+
+
 
     /**
      * <p>카테고리를 List하는 기능</p>
@@ -53,6 +90,9 @@ public class AdminService {
         return adminRepository.categoryView();
     }
 
+
+
+
     /**
      * <p>삭제된 게시글을 List하는 기능</p>
      * @since 2023. 11. 28.
@@ -62,6 +102,9 @@ public class AdminService {
         return adminRepository.postDeletedView(postDeletedDto);
     }
 
+
+
+
     /**
      * <p>댓글을 List하는 기능</p>
      * @since 2023. 11. 28.
@@ -70,6 +113,9 @@ public class AdminService {
     public List<CommentEntity> commentView(CommentDto commentDto) {
         return adminRepository.commentView(commentDto);
     }
+
+
+
 
     /**
      * <p>카테고리 생성</p>
@@ -93,6 +139,17 @@ public class AdminService {
     public CategoryUpDownDto createCategoryLine(CategoryUpDownDto categoryUpDownDto) {
         adminRepository.createCategoryLine(categoryUpDownDto);
         return categoryUpDownDto;
+    }
+
+
+
+    /**
+     * <p>delete block user</p>
+     * @since 2023. 12. 12.
+     * @return 유저 차단을 취소시킵니다. (차단해제)
+     */
+    public boolean deleteBlockUser(UserDto dto) {
+        return adminRepository.deleteBlockUser(dto);
     }
 
 

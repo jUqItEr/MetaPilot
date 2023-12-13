@@ -58,6 +58,19 @@ public class AdminController {
 
 
     /**
+     * <p>read block user</p>
+     * @since 2023. 12. 12.
+     * @return 차단된 유저 아이디 정보를 List에 담습니다.
+     */
+    @ResponseBody
+    @GetMapping("/readBlockUser")
+    public ResponseEntity<?> readBlockUser() {
+        return ResponseEntity.ok(adminService.readBlockUser());
+    }
+
+
+
+    /**
      * <p>카테고리를 list하는 기능입니다.</p>
      *
      * @since 2023. 11. 30.
@@ -77,7 +90,7 @@ public class AdminController {
      *      createdAt : 카테고리 작성일
      */
     @ResponseBody
-    @GetMapping("/list")
+    @GetMapping("/category/list")
     public ResponseEntity<?> list() {
         return ResponseEntity.ok(adminService.categoryView());
     }
@@ -150,6 +163,32 @@ public class AdminController {
     @PostMapping("/createCategoryLine")
     public ResponseEntity<?> createCategoryLine(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.createCategoryLine(categoryUpDownDto));
+    }
+
+
+
+    /**
+     * <p>create block user</p>
+     * @since 2023. 12. 12.
+     * @return 사용자 차단.
+     */
+    @ResponseBody
+    @PostMapping("/createBlockUser")
+    public ResponseEntity<?> createBlockUser(UserDto dto) {
+        return ResponseEntity.ok(adminService.createBlockUser(dto));
+    }
+
+
+
+    /**
+     * <p>delete block user</p>
+     * @since 2023. 12. 12.
+     * @return 차단된 유저를 차단 해제 합니다.
+     */
+    @ResponseBody
+    @PostMapping("/deleteBlockUser")
+    public ResponseEntity<?> deleteBlockUser(UserDto dto) {
+        return ResponseEntity.ok(adminService.deleteBlockUser(dto));
     }
 
 

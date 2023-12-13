@@ -19,6 +19,10 @@
         <result property="googleAnalytics" column="google_analytics"/>
     </resultMap>
 
+    <resultMap id="blockUser" type="com.dita.metapilot.admin.dto.UserDto">
+        <result property="userId" column="user_tbl_id"/>
+    </resultMap>
+
     <resultMap id="categoryEntity" type="com.dita.metapilot.admin.entity.CategoryEntity">
         <result property="id" column="id"/>
         <result property="categoryTblRefId" column="category_tbl_ref_id"/>
@@ -94,6 +98,15 @@
         ]]>
     </insert>
 
+    <!--Read Block User -->
+    <select id="readBlockUser" resultMap="blockUser">
+        select
+        user_tbl_id
+        from
+        block_tbl
+        order by id asc
+    </select>
+
     <!-- 카테고리 목록 list -->
     <select id="categoryView" resultMap="categoryEntity">
         <![CDATA[
@@ -132,6 +145,17 @@
             order by created_at desc;
         ]]>
     </select>
+
+    <!--Create Block User. -->
+    <insert id="createBlockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
+        <![CDATA[
+            insert into
+                block_tbl
+            values (
+                null, #{userId}
+            )
+        ]]>
+    </insert>
 
     <!-- 카테고리 생성 -->
     <insert id="createCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
@@ -209,6 +233,13 @@
             select null, @id, '-----', @setDepth, @setPos, 0, 1, 1, 1, 1, 1, now();
         ]]>
     </insert>
+
+    <delete id="deleteBlockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
+        delete
+        from
+        block_tbl
+        where user_tbl_id = #{userId}
+    </delete>
 
     <!-- 카테고리 삭제 -->
     <delete id="deleteCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">

@@ -42,6 +42,14 @@ public interface AdminRepository {
     boolean blockUser(UserDto dto);
 
     /**
+     * <p>Read Block user.</p>
+     *
+     * @since 2023. 12. 12.
+     * @return It'll be return true if the user can block successfully.
+     * */
+    List<UserDto> readBlockUser();
+
+    /**
      * <p>카테고리를 List하는 기능</p>
      * @since 2023. 11. 28.
      * @return 모든 카테고리를 List에 담습니다.
@@ -63,6 +71,15 @@ public interface AdminRepository {
     List<CommentEntity> commentView(CommentDto commentDto);
 
     /**
+     * <p>Create Block user.</p>
+     *
+     * @since 2023. 11. 29.
+     * @param dto User Data Transfer Object.
+     * @return It'll be return true if the user can block successfully.
+     * */
+    boolean createBlockUser(UserDto dto);
+
+    /**
      * <p>Create category.</p>
      *
      * @since 2023. 11. 28.
@@ -79,6 +96,14 @@ public interface AdminRepository {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     boolean createCategoryLine(CategoryUpDownDto categoryUpDownDto);
+
+    /**
+     * <p>delete Block user.</p>
+     *
+     * @since 2023. 12. 12.
+     * @return It'll be return true if the user can block successfully.
+     * */
+    boolean deleteBlockUser(UserDto dto);
 
     /**
      * <p>카테고리 삭제. 카테고리를 삭제하면 해당 삭제한 카테고리의 {절대 경로 pos}보다 높은 모든 데이터의 {절대 경로 pos}값을 -1 합니다.</p>
