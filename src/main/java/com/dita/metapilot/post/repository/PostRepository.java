@@ -4,6 +4,7 @@ import com.dita.metapilot.post.dto.*;
 import com.dita.metapilot.post.entity.PostEntity;
 import com.dita.metapilot.post.dto.PostTagDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -151,6 +152,8 @@ public interface PostRepository {
      * @return 최근에 작성된 게시글 번호를 반환.
      */
     long getRecentPostId();
+
+    List<PostEntity> getPagingView(PagingDto pagingDto);
 
     /**
      * 게시글에 연결된 좋아요를 취소하는 메서드.

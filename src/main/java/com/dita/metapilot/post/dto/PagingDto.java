@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PagingDto {
-    private int postCount;
-    private String subject;
-    private int commentCount;
-    private String createdDate;
-    private String createdAt;
-    private int limitCount;
-    private int pageNum;
+
+    private String limit;
+    private int page;
+    private int count;
+    private int index;
+
+    public void setIndex() {
+        index = (page - 1) * count;
+    }
 }
