@@ -26,7 +26,7 @@ public interface CommentRepository {
     long updateComment(CommentDto commentDto);
     boolean deleteComment(CommentIdDto commentIdDto);
     List<CommentEntity> findByPostId(PostIdDto postIdDto);
-    int getRecentCommentId();
+    long getRecentCommentId();
 
     /*
     default void deleteById(long id) {
@@ -42,6 +42,8 @@ public interface CommentRepository {
     boolean addComment(PostCommentDto postCommentDto);
 
     boolean updateCommentReference(PostCommentDto postCommentDto);
+
+    boolean updateCommentRoot(RefCommentDto refCommentDto);
 
     boolean createComment(RefCommentDto refCommentDto);
     // 댓글 조회

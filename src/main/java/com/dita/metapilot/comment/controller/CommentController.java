@@ -47,8 +47,8 @@ public class CommentController {
      * @version 1.0.0
      */
     @ResponseBody
-    @PostMapping("/registerComment")
-    public ResponseEntity<?> registerComment(@RequestPart CommentDto commentDto, @RequestPart(required = false) MultipartFile file, BindingResult bindingResult) {
+    @PostMapping("/create")
+    public ResponseEntity<?> registerComment(@RequestPart("request") CommentDto commentDto, @RequestPart(required = false) MultipartFile file, BindingResult bindingResult) {
         return ResponseEntity.ok(commentService.saveComment(commentDto, file)); // 댓글 저장 후 결과 반환
     }
 
@@ -63,7 +63,7 @@ public class CommentController {
      */
     @ResponseBody
     @PostMapping("/updateComment")
-    public ResponseEntity<?> updateComment(@RequestBody CommentDto commentDto) {
+    public ResponseEntity<?> updateComment(CommentDto commentDto) {
         CommentDto updatedComment = commentService.updateCommentDto(commentDto); // 댓글 업데이트
         if (updatedComment != null) {
             return ResponseEntity.ok().build(); // 업데이트 성공
@@ -84,7 +84,7 @@ public class CommentController {
      */
     @ResponseBody
     @PostMapping("/deleteComment")
-    public ResponseEntity<?> deleteComment(@RequestBody CommentIdDto commentIdDto) {
+    public ResponseEntity<?> deleteComment(CommentIdDto commentIdDto) {
         boolean isDeleted = commentService.deleteComment(commentIdDto);
 
         if (isDeleted) {
@@ -119,9 +119,15 @@ public class CommentController {
      */
     @ResponseBody
     @PostMapping("/createComment")
-    public ResponseEntity<String> createComment(@RequestBody RefCommentDto refCommentDto) {
+    public ResponseEntity<String> createComment(RefCommentDto refCommentDto) {
         try {
             commentService.createComment(refCommentDto);
+
+            if (refCommentDto.getCommentRootId() == 0) {
+                long id = commentService.getRecentCommentId();
+                refCommentDto.setId(id);
+                commentService.updateCommentRootId(refCommentDto);
+            }
             return ResponseEntity.status(HttpStatus.CREATED).body("Comment created successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create comment");
@@ -139,7 +145,7 @@ public class CommentController {
      */
     @ResponseBody
     @PostMapping("/likes/update")
-    public ResponseEntity<String> updateLike(@RequestBody LikeDto likeDto) {
+    public ResponseEntity<?> updateLike(LikeDto likeDto) {
         boolean result = commentService.updateLike(likeDto);
 
         if (result) {
@@ -160,15 +166,9 @@ public class CommentController {
      * @version 1.0.0
      */
     @ResponseBody
-    @GetMapping("/likes/haslike")
-    public ResponseEntity<Boolean> hasLike(@ModelAttribute LikeDto likeDto) {
-        long id = likeDto.getComment_tbl_id();
-        String userId = likeDto.getUser_tbl_id();
+    @PostMapping("/hasLike")
+    public ResponseEntity<Boolean> hasLike(LikeDto likeDto) {
         boolean hasLike = commentService.hasLike(likeDto); // likeDto를 전달합니다.
         return ResponseEntity.ok(hasLike);
     }
-
-
-
-
 }

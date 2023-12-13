@@ -7,7 +7,6 @@ import org.attoparser.dom.Text;
 @AllArgsConstructor
 @Builder
 public class CommentEntity {
-
     private long id;
     private long postId;
     private long commentRefId;
@@ -18,7 +17,6 @@ public class CommentEntity {
     private int pos;
     private int visible;
     private String createdAt;
-
-    public void setCommentrootId(Long id) {
-    }
+    private String nickname;
+    private int likeCount;
 }

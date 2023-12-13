@@ -49,7 +49,7 @@ public class CommentService {
         boolean result = false;
 
         result = commentRepository.saveComment(commentDto);
-        int commentId = commentRepository.getRecentCommentId();
+        long commentId = commentRepository.getRecentCommentId();
         MultipartFile file = null;
         if (file != null) {
             result &= fileService.createFile(file, new FileIdDto(commentId));
@@ -148,7 +148,7 @@ public class CommentService {
         result = commentRepository.saveComment(commentDto);
 
         // 저장된 댓글의 ID 가져오기
-        int commentId = commentRepository.getRecentCommentId();
+        long commentId = commentRepository.getRecentCommentId();
 
         // 파일 서비스를 사용하여 파일 저장
         if (file != null && !file.isEmpty()) {
@@ -187,6 +187,14 @@ public class CommentService {
     public RefCommentDto createComment(RefCommentDto refCommentDto) {
         commentRepository.createComment(refCommentDto);
         return refCommentDto;
+    }
+
+    public boolean updateCommentRootId(RefCommentDto refCommentDto) {
+        return commentRepository.updateCommentRoot(refCommentDto);
+    }
+
+    public long getRecentCommentId() {
+        return commentRepository.getRecentCommentId();
     }
 
     /*
