@@ -73,6 +73,16 @@
             blog_info_tbl bi
     </select>
 
+    <!-- blog info tbl layout 수정 -->
+    <update id="updateLayout" parameterType="com.dita.metapilot.admin.entity.CmsInfoEntity">
+        update
+            blog_info_tbl
+        set
+            layout_tbl_id = #{layoutId}
+        where
+            id = #{id}
+    </update>
+
     <select id="readTag" parameterType="com.dita.metapilot.admin.dto.HashtagSearchDto" resultType="com.dita.metapilot.admin.entity.HashtagEntity">
         select
         *

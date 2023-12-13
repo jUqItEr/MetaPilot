@@ -43,7 +43,7 @@
 }
 
 .list {
-    width: 60%;
+    width: 400px;
     height: 200px;
     max-height: 200px;
     overflow-y: auto; /* Add this line to enable vertical scrollbar */
@@ -78,4 +78,9 @@
 .blockInfo ul {
     margin: 0;
     padding: 0 20px;
+}
+
+.xclk {
+    background-color: transparent;
+    border: none;
 }

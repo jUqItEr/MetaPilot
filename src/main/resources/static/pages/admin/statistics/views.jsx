@@ -20,6 +20,11 @@ import { Line } from 'react-chartjs-2';
  * @returns
  */
 
+const btnclk = () => {
+    console.log($(`#dateInput`).val());
+}
+
+
 // 그래프
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 export const options = {
@@ -34,14 +39,19 @@ export const options = {
         },
     },
 };
-const labels = ['23.12.10','23.12.10','23.12.10','23.12.10','23.12.10','23.12.10','23.12.10']; //x축 기준
+ 
+const labels = ['23.12.01','23.12.02','23.12.03','23.12.04','23.12.05','23.12.06','23.12.07']; //x축 기준
+
+const data1 = [111, 311, 385, 485, 752, 847, 926];
+const data2 = [222, 97, 167, 242, 373, 301, 245];
+
 
 export const data= {
     labels,
     datasets: [
         {
             label: '분류1',
-            data: [1, 2, 3, 4, 5, 6, 100], //실제 그려지는 데이터(Y축 숫자)
+            data: [111, 311, 385, 485, 752, 847, 926], //실제 그려지는 데이터(Y축 숫자)
             borderColor: '#0d6efd', //그래프 선 color
             backgroundColor: 'rgba(13,110,253,0.5)', //마우스 호버시 나타나는 분류네모 표시 bg
         },
@@ -93,9 +103,9 @@ export default function AdminHashTagPage() {
                             </div>
                             <div className="input-group" style={{width:'125px'}}>
                                 {/*일간*/}
-                                <button className="btn btn-primary ps-3 pe-3" type="button" id="btnDay" style={{border:'1px solid white'}}>일간</button>
+                                <button className="btn btn-primary ps-3 pe-3" type="button" id="btnDay" style={{border:'1px solid white'}} onClick={() => btnclk()}>일간</button>
                                 {/*주간*/}
-                                {/*<button className="btn btn-primary ps-2 pe-2" type="button" id="btnWeek" style={{border:'1px solid white'}}>주간</button>*/}
+                                {/* <button className="btn btn-primary ps-2 pe-2" type="button" id="btnWeek" style={{border:'1px solid white'}}>주간</button> */}
                                 {/*월간*/}
                                 <button className="btn btn-primary ps-3 pe-3" type="button" id="btnMonth" style={{border:'1px solid white'}}>월간</button>
                             </div>

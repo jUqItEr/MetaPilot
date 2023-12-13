@@ -1,6 +1,7 @@
 package com.dita.metapilot.admin.controller;
 
 import com.dita.metapilot.admin.dto.*;
+import com.dita.metapilot.admin.entity.CmsInfoEntity;
 import com.dita.metapilot.admin.entity.HashtagEntity;
 import com.dita.metapilot.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,17 @@ public class AdminController {
     @GetMapping("/getBlogInfo")
     public ResponseEntity<?> getBlogInfo() {
         return ResponseEntity.ok(adminService.getBlogInfo());
+    }
+
+    /**
+     * <p>blog info tbl layout 수정</p>
+
+     * @since 2023. 12. 12.
+     */
+    @ResponseBody
+    @PostMapping("/updateLayout")
+    public ResponseEntity<?> updateLayout(CmsInfoEntity cmsInfoEntity) {
+        return ResponseEntity.ok(adminService.updateLayout(cmsInfoEntity));
     }
 
     @ResponseBody
