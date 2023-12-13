@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import $ from "jquery";
+import $, { post } from "jquery";
 
 import styles from "/styles/post/post.module.css";
 import {
@@ -18,7 +18,18 @@ import CommentsList from "../../../components/post/comment";
 import LikesList from "../../../components/post/likes";
 // import CKEditorComponent from "../../../components/post/ckEditor";
 
-const PostPage = ({ pid }) => {
+
+export const getServerSideProps = async context => {
+  const { postId } = context.params
+
+  return {
+    props: {
+      postId: postId
+    }
+  }
+} 
+
+const PostPage = ({ postId }) => {
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -56,16 +67,13 @@ const PostPage = ({ pid }) => {
   const [likes, setLikes] = useState([]);
   const [user, setUser] = useState([]);
   const [showComments, setShowComments] = useState(false);
+  const [updateLike, setUpdateLike] = useState(false); // 게시글 좋아요 눌림
   const [postLiked, setPostLiked] = useState(false); // 게시글에 대한 좋아요 상태
   const [postLikes, setPostLikes] = useState(0); // 게시글 좋아요 수
   const [faChevron, setFaChevron] = useState(false); // 공감수 리스트 상태
   const [showReplyForm, setShowReplyForm] = useState(false); // 답글 폼
   const [likesVisible, setLikesVisible] = useState(false);
   const [formVisibility, setFormVisibility] = useState({});
-
-  // const [ post, setPost ] = useState([])
-  // const router = useRouter()
-  // const { postId } = router.query
 
   // 공감수 토글
   const toggleFaChevron = () => {
@@ -77,7 +85,17 @@ const PostPage = ({ pid }) => {
 
   // 포스트 좋아요 토글
   const togglePostLike = () => {
-    setPostLiked(!postLiked);
+    axios({
+      method: "post",
+      params: {
+        postId: postId,
+        userId: user.id,
+      },
+      url: "/api/post/updateLike",
+    }).then((res) => {
+      console.log(res.data);
+      setPostLiked(!postLiked);
+    });
   };
 
   const handleLikesCountChange = (newCount) => {
@@ -142,30 +160,41 @@ const PostPage = ({ pid }) => {
   };
 
   useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem('user')))
+
+    console.log(postId)
+
     axios({
       method: "get",
       params: {
-        postId: 20, // postId를 prop으로부터 받아오도록 수정했습니다.
+        postId: postId, // postId를 prop으로부터 받아오도록 수정했습니다.
       },
       url: "/api/post/likesList",
     }).then((res) => {
       setLikes(res.data);
     });
 
-    setUser(localStorage.getItem("token"));
-  }, [pid]);
+    axios({
+      method: "post",
+      params: {
+        postId: postId,
+        userId: user.id,
+      },
+      url: "/api/post/hasLike",
+    }).then((res) => {
+      setPostLiked(res.data);
+    });
+  }, [postId, postLiked, user.id]);
 
   return (
     <>
-      {console.log("current user: ")}
-      {console.log(user)}
       <Head>
         <title>게시글</title>
         <meta property="og:title" content="게시글" key="title" />
       </Head>
       <div className="wrap">
         <div className="container">
-          <PostHeader />
+          <PostHeader pid={postId} />
 
           <main className={styles.mainContainer}></main>
 
@@ -194,7 +223,7 @@ const PostPage = ({ pid }) => {
                         {postLiked ? "❤️" : "🤍"}
                       </span>
                       <span className={styles.likeCount}>
-                        {likes.length} 공감해요
+                        {likes.length} 좋아요
                       </span>
                     </button>
 
