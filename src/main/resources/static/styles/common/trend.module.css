@@ -1,6 +1,6 @@
 .wrap {
     width: 100%;
-    border: 1px solid black;
+    
     min-width: 744px;
     height: 315px;
     overflow: scroll;
