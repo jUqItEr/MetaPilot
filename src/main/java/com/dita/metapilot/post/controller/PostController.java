@@ -4,13 +4,11 @@ import com.dita.metapilot.post.dto.*;
 import com.dita.metapilot.post.entity.PostEntity;
 import com.dita.metapilot.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.text.BreakIterator;
 import java.util.List;
 
 
@@ -32,17 +30,14 @@ public class PostController {
     /**
      * <p>게시글을 작성하고 성공 여부를 반환하는 컨트롤러 메서드</p>
      *
-     * @param postDto 게시글 작성에 필요한 정보를 담은 DTO.
-     * @param tags 게시글에 추가될 해시태그 리스트
-     * @return 게시글 작성 성공 시 true, 실패 시 false를 반환
+     * @param postDto 게시글 번호를 담은 DTO.
+     * @return 게시글 작성 성공 시 postIdDto return, 실패 시 false를 반환
      * @since 2023. 11. 28.
      */
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<Boolean> createPost(@RequestPart PostDto postDto,
-                                              @RequestPart(required = false) List<String> tags,
-                                              @RequestPart(required = false) List<MultipartFile> files) {
-        return ResponseEntity.ok(postService.createPost(postDto, tags, files));
+    public ResponseEntity<Boolean> createPost(@RequestBody PostDto postDto) {
+        return ResponseEntity.ok(postService.createPost(postDto));
     }
 
     /**
@@ -72,6 +67,19 @@ public class PostController {
     }
 
     /**
+     * <p>게시글에 좋아요 누른 유저 목록을 가져오는 컨트롤러 메서드</p>
+     *
+     * @param
+     * @return
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/likesList")
+    public List<PostLikesDto> getLikesList(PostIdDto postIdDto) {
+        return postService.getLikesList(postIdDto);
+    }
+
+    /**
      * <p>공지사항 게시글 리스트를 반환하는 컨트롤러 메서드</p>
      *
      * @return 공지사항 게시글 리스트를 반환
@@ -91,7 +99,7 @@ public class PostController {
      */
     @ResponseBody
     @GetMapping("/popular")
-    public List<PostEntity> getPopularPosts() {
+    public List<PostPopularDto> getPopularPosts() {
         return postService.getPopularPosts();
     }
 
@@ -117,8 +125,10 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/update")
-    public ResponseEntity<Boolean> updatePost(PostDto postDto) {
-        return ResponseEntity.ok(postService.updatePost(postDto));
+    public ResponseEntity<Boolean> updatePost(@RequestPart(required = false) PostDto postDto,
+                                              @RequestPart(required = false) List<String> tags,
+                                              @RequestPart(required = false) List<MultipartFile> files) {
+        return ResponseEntity.ok(postService.updatePost(postDto, tags, files));
     }
 
     /**
@@ -129,7 +139,7 @@ public class PostController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/updatelike")
+    @PostMapping("/updateLike")
     public ResponseEntity<Boolean> updateLike(PostResponseDto postResponseDto) {
         return ResponseEntity.ok(postService.updateLike(postResponseDto));
     }
@@ -137,16 +147,23 @@ public class PostController {
     /**
      * <p>게시글을 조회하고, 조회된 게시글 정보를 반환하는 컨트롤러.</p>
      *
-     * @param postId 게시글 번호.
+     * @param postIdDto 게시글 번호 담긴 DTO.
      * @return 조회된 게시글 정보를 반환
      * @since 2023. 11. 28.
      */
     @ResponseBody
-    @GetMapping("/postView/{postId}")
-    public ResponseEntity<PostViewDto> postView(@PathVariable int postId) {
-        PostIdDto postIdDto = new PostIdDto();
-
-        postIdDto.setPostId(postId);
+    @GetMapping("/postView")
+    public ResponseEntity<PostViewDto> postView(PostIdDto postIdDto) {
+        System.out.println(postIdDto.getPostId());
         return ResponseEntity.ok(postService.getPostView(postIdDto));
     }
+
+    /*
+    @ResponseBody
+    @PostMapping("/getPost")
+    public ResponseEntity<?> getPost(PostIdDto postIdDto) {
+        System.out.println(postIdDto.getPostId());
+        return ResponseEntity.ok(postService.getPost(postIdDto));
+    }
+    */
 }

@@ -14,6 +14,7 @@
 		<result property="count" column="count"></result>
 		<result property="notice" column="notice"></result>
 		<result property="categoryId" column="category_tbl_id"></result>
+		<result property="thumbnail" column="thumbnail"></result>
 		<result property="deleted" column="deleted"></result>
 		<result property="type" column="type"></result>
 		<result property="likeCount" column="liked"></result>
@@ -32,11 +33,19 @@
 		</collection>
 	</resultMap>
 
+	<resultMap id="postPopularDto" type="com.dita.metapilot.post.dto.PostPopularDto">
+		<result property="id" column="id"/>
+		<result property="categoryId" column="category_id"/>
+		<result property="categorySubject" column="category_subject"/>
+		<result property="thumbnail" column="thumbnail"/>
+		<result property="subject" column="subject"/>
+	</resultMap>
+
 	<!-- 해시태그 생성 -->
 	<insert id="createHashtag" parameterType="com.dita.metapilot.post.dto.HashtagDto">
 		insert into hashtag_tbl(content)
 		values(#{content})
-		<selectKey resultType="int" keyProperty="hashtagId" order="AFTER">
+		<selectKey resultType="long" keyProperty="hashtagId" order="AFTER">
 			select max(id) from hashtag_tbl
 		</selectKey>
 	</insert>
@@ -51,21 +60,27 @@
 
 	<!-- 게시글 작성 -->
 	<insert id="createPost" parameterType="com.dita.metapilot.post.dto.PostDto">
-		insert into post_tbl(category_tbl_id ,user_tbl_id, subject, content, count, deleted, type, created_at)
-		values(#{catergoryId}, #{userId}, #{subject}, #{content}, 0, 0, #{type}, now())
+		insert into post_tbl(category_tbl_id, user_tbl_id, type)
+		values(#{categoryId}, #{userId}, 2)
 	</insert>
 
 	<!-- 게시글에 해시태그 추가 -->
 	<insert id="createPostHashtag" parameterType="com.dita.metapilot.post.dto.PostTagDto">
 		insert into post_hashtag_tbl(post_tbl_id, hashtag_tbl_id, created_at)
-		values(#{postId}, #{hashtagId}, now());
+		values(#{postId}, #{hashtagId}, now())
 	</insert>
+
+	<!-- 게시글과 연결된 모든 해시태그 삭제 -->
+	<delete id="deleteHashtags" parameterType="com.dita.metapilot.post.dto.PostIdDto">
+		delete from post_hashtag_tbl
+		where post_tbl_id = #{postId}
+	</delete>
 
 	<!-- 게시글 삭제 -->
 	<update id="deletePost" parameterType="com.dita.metapilot.post.dto.PostIdDto">
 		<!-- 게시글 삭제시 휴지통으로 보내기(delete => 1) -->
 		<![CDATA[
-        update post_tbl set deleted = 1 where id = #{postId};
+        update post_tbl set deleted = 1 where id = #{postId}
         ]]>
 	</update>
 
@@ -86,7 +101,7 @@
 	</select>
 
 	<!-- 해시태그의 id를 가져옴 -->
-	<select id="getHashtagId" parameterType="com.dita.metapilot.post.dto.HashtagDto" resultType="int">
+	<select id="getHashtagId" parameterType="com.dita.metapilot.post.dto.HashtagDto" resultType="long">
 		select id
 		from hashtag_tbl
 		where content = #{content}
@@ -98,6 +113,14 @@
 		from hashtag_tbl ht
 		left join post_hashtag_tbl pht on ht.id = pht.hashtag_tbl_id
 		where pht.post_tbl_id = #{postId}
+	</select>
+
+	<!-- 게시글 좋아요한 유저 리스트 -->
+	<select id="getLikesList" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultType="com.dita.metapilot.post.dto.PostLikesDto">
+		select plt.post_tbl_id as postId, plt.user_tbl_id as userId, ut.nickname, ut.profile_image as image
+		from post_like_tbl plt
+		left join user_tbl ut on plt.user_tbl_id = ut.id
+		where plt.post_tbl_id = #{postId}
 	</select>
 
 	<!-- 공지사항 게시글 목록 -->
@@ -113,36 +136,47 @@
 		where pt.notice = 1 and pt.deleted = 0
 		order by
 		pt.created_at desc
-		limit 3;
+		limit 3
 	</select>
 
 	<!-- 인기 게시글 목록 -->
-	<select id="getPopularPosts" resultMap="postEntity">
+	<select id="getPopularPosts" resultMap="postPopularDto">
 		<![CDATA[
-		select distinct pt.*,
-						(
-							select count(*)
-							from post_like_tbl plt
-							where plt.post_tbl_id = pt.id
-						) as liked
-		from post_tbl pt
-		left join post_like_tbl plt on pt.id = plt.post_tbl_id
-		where pt.created_at >= date_sub(now(), interval 7 day)
-			and (
-						select count(*)
-						from post_like_tbl
-						where post_tbl_id = pt.id
-				) >= 3
-				and pt.deleted = 0
-		order by
-			(
-				select count(*)
-				from post_like_tbl
-				where post_tbl_id = pt.id
-			) desc,
-			pt.`count` desc,
-			pt.created_at desc
-		limit 10;
+			select
+				pt.id,
+				pt.subject,
+				pt.thumbnail,
+				ct.id as category_id,
+				ct.subject as category_subject,
+				(
+					select
+						count(*)
+					from
+						post_like_tbl plt
+					where
+						plt.post_tbl_id = pt.id
+				) as liked
+			from
+				post_tbl pt
+			join
+				category_tbl ct
+			on
+				pt.category_tbl_id = ct.id
+			where
+				pt.created_at >= date_sub(now(), interval 7 day)
+			and
+				pt.deleted = 0
+			and
+				pt.count >= 50
+			and
+				pt.type = 0
+			having
+				liked >= 3
+			order by
+				liked desc,
+				pt.count desc,
+				pt.created_at desc
+			limit 10
 		]]>
 	</select>
 	
@@ -162,6 +196,13 @@
 		where content = #{content}
 	</select>
 
+	<!-- 게시글과 연결된 해시태그 중복확인 -->
+	<select id="hasPostHashtag" resultType="java.lang.Boolean">
+		select count(*) > 0
+		from post_hashtag_tbl
+		where post_tbl_id = #{postId} and hashtag_tbl_id = #{hashtagId}
+	</select>
+
 	<!-- 게시글 좋아요 상태체크 -->
 	<select id="hasLike" parameterType="com.dita.metapilot.post.dto.PostResponseDto" resultType="java.lang.Boolean">
 		<![CDATA[
@@ -172,7 +213,7 @@
 	</select>
 
 	<!-- 해시태그의 id를 가져옴 -->
-	<select id="getRecentPostId" resultType="int">
+	<select id="getRecentPostId" resultType="long">
 		select max(id)
 		from post_tbl
 	</select>
@@ -188,18 +229,21 @@
 	<!-- 게시글 조회수 증가 -->
 	<update id="updateCount" parameterType="com.dita.metapilot.post.dto.PostIdDto" >
 		<![CDATA[
-        update post_tbl set count = count + 1 where id = #{postId};
+        update post_tbl set count = count + 1 where id = #{postId}
         ]]>
 	</update>
 
 	<!-- 게시글 수정 -->
-	<update id="updatePost" parameterType="com.dita.metapilot.post.dto.PostResponseDto">
+	<update id="updatePost" parameterType="com.dita.metapilot.post.dto.PostDto">
 		<![CDATA[
         update post_tbl
         set
             subject = #{subject},
             content = #{content},
-            type = #{type}
+            notice = #{notice},
+            thumbnail = #{thumbnail},
+            type = #{type},
+            created_at = ifnull(created_at, now())
         where id = #{postId}
         ]]>
 	</update>

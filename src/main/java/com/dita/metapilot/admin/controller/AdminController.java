@@ -1,7 +1,6 @@
 package com.dita.metapilot.admin.controller;
 
 import com.dita.metapilot.admin.dto.*;
-import com.dita.metapilot.admin.entity.CategoryEntity;
 import com.dita.metapilot.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +26,34 @@ public class AdminController {
      * <p>CategoryService를 불러옵니다.</p>
      */
     private final AdminService adminService;
+
+
+
+    /**
+     * <p>블로그 Info를 List하는 기능</p>
+     *
+     * @since 2023. 12. 11.
+     *
+     * @return BlogInfoDto
+     */
+    @ResponseBody
+    @GetMapping("/getBlogInfo")
+    public ResponseEntity<?> getBlogInfo() {
+        return ResponseEntity.ok(adminService.getBlogInfo());
+    }
+
+
+
+    /**
+     * <p>blog info 수정</p>
+
+     * @since 2023. 12. 12.
+     */
+    @ResponseBody
+    @PostMapping("/updateBlogInfo")
+    public ResponseEntity<?> updateBlogInfo(CmsInfoDto dto) {
+        return ResponseEntity.ok(adminService.updateBlogInfo(dto));
+    }
 
 
 
@@ -114,7 +141,7 @@ public class AdminController {
     /**
      * <p>카테고리 구분선 생성</p>
      *
-     * @param categoryDto
+     * @param categoryUpDownDto
      *      categoryTblRefId : 부모 카테고리의 id (자식 카테고리가 아니라면 1. 왜냐하면 [전체 목록]의 id가 1이기 때문)
      *
      * @since 2023. 11. 29.

@@ -2,6 +2,7 @@ package com.dita.metapilot.admin.repository;
 
 import com.dita.metapilot.admin.dto.*;
 import com.dita.metapilot.admin.entity.CategoryEntity;
+import com.dita.metapilot.admin.entity.CmsInfoEntity;
 import com.dita.metapilot.admin.entity.CommentEntity;
 import com.dita.metapilot.admin.entity.PostEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,6 +18,20 @@ import java.util.List;
  * */
 @Mapper
 public interface AdminRepository {
+    /**
+     * <p>블로그 Info를 List하는 기능</p>
+     * @since 2023. 12. 11.
+     * @return 모든 정보를 List에 담습니다.
+     */
+    List<CmsInfoEntity> getCmsInfo();
+
+    /**
+     * <p>blog info 수정</p>
+     * @since 2023. 12. 12.
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    boolean updateBlogInfo(CmsInfoDto dto);
+
     /**
      * <p>Block user.</p>
      *

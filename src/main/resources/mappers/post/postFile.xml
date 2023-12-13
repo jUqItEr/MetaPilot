@@ -9,23 +9,37 @@
         <result property="name" column="name" />
         <result property="originalName" column="original_name" />
         <result property="extension" column="extension" />
-        <result property="filesize" column="filesize" />
+        <result property="fileSize" column="filesize" />
     </resultMap>
+
     <!-- 게시글 첨부파일 조회 -->
     <select id="getPostFile" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultMap="postFile">
         <![CDATA[
         select * from post_file_tbl
-        where post_tbl_id = #{postId}
+        where post_tbl_id = #{postId} and type = 0
         ]]>
     </select>
 
     <!-- 게시글 첨부파일 추가 -->
     <insert id="createFile" parameterType="list">
-        insert into post_file_tbl(post_tbl_id, name, original_name, extension, filesize)
+        insert into post_file_tbl(post_tbl_id, name, original_name, extension, filesize, type)
         values
         <foreach collection="list" item="file" separator=",">
-            (#{file.postId}, #{file.name}, #{file.originalName}, #{file.extension}, #{file.filesize})
+            (#{file.postId}, #{file.name}, #{file.originalName}, #{file.extension}, #{file.fileSize}, 0)
         </foreach>
     </insert>
+
+    <!-- 게시글에 연결된 첨부파일 삭제 -->
+    <delete id="deletePostFile" parameterType="long">
+        delete from post_file_tbl
+        where post_tbl_id = #{postId} and type = 0
+    </delete>
+
+    <!-- UUID로 원본 파일 이름 가져오기 -->
+    <select id="getOriginalName" resultType="com.dita.metapilot.post.postFile.dto.PostFileDto">
+        select original_name as originalName, extension
+        from post_file_tbl
+        where name = #{name}
+    </select>
 
 </mapper>

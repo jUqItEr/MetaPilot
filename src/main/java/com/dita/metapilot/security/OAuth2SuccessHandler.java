@@ -38,7 +38,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         System.out.println(jwtAccessToken);//TODO
         //response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtAccessToken);
-        response.sendRedirect("http://localhost:3080/account/loginOauth2?token=" + URLEncoder.encode(jwtAccessToken));
+        response.sendRedirect("http://localhost:3080/account/loginToken?token=" + URLEncoder.encode(jwtAccessToken));
         System.out.println(response); //TODO
 
     }

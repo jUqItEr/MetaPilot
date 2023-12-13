@@ -12,11 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostDto {
-    private int postId;
-    private int catergoryId;
+    private long postId;
+    private int categoryId;
     private String userId;
     private String subject;
     private String content;
+    private int notice;
+    private String thumbnail;
     private int type;
     private String createdAt;
 }

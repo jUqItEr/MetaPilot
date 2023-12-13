@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryEntity {
     private int id;
-    private int categoryTblRefId;
+    private int refId;
     private String subject;
     private int depth;
     private int pos;

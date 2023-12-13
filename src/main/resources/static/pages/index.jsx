@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import IndexHeader from '../layout/home/header';
 import IndexSidebar from '../layout/home/sidebar';
+import TrendPost from '../components/common/trend';
+
 
 
 const IndexPage = () => {
@@ -26,6 +28,7 @@ const IndexPage = () => {
     }
 
     useEffect(() => {
+        console.log(localStorage.getItem('user'))
         getInfo()
     }, [])
 
@@ -36,6 +39,7 @@ const IndexPage = () => {
             </Head>
             <IndexHeader/>
             <IndexSidebar/>
+            <TrendPost/>
         </>
     )
 }

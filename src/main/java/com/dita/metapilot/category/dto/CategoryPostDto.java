@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryPostDto {
     private int categoryId;
+    private long postId;
 }

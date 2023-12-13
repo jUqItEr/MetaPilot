@@ -19,4 +19,6 @@ public class CategoryDto {
     private int countVisible;
     private int listVisible;
     private int listCount;
+    private int postCount;
+    private int refCount;
 }
