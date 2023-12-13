@@ -34,10 +34,15 @@
     position: absolute;
     left: 5%;
     bottom: 10%;
+    border-radius: 50%;
 }
 
 .headerProfileName {
     margin: 0 10px;
+}
+
+.profileNickname {
+  font-size: 24px;
 }
 
 .headerSubDropdown {
