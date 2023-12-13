@@ -19,17 +19,6 @@
   font-weight: 600;
 }
 
-@media (min-width: 744px) {
-  .popularPostContainer {
-    padding-left: calc(50% - 320px);
-    scroll-padding-left: calc(50% - 320px);
-  }
-
-  .popularPostBox:last-child {
-    padding-right: calc(50% - 170px);
-  }
-}
-
 .popularPostList {
   display: flex;
   list-style-type: none;
@@ -77,5 +66,44 @@
 
 .popularCategoryName {
   font-size: 10px;
-  color: darkgray;
+  color: var(--bs--darkgrey);
+}
+
+@media (min-width: 744px) {
+  .popularPostContainer {
+    padding-left: calc(50% - 320px);
+    scroll-padding-left: calc(50% - 320px);
+  }
+
+  .popularPostBox:last-child {
+    padding-right: calc(50% - 170px);
+  }
+}
+
+
+@media (max-width: 375px) {
+  .wrap {
+      min-width: 0; 
+      height: auto; 
+      overflow-x: scroll;
+      overflow-y: hidden;
+      white-space: nowrap;
+  }
+
+  .popularPost {
+      width: 100%; 
+      padding: 15px 0; 
+      box-sizing: border-box;
+  }
+
+  .popularImageBox {
+      max-width: 150px;
+      height: auto;
+      margin-right: 10px;
+  }
+
+  .popularImageTitle {
+      width: 150px;
+      padding: 8px 0;
+  }
 }
