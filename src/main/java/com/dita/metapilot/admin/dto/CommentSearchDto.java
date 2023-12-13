@@ -5,6 +5,6 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentDto {
-    private int id;
+public class CommentSearchDto {
+    private String nickname;
 }

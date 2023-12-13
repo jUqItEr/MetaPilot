@@ -44,7 +44,7 @@ export default function AdminCatePage() {
 
         axios({
             method: "get",
-            url: "/api/admin/list",
+            url: "/api/admin/category/list",
         }).then((res) => {
             setData(res.data);
             console.log(res.data);

@@ -18,4 +18,8 @@ public class CommentEntity {
     private int pos;
     private int visible;
     private String createdAt;
+    private int postId;
+    private String postUserTblId;
+    private String postSubject;
+    private String nickname;
 }

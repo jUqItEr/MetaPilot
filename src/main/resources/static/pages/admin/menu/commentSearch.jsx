@@ -21,6 +21,7 @@ import AdminSidebar from "../../../layout/admin/sidebar"
  */
 export default function AdminCommentPage() {
     const router = useRouter();
+    const { search } = router.query;
 
     const [data, setData] = useState([]);
     const [commentUserTblId, setCommentUserTblId] = useState("");
@@ -63,14 +64,17 @@ export default function AdminCommentPage() {
     };
 
     useEffect(() => {
-          axios({
-              method: "get",
-              url: "/api/admin/commentList",
-          }).then((res) => {
-              setData(res.data);
-              console.log(res.data);
-          });
-      }, []);
+        if (search) {
+            axios({
+                method: "get",
+                params: { "nickname": search },
+                url: "/api/admin/commentSearchList",
+            }).then((res) => {
+                setData(res.data);
+                console.log(res.data);
+            });
+        }
+    }, [search]);
 
     const handleCommentClick = (mapper) => {
         if (selectedComments.includes(mapper.id)) {

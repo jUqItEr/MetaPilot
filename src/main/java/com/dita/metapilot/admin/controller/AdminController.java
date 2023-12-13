@@ -151,6 +151,23 @@ public class AdminController {
         return ResponseEntity.ok(adminService.commentView(commentDto));
     }
 
+
+
+    /**
+     * <p>검색한 댓글을 list하는 기능입니다.</p>
+     *
+     * @since 2023. 12. 13.
+     *
+     * @return ResponseEntity
+     */
+    @ResponseBody
+    @GetMapping("/commentSearchList")
+    public ResponseEntity<?> commentSearchView(CommentSearchDto commentSearchDto) {
+        return ResponseEntity.ok(adminService.commentSearchView(commentSearchDto));
+    }
+
+
+
     /**
      * <p>카테고리 생성</p>
      *

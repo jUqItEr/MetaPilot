@@ -122,14 +122,14 @@
     <!-- blog info 수정 -->
     <update id="updateBlogInfo" parameterType="com.dita.metapilot.admin.dto.CmsInfoDto">
         update
-        blog_info_tbl
+            blog_info_tbl
         set
-        title = #{title},
-        profile = #{profile},
-        profile_image = #{profileImage},
-        google_analytics = #{googleAnalytics}
+            title = #{title},
+            profile = #{profile},
+            profile_image = #{profileImage},
+            google_analytics = #{googleAnalytics}
         where
-        id = #{id}
+            id = #{id}
     </update>
 
 
@@ -147,10 +147,11 @@
     <!--Read Block User -->
     <select id="readBlockUser" resultMap="blockUser">
         select
-        user_tbl_id
+            user_tbl_id
         from
-        block_tbl
-        order by id asc
+            block_tbl
+        order by
+            id asc
     </select>
 
     <!-- 카테고리 목록 list -->
@@ -183,23 +184,46 @@
     <!-- 댓글 list -->
     <select id="commentView" resultMap="commentEntity">
         <![CDATA[
-            set @id = #{id};
+            select ct.id, ct.post_tbl_id, ct.comment_tbl_ref_id, ct.comment_tbl_root_id, ct.user_tbl_id, ct.content, ct.depth, ct.pos, ct.visible, ct.created_at
+            , pt.id as 'postId', pt.user_tbl_id as 'postUserTblId', pt.subject as 'postSubject', ut.nickname
+            from comment_tbl ct
+            left outer join post_tbl pt
+            on pt.id = ct.post_tbl_id
+            left outer join user_tbl ut
+            on ut.id = ct.user_tbl_id
+            order by ct.created_at desc;
+        ]]>
+    </select>
 
-            select id, post_tbl_id, comment_tbl_ref_id, comment_tbl_root_id, user_tbl_id, content, depth, pos, visible, created_at
-            from comment_tbl
-            where id = @id
-            order by created_at desc;
+    <!-- 검색한 댓글 list -->
+    <select id="commentSearchView" resultMap="commentEntity">
+        <![CDATA[
+            select ct.id, ct.post_tbl_id, ct.comment_tbl_ref_id, ct.comment_tbl_root_id, ct.user_tbl_id, ct.content, ct.depth, ct.pos, ct.visible, ct.created_at
+            , pt.id as 'postId', pt.user_tbl_id as 'postUserTblId', pt.subject as 'postSubject', ut.nickname
+            from comment_tbl ct
+            left outer join post_tbl pt
+            on pt.id = ct.post_tbl_id
+            left outer join user_tbl ut
+            on ut.id = ct.user_tbl_id
+            where ut.nickname like CONCAT('%', #{nickname}, '%')
+            order by ct.created_at desc;
         ]]>
     </select>
 
     <!--Create Block User. -->
     <insert id="createBlockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
         <![CDATA[
-            insert into
-                block_tbl
-            values (
+            INSERT INTO
+                block_tbl (id, user_tbl_id)
+            SELECT
                 null, #{userId}
-            )
+            FROM
+                dual
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM block_tbl
+                WHERE user_tbl_id = #{userId}
+            );
         ]]>
     </insert>
 
@@ -281,10 +305,10 @@
     </insert>
 
     <delete id="deleteBlockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
-        delete
-        from
-        block_tbl
-        where user_tbl_id = #{userId}
+        delete from
+            block_tbl
+        where
+            user_tbl_id = #{userId}
     </delete>
 
     <!-- 카테고리 삭제 -->
