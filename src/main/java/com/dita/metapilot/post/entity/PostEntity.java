@@ -21,4 +21,6 @@ public class PostEntity {
     private int type;
     private String createdAt;
     private int likeCount;
+    private int commentCount;
+    private String createdDate;
 }

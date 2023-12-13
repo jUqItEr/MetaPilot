@@ -18,6 +18,9 @@
 		<result property="deleted" column="deleted"></result>
 		<result property="type" column="type"></result>
 		<result property="likeCount" column="liked"></result>
+		<result property="commentCount" column="comment_count"/>
+		<result property="createdDate" column="created_date"/>
+
 	</resultMap>
 
 	<resultMap id="postDto" type="com.dita.metapilot.post.dto.FindPostByHashtagDto">
@@ -143,7 +146,7 @@
 					comment_tbl ct
 				where
 					ct.post_tbl_id = pt.id
-			) as commented
+			) as comment_count
 		from
 			post_tbl pt
 		where
@@ -236,7 +239,7 @@
 	<delete id="revokeLike" parameterType="com.dita.metapilot.post.dto.PostResponseDto">
 		<![CDATA[
         delete from post_like_tbl
-        where post_tbl_id = #{postId}
+        where post_tbl_id = #{postId} and user_tbl_id = #{userId}
         ]]>
 	</delete>
 
