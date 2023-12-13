@@ -14,7 +14,7 @@
      * @since 2023. 11. 28.
      * @version 1.0.0
      -->
-    <insert id="saveComment" parameterType="com.dita.metapilot.comment.dto.CommentDto" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveComment" parameterType="com.dita.metapilot.comment.entity.CommentEntity" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO comment_tbl (post_tbl_id, comment_tbl_ref_id, comment_tbl_root_id, user_tbl_id, content, depth, pos, visible, created_at)
         VALUES (#{postId}, #{commentRefId}, #{commentRootId}, #{userId}, #{content}, null,null, null, now())
     </insert>
@@ -43,7 +43,7 @@
      * @since 2023. 11. 28.
      * @version 1.0.0
      -->
-    <delete id="deleteComment" parameterType="com.dita.metapilot.comment.dto.CommentDto">
+    <delete id="deleteComment" parameterType="com.dita.metapilot.comment.dto.CommentIdDto">
         DELETE FROM comment_tbl
         WHERE id = #{id}
     </delete>
@@ -56,7 +56,7 @@
      * @since 2023. 11. 28.
      * @version 1.0.0
      -->
-    <select id="findByPostId" resultType="com.dita.metapilot.comment.entity.CommentEntity" parameterType="Long">
+    <select id="findByPostId" resultType="com.dita.metapilot.comment.entity.CommentEntity" parameterType="com.dita.metapilot.comment.dto.PostIdDto">
         SELECT * FROM comment_tbl
         WHERE post_tbl_Id = #{postId}
     </select>

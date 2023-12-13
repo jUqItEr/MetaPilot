@@ -1,11 +1,9 @@
 package com.dita.metapilot.comment.controller;
 
-import com.dita.metapilot.comment.dto.CommentDto;
-import com.dita.metapilot.comment.dto.RefCommentDto;
+import com.dita.metapilot.comment.dto.*;
 import com.dita.metapilot.comment.entity.CommentEntity;
 import com.dita.metapilot.comment.repository.CommentRepository;
 import com.dita.metapilot.comment.service.CommentService;
-import com.dita.metapilot.comment.dto.LikeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,8 +84,8 @@ public class CommentController {
      */
     @ResponseBody
     @PostMapping("/deleteComment")
-    public ResponseEntity<?> deleteComment(@RequestParam("id") long id) {
-        boolean isDeleted = commentService.deleteCommentById(id);
+    public ResponseEntity<?> deleteComment(@RequestBody CommentIdDto commentIdDto) {
+        boolean isDeleted = commentService.deleteComment(commentIdDto);
 
         if (isDeleted) {
             return ResponseEntity.ok().build();
@@ -106,15 +104,14 @@ public class CommentController {
      */
     @ResponseBody
     @GetMapping("/comments")
-    public List<CommentEntity> commentsByPostId(@RequestParam("postId") Long postId) {
-        return commentService.listCommentsByPostId(postId); // 특정 postId에 해당하는 댓글 목록 반환
+    public List<CommentEntity> commentsByPostId(PostIdDto postIdDto) {
+        Long postId = postIdDto.getPostId(); // postIdDto에서 postId 가져오기
+        return commentService.listCommentsByPostId(postIdDto); // 특정 postId에 해당하는 댓글 목록 반환
     }
+
 
     /**
      * 댓글을 생성합니다.
-     *
-     * @param postCommentDto   생성할 댓글의 정보를 담은 DTO 객체
-     * @param bindingResult    요청 데이터의 검증 결과를 담은 객체
      * @return                 ResponseEntity 객체를 반환하여 댓글 생성 여부 반환
      * @author Seung yun Lee (@Seungyun)
      * @since 2023. 12. 11.
@@ -164,12 +161,14 @@ public class CommentController {
      */
     @ResponseBody
     @GetMapping("/likes/haslike")
-    public ResponseEntity<Boolean> hasLike(@RequestParam Long commentId, @RequestParam String userId) {
-        LikeDto likeDto = new LikeDto();
-        likeDto.setComment_tbl_id(commentId);
-        likeDto.setUser_tbl_id(userId);
-
-        boolean hasLike = commentService.hasLike(likeDto);
+    public ResponseEntity<Boolean> hasLike(@ModelAttribute LikeDto likeDto) {
+        long id = likeDto.getComment_tbl_id();
+        String userId = likeDto.getUser_tbl_id();
+        boolean hasLike = commentService.hasLike(likeDto); // likeDto를 전달합니다.
         return ResponseEntity.ok(hasLike);
     }
+
+
+
+
 }

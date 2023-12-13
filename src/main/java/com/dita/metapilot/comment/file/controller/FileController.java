@@ -1,5 +1,7 @@
 package com.dita.metapilot.comment.file.controller;
 
+import com.dita.metapilot.comment.file.dto.FileDto;
+import com.dita.metapilot.comment.file.dto.FileIdDto;
 import com.dita.metapilot.comment.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -34,11 +36,15 @@ public class FileController {
      * @version 1.0.0
      */
     @ResponseBody
-    @PostMapping(value = "/file/{commentId}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createFile(@PathVariable int commentId, @RequestPart MultipartFile file) {
-        fileService.createFile(commentId, file);
+    @PostMapping(value = "/file/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createFile(@RequestPart("file") MultipartFile file, @RequestPart("fileIdDto") FileIdDto fileIdDto) {
+        fileService.createFile(file, fileIdDto);
 
         return ResponseEntity.ok().body("성공적으로 생성되었습니다.");
     }
+
+
+
+
 }
 

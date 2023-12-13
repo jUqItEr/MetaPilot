@@ -17,7 +17,6 @@ public class CommentEntity {
     private int depth;
     private int pos;
     private int visible;
-    private long likes;
     private String createdAt;
 
     public void setCommentrootId(Long id) {
