@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dita.metapilot.comment.repository.CommentRepository">
+
+    <!-- Insert a new comment -->
+    <!--
+     * <p> 'comment_tbl' 테이블에 새로운 댓글을 추가하는 쿼리 </p>
+     * @param postId 댓글이 속한 게시물의 ID
+     * @param content 댓글의 내용
+     * @author Seungyun Lee (@Seoungyun)
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <insert id="saveComment" parameterType="com.dita.metapilot.comment.dto.CommentDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO comment_tbl (post_tbl_id, comment_tbl_ref_id, comment_tbl_root_id, user_tbl_id, content, depth, pos, visible, created_at)
+        VALUES (#{postId}, #{commentRefId}, #{commentRootId}, #{userId}, #{content}, null,null, null, now())
+    </insert>
+
+
+    <!-- Update an existing comment -->
+    <!--
+     * <p> 'comment_tbl' 테이블에서 특정 ID에 해당하는 댓글의 내용을 수정하는 쿼리 </p>
+     * @param id 수정할 댓글의 고유 ID
+     * @param content 수정할 댓글의 내용
+     * @author Seungyun Lee (@Seoungyun)
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <update id="updateComment" parameterType="com.dita.metapilot.comment.dto.CommentDto">
+        UPDATE comment_tbl
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- Delete a comment -->
+    <!--
+     * <p> comment_tbl' 테이블에서 특정 ID에 해당하는 댓글을 삭제하는 쿼리 </p>
+     * @param id 삭제할 댓글의 고유 ID
+     * @author Seungyun Lee (@Seoungyun)
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <delete id="deleteComment" parameterType="com.dita.metapilot.comment.dto.CommentDto">
+        DELETE FROM comment_tbl
+        WHERE id = #{id}
+    </delete>
+
+    <!-- Get a list of comments -->
+    <!--
+     * <p> 'comment_tbl' 테이블에서 모든 댓글을 가져오는 쿼리입니다.</p>
+     * @return 댓글 상세 정보를 포함하는 CommentEntity 객체의 목록
+     * @author Seungyun Lee (@Seoungyun)
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <select id="findByPostId" resultType="com.dita.metapilot.comment.entity.CommentEntity" parameterType="Long">
+        SELECT * FROM comment_tbl
+        WHERE post_tbl_Id = #{postId}
+    </select>
+
+    <!-- Get the ID of the most recent comment -->
+    <!--
+     * 'comment_tbl' 테이블에서 가장 최근에 생성된 댓글의 ID를 조회하는 쿼리입니다.
+     * @return 최근 댓글의 ID 값
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <select id="getRecentCommentId" resultType="int">
+        select max(id)
+        from comment_tbl
+    </select>
+
+    <!-- Save a reply to a comment -->
+    <!--
+     * 특정 댓글에 대한 답글을 'comment_tbl' 테이블에 저장하는 쿼리입니다.
+     * @param postId 답글이 속한 게시물의 ID
+     * @param commentRefId 답글이 참조하는 댓글의 ID
+     * @param commentRootId 답글이 속한 최상위 댓글의 ID
+     * @param userId 답글을 작성한 사용자의 ID
+     * @param content 답글 내용
+     * @return 새로 생성된 답글의 ID
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <insert id="saveReplyToComment" parameterType="com.dita.metapilot.comment.dto.CommentDto">
+        INSERT INTO comment_tbl (post_tbl_id, comment_tbl_ref_id, comment_tbl_root_id, user_tbl_id, content, depth, pos, visible, created_at)
+        VALUES (#{postId}, #{commentRefId}, #{commentRootId}, #{userId}, #{content}, 0, 0, 0, now())
+    </insert>
+
+    <!-- Add a comment -->
+    <!--
+     * 'comment_tbl' 테이블에 댓글을 추가하는 쿼리입니다.
+     * @param postId 댓글이 속한 게시물의 ID
+     * @param userId 댓글을 작성한 사용자의 ID
+     * @param content 댓글 내용
+     * @param visible 댓글의 가시성 여부
+     * @return 새로 생성된 댓글의 ID
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <insert id="addComment" parameterType="com.dita.metapilot.comment.dto.PostCommentDto" keyProperty="id" useGeneratedKeys="true">
+        insert into comment_tbl (post_tbl_id, user_tbl_id,comment_tbl_ref_id, content, depth, pos, visible, created_at)
+        values (#{postId}, #{userId}, null, #{content}, 0, 0, #{visible}, now())
+    </insert>
+
+    <!-- Update the comment reference -->
+    <!--
+     * 특정 댓글의 참조를 업데이트하는 쿼리입니다.
+     * @param id 댓글의 ID
+     * @param comment_tbl_root_id 업데이트할 참조 댓글의 ID
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <update id="updateCommentReference" parameterType="com.dita.metapilot.comment.dto.PostCommentDto">
+        update comment_tbl
+        set comment_tbl_root_id = #{id}
+        where id = #{id}
+    </update>
+
+    <!-- Find replies to a comment -->
+    <!--
+     * 특정 댓글에 대한 답글을 조회하는 쿼리입니다.
+     * @param id 댓글의 ID
+     * @return 해당 댓글에 대한 답글 목록
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <select id="findRepliesToComment" resultType="com.dita.metapilot.comment.entity.CommentEntity" parameterType="Long">
+        SELECT * FROM comment_tbl WHERE commentRootId = #{id}
+    </select>
+
+    <!-- Get the last comment ID -->
+    <!--
+     * 'comment_tbl' 테이블에서 가장 마지막에 생성된 댓글의 ID를 조회하는 쿼리입니다.
+     * @return 마지막 댓글의 ID 값
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <select id="getLastCommentId" resultType="Long">
+        select max(id) + 1
+        from comment_tbl
+    </select>
+
+    <!-- Create a comment -->
+    <!--
+     * 'comment_tbl' 테이블에 댓글을 생성하는 쿼리입니다.
+     * @param postId 댓글이 속한 게시물의 ID
+     * @param userId 댓글을 작성한 사용자의 ID
+     * @param commentRefId 대댓글이 참조하는 댓글의 ID
+     * @param commentRootId 대댓글이 속한 최상위 댓글의 ID
+     * @param content 댓글 내용
+     * @param depth 댓글의 깊이
+     * @param visible 댓글의 가시성 여부
+     * @return 새로 생성된 댓글의 ID
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <insert id="createComment" parameterType="com.dita.metapilot.comment.dto.RefCommentDto">
+        insert into comment_tbl (
+        post_tbl_id,
+        comment_tbl_ref_id,
+        comment_tbl_root_id,
+        user_tbl_id,
+        content,
+        depth,
+        pos,
+        visible,
+        created_at
+        )
+        values (
+        #{postId},
+        <choose>
+            <when test="depth > 0">
+                #{commentRefId} <!-- 대댓글이 참조하는 댓글의 ID -->
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="depth > 0">
+                #{commentRootId} <!-- 대댓글이 속한 최상위 댓글의 ID -->
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>,
+        #{userId},
+        #{content},
+        #{depth},
+        0,  <!-- 'pos'는 필요에 따라 설정 -->
+        #{visible},
+        now()
+        )
+    </insert>
+
+
+</mapper>
