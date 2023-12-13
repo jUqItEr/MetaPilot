@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dita.metapilot.comment.file.repository.FileRepository">
+
+    <!-- 게시글 첨부파일 추가 -->
+    <!--
+     * 'comment_file_tbl' 테이블에 첨부 파일을 추가하는 쿼리입니다.
+     * @param commentId 첨부 파일이 속한 댓글의 ID
+     * @param name 파일 이름
+     * @param originalName 원본 파일 이름
+     * @param extension 파일 확장자
+     * @param fileSize 파일 크기
+     * @since 2023. 11. 28.
+     * @version 1.0.0
+     -->
+    <insert id="createFile" parameterType="com.dita.metapilot.comment.file.dto.FileDto">
+        insert into comment_file_tbl(comment_tbl_id, name, original_name, extension, fileSize)
+        values(#{commentId}, #{name}, #{originalName}, #{extension}, #{fileSize})
+    </insert>
+
+</mapper>
