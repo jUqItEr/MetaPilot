@@ -3,6 +3,7 @@ package com.dita.metapilot.post.postFile.service;
 
 import com.dita.metapilot.post.dto.PostIdDto;
 import com.dita.metapilot.post.postFile.dto.PostFileDto;
+import com.dita.metapilot.post.postFile.dto.PostFileIdDto;
 import com.dita.metapilot.post.postFile.repository.PostFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -25,16 +26,28 @@ public class PostFileService {
     private final PostFileRepository postFileRepository;
 
     /**
-     * <p>첨부파일을 업로드하는 메서드</p>
+     * <p>
+     * 첨부파일을 업로드하는 메서드
+     * </p>
      *
-     * <p>1. assets 디렉토리(파일저장소)가 존재하지 않으면 생성</p>
-     * <p>2. 각 첨부파일에 대해 UUID로 고유한 파일명을 생성</p>
-     * <p>3. 파일들을 assets 디렉토리에 저장</p>
-     * <p>5. PostFileDto 객체를 생성후 해당 파일의 정보를 입력 한 후 목록에 추가</p>
-     * <p>6. postFileRepository.createFile 메서드로 파일 정보를 DB에 저장</p>
+     * <p>
+     * 1. assets 디렉토리(파일저장소)가 존재하지 않으면 생성
+     * </p>
+     * <p>
+     * 2. 각 첨부파일에 대해 UUID로 고유한 파일명을 생성
+     * </p>
+     * <p>
+     * 3. 파일들을 assets 디렉토리에 저장
+     * </p>
+     * <p>
+     * 5. PostFileDto 객체를 생성후 해당 파일의 정보를 입력 한 후 목록에 추가
+     * </p>
+     * <p>
+     * 6. postFileRepository.createFile 메서드로 파일 정보를 DB에 저장
+     * </p>
      *
      * @param postIdDto 게시글 번호가 담긴 DTO.
-     * @param files 업로드할 첨부파일 목록
+     * @param files     업로드할 첨부파일 목록
      * @return 성공적으로 파일을 업로드했을 때 true 반환
      */
     public boolean createFiles(PostIdDto postIdDto, List<MultipartFile> files) {
@@ -42,45 +55,124 @@ public class PostFileService {
         long postId = postIdDto.getPostId();
 
         try {
-            Resource resource = new ClassPathResource("assets/");
-            Path uploadPath = Paths.get(resource.getURI());
+            if (files != null && !files.isEmpty()) {
+                String assetsPath = "src/main/resources/assets";
+                Path uploadPath = Paths.get(assetsPath);
 
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            files.forEach(file -> {
-                String fileName = file.getOriginalFilename();
-                String originalName = fileName.substring(0, fileName.lastIndexOf('.'));
-                String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-                String name = UUID.randomUUID().toString().replaceAll("-", "");
-                String uuidName = name + "." + extension;
-                long fileSize = files.size();
-
-                try {
-                    Path filePath = uploadPath.resolve(uuidName);
-                    Files.write(filePath, file.getBytes());
-
-                    PostFileDto postFileDto = new PostFileDto(postId, name, originalName, extension, fileSize, 0);
-                    postFiles.add(postFileDto);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
                 }
-            });
 
-            postFileRepository.createFile(postFiles);
+                files.forEach(file -> {
+                    String fileName = file.getOriginalFilename();
+                    String originalName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+                    String name = UUID.randomUUID().toString().replaceAll("-", "");
+                    String uuidName = name + "." + extension;
+                    long fileSize = files.size();
+
+                    try {
+                        Path filePath = uploadPath.resolve(uuidName);
+                        Files.write(filePath, file.getBytes());
+
+                        PostFileDto postFileDto = new PostFileDto(postId, name, originalName, extension, fileSize, 0);
+                        postFiles.add(postFileDto);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                if (!postFiles.isEmpty()) {
+                    postFileRepository.createFile(postFiles);
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return true;
     }
 
     /**
-     * <p>게시글에 연결된 첨부파일 목록을 조회하는 메서드</p>
+     * <p>
+     * 이미지를 업로드하는 메서드
+     * </p>
      *
-     * <p>1. 게시글 번호(postId)로 해당 게시글과 연결된 첨부파일 목록을 조회</p>
-     * <p>2. 조회된 첨부파일 정보를 PostFileDto로 반환</p>
+     * <p>
+     * 1. assets 디렉토리(파일저장소)가 존재하지 않으면 생성
+     * </p>
+     * <p>
+     * 2. 각 첨부파일에 대해 UUID로 고유한 파일명을 생성
+     * </p>
+     * <p>
+     * 3. 파일들을 assets 디렉토리에 저장
+     * </p>
+     * <p>
+     * 5. PostFileDto 객체를 생성후 해당 이미지의 정보를 입력 한 후 목록에 추가
+     * </p>
+     * <p>
+     * 6. postFileRepository.createImages 메서드로 이미지 정보를 DB에 저장
+     * </p>
+     *
+     * @param postIdDto 게시글 번호가 담긴 DTO.
+     * @param files     업로드할 이미지파일 목록
+     * @return 성공적으로 이미지파일을 업로드했을 때 true 반환
+     */
+    public boolean createImages(PostIdDto postIdDto, List<MultipartFile> files) {
+        List<PostFileDto> postFiles = new ArrayList<>();
+        long postId = postIdDto.getPostId();
+
+        try {
+            if (files != null && !files.isEmpty()) {
+                /*
+                 * String assetsPath = System.getProperty("user.dir") +
+                 * "/src/main/resources/assets";
+                 * Path uploadPath = Paths.get(assetsPath);
+                 */
+                String assetsPath = "src/main/resources/assets";
+                Path uploadPath = Paths.get(assetsPath);
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                files.forEach(file -> {
+                    String fileName = file.getOriginalFilename();
+                    String originalName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+                    String name = UUID.randomUUID().toString().replaceAll("-", "");
+                    String uuidName = name + "." + extension;
+                    long fileSize = files.size();
+
+                    try {
+                        Path filePath = uploadPath.resolve(uuidName);
+                        Files.write(filePath, file.getBytes());
+
+                        PostFileDto postFileDto = new PostFileDto(postId, name, originalName, extension, fileSize, 0);
+                        postFiles.add(postFileDto);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                if (!postFiles.isEmpty()) {
+                    postFileRepository.createImages(postFiles);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+    /**
+     * <p>
+     * 게시글에 연결된 첨부파일 목록을 조회하는 메서드
+     * </p>
+     *
+     * <p>
+     * 1. 게시글 번호(postId)로 해당 게시글과 연결된 첨부파일 목록을 조회
+     * </p>
+     * <p>
+     * 2. 조회된 첨부파일 정보를 PostFileDto로 반환
+     * </p>
      *
      * @param postIdDto 게시글 번호를 담은 DTO
      * @return 해당 게시글과 연결된 첨부파일 정보를 담은 PostFileDto 객체의 목록
@@ -90,11 +182,19 @@ public class PostFileService {
     }
 
     /**
-     * <p>받은 파일 이름을 바이트 배열로 읽어오는 메서드</p>
+     * <p>
+     * 받은 파일 이름을 바이트 배열로 읽어오는 메서드
+     * </p>
      *
-     * <p>1. 받은 파일의 이름을 이용해 실제 저장된 파일의 경로를 찾아 파일을 읽어옴</p>
-     * <p>2. 파일이 존재하고 읽을 수 있으면 해당 파일의 내용을 바이트 배열로 반환</p>
-     * <p>3. 파일이 존재하지 않거나 읽을 수 없을 경우 FileNotFoundException 또는 IOException 발생</p>
+     * <p>
+     * 1. 받은 파일의 이름을 이용해 실제 저장된 파일의 경로를 찾아 파일을 읽어옴
+     * </p>
+     * <p>
+     * 2. 파일이 존재하고 읽을 수 있으면 해당 파일의 내용을 바이트 배열로 반환
+     * </p>
+     * <p>
+     * 3. 파일이 존재하지 않거나 읽을 수 없을 경우 FileNotFoundException 또는 IOException 발생
+     * </p>
      *
      * @param fileName 다운로드할 파일의 이름
      * @return 파일의 내용을 담은 바이트 배열
@@ -104,32 +204,41 @@ public class PostFileService {
         String originalFileName = getOriginalFileName(fileName);
 
         try {
-            Resource resource = new ClassPathResource("assets/" + originalFileName);
+            String assetsPath = "src/main/resources/assets";
+            Path filePath = Paths.get(assetsPath, originalFileName);
 
-            if (!resource.exists() || !resource.isReadable()) {
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
                 throw new FileNotFoundException("File not found or cannot be read: " + originalFileName);
             }
 
-            return Files.readAllBytes(Paths.get(resource.getURI()));
+            return Files.readAllBytes(filePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     * <p>받은 파일 이름으로 확장자를 제외한 원본 파일 이름을 찾아 반환하는 메서드</p>
+     * <p>
+     * 받은 파일 이름으로 확장자를 제외한 원본 파일 이름을 찾아 반환하는 메서드
+     * </p>
      *
-     * <p>1. assets 폴더 내에서 주어진 파일 이름으로 시작하는 파일들을 검색</p>
-     * <p>2. 검색된 파일 중에서 확장자를 제외한 원본 파일 이름을 찾아 반환</p>
-     * <p>3. 검색된 파일이 없거나 확장자를 제외한 원본 파일 이름을 찾지 못한 경우 입력된 파일 이름 그대로 반환</p>
+     * <p>
+     * 1. assets 폴더 내에서 주어진 파일 이름으로 시작하는 파일들을 검색
+     * </p>
+     * <p>
+     * 2. 검색된 파일 중에서 확장자를 제외한 원본 파일 이름을 찾아 반환
+     * </p>
+     * <p>
+     * 3. 검색된 파일이 없거나 확장자를 제외한 원본 파일 이름을 찾지 못한 경우 입력된 파일 이름 그대로 반환
+     * </p>
      *
      * @param fileName 찾을 파일의 이름
      * @return 검색된 파일이 있으면 fullFileName을 반환, 그렇지 않으면 확장자를 제외한 원본 파일 이름을 반환
      */
     public String getOriginalFileName(String fileName) {
         try {
-            Resource resource = new ClassPathResource("assets/");
-            Path uploadPath = Paths.get(resource.getURI());
+            String assetsPath = "src/main/resources/assets";
+            Path uploadPath = Paths.get(assetsPath);
 
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(uploadPath, fileName + ".*")) {
                 for (Path file : stream) {
@@ -149,9 +258,13 @@ public class PostFileService {
     }
 
     /**
-     * <p>파일명에서 확장자를 제외하는 메서드</p>
+     * <p>
+     * 파일명에서 확장자를 제외하는 메서드
+     * </p>
      *
-     * <p>1. 파일명에서 마지막 점(.)의 인덱스를 찾아 확장자를 제외한 부분을 반환</p>
+     * <p>
+     * 1. 파일명에서 마지막 점(.)의 인덱스를 찾아 확장자를 제외한 부분을 반환
+     * </p>
      *
      * @param fileName 확장자를 제외하고자 하는 파일명
      * @return 확장자를 제외한 파일명 반환
@@ -165,12 +278,34 @@ public class PostFileService {
     }
 
     /**
-     * <p>게시글 수정 시 연결된 첨부파일을 삭제하는 메서드</p>
+     * <p>
+     * 게시글 파일을 삭제하는 메서드
+     * </p>
      *
-     * <p>1. 주어진 게시글 번호에 해당하는 첨부파일을 불러옴</p>
-     * <p>2. 해당 번호를 가진 첨부파일의 uuid.확장자 이름을 파일 저장소에서 찾음</p>
-     * <p>3. 해당 이름의 파일이 존재하면 파일 저장소에서 삭제</p>
-     * <p>4. DB에서의 해당 파일 삭제 메서드 리턴</p>
+     * @param postFileIdDto 파일의 id가 담긴 DTO.
+     * @return
+     */
+    public boolean deleteFile(PostFileIdDto postFileIdDto) {
+        return postFileRepository.deleteFile(postFileIdDto);
+    }
+
+    /**
+     * <p>
+     * 게시글 수정 시 연결된 첨부파일을 삭제하는 메서드
+     * </p>
+     *
+     * <p>
+     * 1. 주어진 게시글 번호에 해당하는 첨부파일을 불러옴
+     * </p>
+     * <p>
+     * 2. 해당 번호를 가진 첨부파일의 uuid.확장자 이름을 파일 저장소에서 찾음
+     * </p>
+     * <p>
+     * 3. 해당 이름의 파일이 존재하면 파일 저장소에서 삭제
+     * </p>
+     * <p>
+     * 4. DB에서의 해당 파일 삭제 메서드 리턴
+     * </p>
      *
      * @param postIdDto) 삭제할 첨부파일이 연결된 게시글 번호 DTO.
      * @return 삭제 성공시 true, 실패시 false 반환
@@ -182,11 +317,10 @@ public class PostFileService {
 
             for (PostFileDto file : files) {
                 String fileName = file.getName() + "." + file.getExtension();
-                String filePath = "assets/" + fileName;
+                String filePath = "src/main/resources/assets/" + fileName;
 
                 try {
-                    Resource resource = new ClassPathResource(filePath);
-                    Path path = Paths.get(resource.getURI());
+                    Path path = Paths.get(filePath);
 
                     if (Files.exists(path)) {
                         Files.delete(path);
@@ -205,7 +339,27 @@ public class PostFileService {
     }
 
     /**
-     * <p>UUID처리된 파일의 원본 이름과 확장자를 가져오는 메서드</p>
+     * <p>
+     * 게시글에 연결된 이미지 파일 리스트를 가져오는 메서드
+     * </p>
+     *
+     * @param postIdDto 게시글 번호 DTO.
+     * @return 게시글에 연결된 이미지 파일 리스트 반환
+     */
+    public List<PostFileDto> getPostImages(PostIdDto postIdDto) {
+        List<PostFileDto> postImages = postFileRepository.getPostImages(postIdDto);
+
+        if (postImages != null && !postImages.isEmpty()) {
+            return postImages;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * <p>
+     * UUID처리된 파일의 원본 이름과 확장자를 가져오는 메서드
+     * </p>
      *
      * @param fileName UUID처리된 파일이름
      * @return 원본 파일이름과 확장자를 반환
@@ -214,5 +368,3 @@ public class PostFileService {
         return postFileRepository.getOriginalName(fileName);
     }
 }
-
-

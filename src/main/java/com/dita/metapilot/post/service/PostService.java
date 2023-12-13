@@ -64,6 +64,7 @@ public class PostService {
      * @return
      */
     public List<PostLikesDto> getLikesList(PostIdDto postIdDto) {
+
         return postRepository.getLikesList(postIdDto);
     }
 

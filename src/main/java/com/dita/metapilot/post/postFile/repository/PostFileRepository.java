@@ -4,6 +4,7 @@ package com.dita.metapilot.post.postFile.repository;
 import com.dita.metapilot.post.dto.PostIdDto;
 import com.dita.metapilot.post.dto.PostResponseDto;
 import com.dita.metapilot.post.postFile.dto.PostFileDto;
+import com.dita.metapilot.post.postFile.dto.PostFileIdDto;
 import com.dita.metapilot.post.postFile.entity.PostFileEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.core.io.ByteArrayResource;
@@ -23,12 +24,36 @@ public interface PostFileRepository {
     int createFile(List<PostFileDto> files);
 
     /**
+     * 이미지를 업로드 하는 메서드.
+     *
+     * @param files 이미지파일 정보를 담은 리스트.
+     * @return 생성된 이미지파일들을 반환.
+     */
+    int createImages(List<PostFileDto> files);
+
+    /**
+     * 게시글 파일을 삭제하는 메서드.
+     *
+     * @param
+     * @return
+     */
+    boolean deleteFile(PostFileIdDto postFileIdDto);
+
+    /**
      * 게시글에 연결된 첨부파일을 삭제하는 메서드.
      *
-     * @param postId 첨부파일을 삭제할 게시글의 ID.
+     * @param postIdDto 첨부파일을 삭제할 게시글의 id가 담긴 DTO.
      * @return 첨부파일 삭제 성공 여부를 반환.
      */
-    boolean deletePostFile(PostIdDto postId);
+    boolean deletePostFile(PostIdDto postIdDto);
+
+    /**
+     * 게시글에 연결된 이미지만 불러오는 메서드.
+     *
+     * @param postIdDto .
+     * @return 게시글에 연결된 이미지파일 리스트 반환.
+     */
+    List<PostFileDto> getPostImages(PostIdDto postIdDto);
 
     /**
      * 게시글에 연결된 첨부파일을 조회하는 메서드.
