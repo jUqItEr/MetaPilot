@@ -125,17 +125,31 @@
 
 	<!-- 공지사항 게시글 목록 -->
 	<select id="getNotciePosts" resultMap="postEntity">
-		select distinct pt.*,
-						(
-							select count(*)
-							from post_like_tbl plt
-							where plt.post_tbl_id = pt.id
-						) as liked
-		from post_tbl pt
-		left join post_like_tbl plt on pt.id = plt.post_tbl_id
-		where pt.notice = 1 and pt.deleted = 0
+		select
+			pt.*,
+			substring(pt.created_at, 1, 10) as created_date,
+			(
+				select
+					count(*)
+				from
+					post_like_tbl plt
+				where
+					plt.post_tbl_id = pt.id
+			) as liked,
+			(
+				select
+					count(*)
+				from
+					comment_tbl ct
+				where
+					ct.post_tbl_id = pt.id
+			) as commented
+		from
+			post_tbl pt
+		where
+			pt.notice = 1 and pt.deleted = 0
 		order by
-		pt.created_at desc
+			pt.created_at desc
 		limit 3
 	</select>
 

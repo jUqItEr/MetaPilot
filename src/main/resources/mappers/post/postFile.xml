@@ -29,11 +29,32 @@
         </foreach>
     </insert>
 
-    <!-- 게시글에 연결된 첨부파일 삭제 -->
-    <delete id="deletePostFile" parameterType="long">
+    <!-- 이미지 파일 추가 -->
+    <insert id="createImages" parameterType="list">
+        insert into post_file_tbl(post_tbl_id, name, original_name, extension, filesize, type)
+        values
+        <foreach collection="list" item="file" separator=",">
+            (#{file.postId}, #{file.name}, #{file.originalName}, #{file.extension}, #{file.fileSize}, 1)
+        </foreach>
+    </insert>
+
+    <!-- 게시글 파일 삭제-->
+    <delete id="deleteFile" parameterType="com.dita.metapilot.post.postFile.dto.PostFileIdDto">
+        delete from post_file_tbl
+        where id = #{id}
+    </delete>
+
+    <!-- 게시글에 연결된 첨부파일 삭제(이미지 X) -->
+    <delete id="deletePostFile" parameterType="com.dita.metapilot.post.dto.PostIdDto">
         delete from post_file_tbl
         where post_tbl_id = #{postId} and type = 0
     </delete>
+
+    <!-- 게시글에 연결된 이미지 가져오기 -->
+    <select id="getPostImages" parameterType="com.dita.metapilot.post.dto.PostIdDto" resultMap="postFile">
+        select * from post_file_tbl
+        where post_tbl_id = #{postId} and type = 1
+    </select>
 
     <!-- UUID로 원본 파일 이름 가져오기 -->
     <select id="getOriginalName" resultType="com.dita.metapilot.post.postFile.dto.PostFileDto">

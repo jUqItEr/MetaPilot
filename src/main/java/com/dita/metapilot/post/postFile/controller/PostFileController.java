@@ -2,6 +2,7 @@ package com.dita.metapilot.post.postFile.controller;
 
 import com.dita.metapilot.post.dto.PostIdDto;
 import com.dita.metapilot.post.postFile.dto.PostFileDto;
+import com.dita.metapilot.post.postFile.dto.PostFileIdDto;
 import com.dita.metapilot.post.postFile.service.PostFileService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,28 @@ public class PostFileController {
 
     private final PostFileService postFileService;
 
+    /**
+     * <p>게시글에 이미지를 추가하는 컨트롤러 메서드</p>
+     *
+     * @param postIdDto 게시글 번호가 담긴 DTO.
+     * @return 게시글에 이미지 추가 성공시 true, 실패시 false
+     */
     @ResponseBody
-    @PostMapping("/upload")
-    public ResponseEntity<?> createFiles(@RequestPart PostIdDto postIdDto, @RequestPart(required = false) List<MultipartFile> files) {
-        return ResponseEntity.ok(postFileService.createFiles(postIdDto ,files));
+    @PostMapping("/create")
+    public ResponseEntity<?> createImages(@RequestPart PostIdDto postIdDto, @RequestPart(required = false) List<MultipartFile> files) {
+        return ResponseEntity.ok(postFileService.createImages(postIdDto ,files));
+    }
+
+    /**
+     * <p>게시글에 있는 파일을 삭제하는 컨트롤러 메서드</p>
+     *
+     * @param postFileIdDto 파일 번호가 담긴 DTO.
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/delete")
+    public ResponseEntity<Boolean> deleteFile(@RequestBody PostFileIdDto postFileIdDto) {
+        return ResponseEntity.ok(postFileService.deleteFile(postFileIdDto));
     }
 
     /**
@@ -87,5 +106,17 @@ public class PostFileController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * <p>게시글의 이미지 리스트를 가져오는 컨트롤러 메서드</p>
+     *
+     * @param postIdDto 게시글 번호가 담긴 DTO.
+     * @return 해당 게시글의 타입이 이미지인 파일 리스트 return
+     */
+    @ResponseBody
+    @GetMapping("/images")
+    public ResponseEntity<List<PostFileDto>> getPostImages(PostIdDto postIdDto) {
+        return ResponseEntity.ok(postFileService.getPostImages(postIdDto));
     }
 }

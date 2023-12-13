@@ -152,7 +152,7 @@ public class PostController {
      * @since 2023. 11. 28.
      */
     @ResponseBody
-    @GetMapping("/postView")
+    @GetMapping("/view")
     public ResponseEntity<PostViewDto> postView(PostIdDto postIdDto) {
         System.out.println(postIdDto.getPostId());
         return ResponseEntity.ok(postService.getPostView(postIdDto));
