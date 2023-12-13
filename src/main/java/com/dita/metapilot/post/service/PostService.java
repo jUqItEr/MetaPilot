@@ -107,6 +107,10 @@ public class PostService {
         return result;
     }
 
+    public List<PostEntity> getPostPageView(PagingDto pagingDto) {
+        return postRepository.getPagingView(pagingDto);
+    }
+
     /**
      * <p>게시글의 좋아요 상태를 체크하는 메서드</p>
      *

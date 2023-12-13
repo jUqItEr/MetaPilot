@@ -4,9 +4,26 @@ import { useEffect, useState } from "react"
 import styles from "/styles/common/postList.module.css";
 
 const PostList = () => {
-    
+    const [postList, setPostList] = useState([true]);
     const [isListVisible, setIsListVisible] = useState(true);
     const [isCheckboxVisible, setIsCheckboxVisible] = useState(false);
+
+    /*
+    useEffect(() => {
+        axios({
+          method: "get",
+          params: {
+            limit: "Y",
+            page: ,
+            count: 
+            index: 
+          },
+          url: "/api/post/page/view",
+        }).then((res) => {
+          console.log(res.data);
+        });
+      }, []);
+      */
 
     // 목록 표시/숨기기 함수
     const toggleListVisibility = () => {
