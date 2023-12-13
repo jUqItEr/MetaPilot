@@ -4,19 +4,18 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
-const PostHeader = () => {
+const PostHeader = ({ pid }) => {
   const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
   const router = useRouter();
-  const { postId } = router.query;
 
   useEffect(() => {
     axios({
       method: "get",
       params: {
-        postId: 68,
+        postId: pid,
       },
-      url: "/api/post/postView",
+      url: "/api/post/view",
     }).then((res) => {
       setData(res.data);
       console.log(res.data);
