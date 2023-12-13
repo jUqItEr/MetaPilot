@@ -29,7 +29,7 @@ const LikesList = ({ likes, isVisible }) => {
   return (
     <div style={{ display: isVisible ? "block" : "none" }}>
       <div className={styles.likesWrap}>
-        이 글에 <span className={styles.likesBloger}>공감한 친구</span>
+        이 글에 <span className={styles.likesBloger}>좋아요</span>를 누른 친구
         <ul className={styles.likesContent}>
           {likes.map(
             (

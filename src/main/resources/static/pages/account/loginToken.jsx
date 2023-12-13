@@ -14,7 +14,7 @@ function LoginOauth2() {
                 // 토큰이 존재하면 로컬 스토리지에 저장하고 리디렉션합니다.
                 localStorage.setItem("token", "Bearer " + token);
 
-                router.push("/temp");  // 사용자를 다른 페이지로 리디렉션합니다.
+                router.push("/");  // 사용자를 다른 페이지로 리디렉션합니다.
             } else {
                 console.log("No token found in URL");
                 // 토큰이 없다면 다른 처리를 할 수 있습니다.

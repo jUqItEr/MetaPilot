@@ -12,7 +12,6 @@ import styles from "/styles/login.module.css";
  * @returns Return the login page.
  */
 export default function LoginPage() {
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -20,7 +19,7 @@ export default function LoginPage() {
 
     axios({
       headers: {
-        Authorization: 'cos',
+        Authorization: "cos",
       },
       data: {
         id: id.value,
@@ -33,7 +32,7 @@ export default function LoginPage() {
         console.log(res.headers);
         const token = res.headers.authorization;
         localStorage.setItem("token", token); //로컬 스토리지에 저장
-        window.location.href = "/temp";
+        window.location.href = "/";
         //localStorage.removeItem("token"); //로그아웃시 로컬 스토리지에서 지우기.
       })
       .catch((err) => {
