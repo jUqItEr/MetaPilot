@@ -1,8 +1,10 @@
 package com.dita.metapilot.admin.controller;
 
 import com.dita.metapilot.admin.dto.*;
+import com.dita.metapilot.admin.entity.HashtagEntity;
 import com.dita.metapilot.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -42,6 +44,29 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getBlogInfo());
     }
 
+    @ResponseBody
+    @GetMapping("/readTag")
+    public ResponseEntity<?> readTag(HashtagSearchDto hashtagSearchDto) {
+        return ResponseEntity.ok(adminService.readTag(hashtagSearchDto));
+    }
+
+    @ResponseBody
+    @GetMapping("/hasTag")
+    public ResponseEntity<?> hasTag(HashtagDto hashtagDto) {
+        return ResponseEntity.ok(adminService.isTagExist(hashtagDto));
+    }
+
+    @ResponseBody
+    @PostMapping("/deleteTag")
+    public ResponseEntity<?> deleteTag(HashtagDto hashtagDto) {
+        return ResponseEntity.ok(adminService.deleteTag(hashtagDto));
+    }
+
+    @ResponseBody
+    @PostMapping("/updateTag")
+    public ResponseEntity<?> updateTag(HashtagEntity hashtagEntity) {
+        return ResponseEntity.ok(adminService.updateTag(hashtagEntity));
+    }
 
 
     /**
@@ -113,19 +138,17 @@ public class AdminController {
 
 
     /**
-     * <p>특정 id의 댓글을 list하는 기능입니다.</p>
+     * <p>댓글을 list하는 기능입니다.</p>
      *
      * @since 2023. 12. 08.
      *
      * @return ResponseEntity
      */
     @ResponseBody
-    @PostMapping("/commentList")
+    @GetMapping("/commentList")
     public ResponseEntity<?> commentView(CommentDto commentDto) {
         return ResponseEntity.ok(adminService.commentView(commentDto));
     }
-
-
 
     /**
      * <p>카테고리 생성</p>

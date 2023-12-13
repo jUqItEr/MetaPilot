@@ -1,10 +1,7 @@
 package com.dita.metapilot.admin.service;
 
 import com.dita.metapilot.admin.dto.*;
-import com.dita.metapilot.admin.entity.CategoryEntity;
-import com.dita.metapilot.admin.entity.CmsInfoEntity;
-import com.dita.metapilot.admin.entity.CommentEntity;
-import com.dita.metapilot.admin.entity.PostEntity;
+import com.dita.metapilot.admin.entity.*;
 import com.dita.metapilot.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,21 @@ public class AdminService {
      */
     public List<CmsInfoEntity>  getBlogInfo(){return adminRepository.getCmsInfo();}
 
+    public List<HashtagEntity> readTag(HashtagSearchDto hashtagSearchDto){
+        return adminRepository.readTag(hashtagSearchDto);
+    }
+
+    public boolean isTagExist(HashtagDto hashtagDto) {
+        return adminRepository.isTagExist(hashtagDto);
+    }
+
+    public boolean deleteTag(HashtagDto hashtagDto) {
+        return adminRepository.deleteTag(hashtagDto);
+    }
+
+    public boolean updateTag(HashtagEntity hashtagEntity) {
+        return adminRepository.updateTag(hashtagEntity);
+    }
 
 
     /**

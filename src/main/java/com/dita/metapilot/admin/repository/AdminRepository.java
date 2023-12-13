@@ -1,10 +1,7 @@
 package com.dita.metapilot.admin.repository;
 
 import com.dita.metapilot.admin.dto.*;
-import com.dita.metapilot.admin.entity.CategoryEntity;
-import com.dita.metapilot.admin.entity.CmsInfoEntity;
-import com.dita.metapilot.admin.entity.CommentEntity;
-import com.dita.metapilot.admin.entity.PostEntity;
+import com.dita.metapilot.admin.entity.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -24,6 +21,14 @@ public interface AdminRepository {
      * @return 모든 정보를 List에 담습니다.
      */
     List<CmsInfoEntity> getCmsInfo();
+
+    List<HashtagEntity> readTag(HashtagSearchDto hashtagSearchDto);
+
+    boolean isTagExist(HashtagDto hashtagDto);
+
+    boolean deleteTag(HashtagDto hashtagDto);
+
+    boolean updateTag(HashtagEntity hashtagEntity);
 
     /**
      * <p>blog info 수정</p>
