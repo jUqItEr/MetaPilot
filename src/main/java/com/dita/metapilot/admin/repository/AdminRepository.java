@@ -81,6 +81,15 @@ public interface AdminRepository {
      */
     List<CommentEntity> commentView(CommentDto commentDto);
 
+
+
+    /**
+     * <p>검색한 댓글 List</p>
+     * @since 2023. 12. 13.
+     * @return 사용자 닉네임으로 검색한 댓글들만 출력합니다.
+     */
+    List<CommentEntity> commentSearchView(CommentSearchDto commentSearchDto);
+
     /**
      * <p>Create Block user.</p>
      *

@@ -137,6 +137,16 @@ public class AdminService {
 
 
 
+    /**
+     * <p>검색한 댓글 List</p>
+     * @since 2023. 12. 13.
+     * @return 사용자 닉네임으로 검색한 댓글들만 출력합니다.
+     */
+    public List<CommentEntity> commentSearchView(CommentSearchDto commentSearchDto) {
+        return adminRepository.commentSearchView(commentSearchDto);
+    }
+
+
 
     /**
      * <p>카테고리 생성</p>
