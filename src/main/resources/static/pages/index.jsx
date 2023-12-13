@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import IndexHeader from '../layout/home/header';
 import IndexSidebar from '../layout/home/sidebar';
 import TrendPost from '../components/common/trend';
+import NoticePost from '../components/common/notice';
+import PostList from '../components/common/postList';
 
 
 
@@ -40,6 +42,8 @@ const IndexPage = () => {
             <IndexHeader/>
             <IndexSidebar/>
             <TrendPost/>
+            <NoticePost/>
+            <PostList/>
         </>
     )
 }

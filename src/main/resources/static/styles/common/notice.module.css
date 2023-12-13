@@ -1,0 +1,37 @@
+.noticeWrap {
+    margin: 0 auto;
+    width: 640px;
+}
+
+.noticeContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.noticeContent {
+    display: flex;
+}
+
+.notice {
+    color: red;
+    margin-right: 10px;
+}
+
+.link {
+    display: flex;
+    text-align: center;
+    color: var(--bs-blue);
+    text-decoration: none;
+}
+
+.postTitle {
+    margin-right: 10px;
+}
+
+.commentCount {
+    color: red;
+}
+
+.commentDate {
+    color:darkgrey;
+}

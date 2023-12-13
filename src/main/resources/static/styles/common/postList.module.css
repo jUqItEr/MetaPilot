@@ -1,0 +1,54 @@
+.postListWrap {
+    margin: 0 auto;
+    width: 640px;
+}
+
+.postListHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.postListGroup {
+    display: flex;
+}
+
+.postListAll {
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.postListCount {
+    font-weight: 300;
+}
+
+.postListToggle {
+    cursor: pointer;
+}
+
+.postListSubHeader {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+}
+
+.postListSubject {
+    color: gray;
+}
+
+.postListTitle {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid lightgray;
+    padding: 10px 0;
+}
+
+.postListCommentCount {
+    color: red;
+}
+
+.postListTitles {
+    margin-right: 10px;
+}
+
