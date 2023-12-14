@@ -27,4 +27,5 @@ public class PostEntity {
     private String profileImage;
     private String categorySubject;
     private String createdView;
+    private int postCount;
 }
