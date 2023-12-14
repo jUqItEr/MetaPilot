@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import styles from '/styles/post/post.module.css'
+import PostContent from '../../../components/post/content'
 
 
 export const getServerSideProps = async context => {
@@ -143,9 +144,9 @@ const PostPage = ({ postId }) => {
             <div className='wrap'>
                 <div className='container'>
                     <PostHeader pid={postId} />
-
-                    <main className={styles.mainContainer}></main>
-
+                    <main className={styles.mainContainer}>
+                        <PostContent />
+                    </main>
                     <footer className={styles.footerContainer}>
                         {/* hashtag */}
                         <div className={styles.hashtagBox}>

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import styles from '/styles/post/post.module.css';
-import CommentLike from './comment_like';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import styles from '/styles/post/post.module.css'
+import CommentLike from './commentLike'
+import axios from 'axios'
 import $ from 'jquery'
+
 
 const CommentsList = ({ postId, comments, setComments }) => {
     const [user, setUser] = useState([])
@@ -44,6 +45,77 @@ const CommentsList = ({ postId, comments, setComments }) => {
         // }
 
         
+    }
+
+    /**
+     * 댓글 / 답글 작성 통합 메서드
+     * 
+     * @author Kiseok Kang
+     * @since 2024. 12. 14.
+     * @version 2.1.0
+     */
+    // const handleComment = async ({ id, rootId }) => {
+    const handleComment = async ({ id, commentRootId }) => {
+        let content
+        let params = {
+            postId: postId,
+            userId: user?.id
+        }
+        let depth = 0
+        let errorMessage = '댓글'
+
+        if (id === undefined) {
+            content = $('#comment')
+            // 댓글 작성 모드
+            content = content.val()
+        } else {
+            // 답글 작성 모드 (대댓글도 지원함)
+            content = $(`textarea[data-id=${id}]`)
+            depth = 1
+
+            /**
+             * refId: 대댓글 작성 시 사용할 부분
+             * rootId: 원 부모 아이디 참조
+             */
+            params.commentRefId = id
+            params.commentRootId = commentRootId
+
+            // Controller 반영되면 변경할 것.
+            // params.refId = comment.id
+            // params.rootId = comment.rootId
+        }
+        if (content.val() !== '') {
+            params.content = content.val()
+            params.depth = depth
+            // 댓글 및 답글의 공개 여부
+            params.visible = 1
+
+            await axios({
+                method: 'post',
+                params: {
+                    content: content,
+                    postId: postId,
+                    userId: user?.id,
+                    depth: 0,
+                    visible: 1
+                },
+                url: '/api/comment/createComment'
+            })
+
+            await axios({
+                method: 'post',
+                params: {
+                    content: content,
+                    postId: postId,
+                    userId: user?.id,
+                    depth: 0,
+                    visible: 1
+                },
+                url: '/api/comment/createComment'
+            })
+        } else {
+            alert(`${errorMessage}을 작성하려면 내용을 입력해주세요.`)
+        }
     }
 
     const createComment = async () => {
@@ -138,10 +210,10 @@ const CommentsList = ({ postId, comments, setComments }) => {
                     <div className={styles.commentDetails}>
                         <span>{comment.createdAt}</span>
                         <div>
-                            <button className="btn" onClick={() => toggleFormVisibility(comment.id)}>
+                            <button className='btn' onClick={() => toggleFormVisibility(comment.id)}>
                                 답글
                             </button>
-                            <button className="btn" onClick={() => toggleCommentLike(comment.id)}>
+                            <button className='btn' onClick={() => toggleCommentLike(comment.id)}>
                                 <CommentLike comment={comment} />
                                 {comment.likeCount}
                             </button>
@@ -151,20 +223,20 @@ const CommentsList = ({ postId, comments, setComments }) => {
                         <div className={styles.commentForm}>
                             {/* 폼 내용 또는 자식 컴포넌트 */}
                             <form onSubmit={createCommentSubmit}>
-                                <input type="hidden" name="postId" value={`${postId}`}/>
-                                <input type="hidden" name="userId" value={`${user?.id}`}/>
+                                <input type='hidden' name='postId' value={`${postId}`}/>
+                                <input type='hidden' name='userId' value={`${user?.id}`}/>
                                 <div className={styles.commentHandlerForm}>
                                     <strong>{user?.nickname}</strong>님의 답글
                                     <div className={`${styles.commentInputGroup} input-group mb-3`}>
-                                        <textarea type="text" className={`${styles.commentTextarea} form-control`} name='content'/>
+                                        <textarea type='text' className={`${styles.commentTextarea} form-control`} name='content'/>
                                     </div>
                                 </div>
                                 <div className={styles.editorForm}>  
                                     <div>
-                                        <input className="form-control form-control-sm" data-id={comment.id} type="file" accept="image/png, image/jpeg, image/webp, image/gif"/>
+                                        <input className='form-control form-control-sm' data-id={comment.id} type='file' accept='image/png, image/jpeg, image/webp, image/gif'/>
                                     </div>
-                                    <div className="input-group-append">
-                                        <button className="btn btn-outline-secondary" type="button" onClick={() => createReply(comment.id)}>답글 달기</button>
+                                    <div className='input-group-append'>
+                                        <button className='btn btn-outline-secondary' type='button' onClick={() => handleComment(comment)}>답글 달기</button>
                                     </div>
                                 </div>
                             </form>
@@ -178,10 +250,10 @@ const CommentsList = ({ postId, comments, setComments }) => {
                             <div className={styles.commentDetails}>
                                 <span>{reply.time}</span>
                                 <div className={styles.commentDetailsButtons}>
-                                    <button className="btn btn-Light" onClick={() =>  toggleFormVisibility(reply.id)}>
+                                    <button className='btn btn-Light' onClick={() =>  toggleFormVisibility(reply.id)}>
                                         답글의 답글
                                     </button>
-                                    <button className="btn btn-Light" onClick={() => toggleCommentLike(reply.id, true, comment.id)}>
+                                    <button className='btn btn-Light' onClick={() => toggleCommentLike(reply.id, true, comment.id)}>
                                         <span className={styles.likeIcon}>{reply.liked ? '❤️' : '🤍'}</span>
                                         {reply.likes}
                                     </button>
@@ -192,15 +264,15 @@ const CommentsList = ({ postId, comments, setComments }) => {
                                     <div className={styles.commentHandlerForm}>
                                     <strong>닉네임</strong> 답글
                                     <div className={`${styles.commentInputGroup} input-group mb-3`}>
-                                        <textarea type="text" className={`${styles.commentTextarea} form-control`} />
+                                        <textarea type='text' className={`${styles.commentTextarea} form-control`} />
                                     </div>
                                 </div>
                                 <div className={styles.editorForm}>  
                                     <div>
-                                        <input className="form-control form-control-sm" id="formFileSm" type="file"/>
+                                        <input className='form-control form-control-sm' id='formFileSm' type='file'/>
                                     </div>
-                                    <div className="input-group-append">
-                                        <button className="btn btn-outline-secondary" type="button">답글 달기</button>
+                                    <div className='input-group-append'>
+                                        <button className='btn btn-outline-secondary' type='button'>답글 달기</button>
                                     </div>
                                 </div>
                             </div>
@@ -217,15 +289,15 @@ const CommentsList = ({ postId, comments, setComments }) => {
                 <div className={styles.commentHandlerForm}>
                     <strong>{user?.nickname}</strong>님의 댓글
                     <div className={`${styles.commentInputGroup} input-group mb-3`}>
-                        <textarea type="text" id="comment" className={`${styles.commentTextarea} form-control`} />
+                        <textarea type='text' id='comment' className={`${styles.commentTextarea} form-control`} />
                     </div>
                 </div>
                 <div className={styles.editorForm}>  
                     <div>
-                        <input className="form-control form-control-sm" id="formFileSm" type="file"/>
+                        <input className='form-control form-control-sm' id='formFileSm' type='file'/>
                     </div>
-                    <div className="input-group-append">
-                        <button className="btn btn-outline-secondary" type="button" onClick={createComment}>댓글 달기</button>
+                    <div className='input-group-append'>
+                        <button className='btn btn-outline-secondary' type='button' onClick={handleComment}>댓글 달기</button>
                     </div>
                 </div>
             </div>
@@ -238,4 +310,4 @@ const CommentsList = ({ postId, comments, setComments }) => {
     )
 }
 
-export default CommentsList;
+export default CommentsList

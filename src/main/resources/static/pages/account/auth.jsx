@@ -3,20 +3,27 @@ import { useEffect } from "react";
 
 const Auth = () => {
     const isValidJSON = ctx => {
-        let result = false
+        let result
+
+        console.log('context? ', ctx)
 
         try {
-            JSON.parse(ctx)
+            JSON.stringify(ctx)
+            result = true
         } catch (e) {
-            
+            result = false
         }
         return result
     }
 
     useEffect(() => {
+        const token = localStorage.getItem('token')
+
+        console.log(token)
+
         axios({
             headers: {
-                'Authorization': localStorage.getItem('token')
+                'Authorization': token
             },
             method: 'post',
             url: '/api/user/principal'
@@ -27,11 +34,11 @@ const Auth = () => {
             }
         })
         .catch((err) => {
-            
+            console.log(err)
         })
     }, [])
 
     return null
 }
 
-export default Auth;
+export default Auth
