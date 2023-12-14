@@ -42,6 +42,7 @@
         <result property="listCount" column="list_count"/>
         <result property="createdAt" column="created_at"/>
         <result property="postCount" column="postCount"/>
+        <result property="totalCount" column="totalCount"/>
     </resultMap>
 
     <resultMap id="postEntity" type="com.dita.metapilot.admin.entity.PostEntity">
@@ -200,10 +201,21 @@
                 , (select count(*) from category_tbl where category_tbl_ref_id = c.id) as refCount
                 , c.id, c.category_tbl_ref_id, c.subject, c.depth, c.pos, c.type
                 , c.visible, c.fold, c.count_visible, c.list_visible, c.list_count, c.created_at
-            from
-                category_tbl c
-            order by
-                pos asc;
+                ,(
+                select
+                    count(*)
+                from
+                    category_tbl ct
+                join
+                    post_tbl pt
+                on
+                    ct.id = pt.category_tbl_id
+                where
+                    ct.id = c.id or ct.category_tbl_ref_id = c.id) as totalCount
+                from
+                    category_tbl c
+                order by
+                    pos asc;
         ]]>
     </select>
 
@@ -392,6 +404,14 @@
         <![CDATA[
             set @id = #{id};
 
+            update
+                post_tbl
+            set
+                deleted = 1,
+                category_tbl_id = 1
+            where
+                category_tbl_id = @id;
+
             set @depth = (select depth from category_tbl where id = @id);
             set @type = (select type from category_tbl where id = @id);
             set @pos = (select pos from category_tbl where id = @id);
@@ -433,6 +453,21 @@
         <![CDATA[
             set @id = #{id};
 
+            update
+                post_tbl
+            set
+                deleted = 1,
+                category_tbl_id = 1
+            where
+                category_tbl_id in (
+                    select
+                        ct.id
+                    from
+                        category_tbl ct
+                    where
+                        ct.category_tbl_ref_id = @id
+                );
+
             set @depth = (select depth from category_tbl where id = @id);
             set @type = (select type from category_tbl where id = @id);
             set @pos = (select pos from category_tbl where id = @id);
@@ -450,7 +485,7 @@
             delete from
                 category_tbl
             where
-                pos >= @pos and pos <= 8;
+                pos >= @pos and pos <= @bottomPos;
 
             update
                 category_tbl

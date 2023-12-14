@@ -16,9 +16,10 @@ import { faDisplay } from "@fortawesome/free-solid-svg-icons"
  * @since 2023. 12. 04.
  *
  * @author Ha Seong Kim
- * @since 2023. 12. 12.
+ * @since 2023. 12. 14.
  * @returns
  */
+
 export default function AdminCatePage() {
     const [data, setData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -31,47 +32,7 @@ export default function AdminCatePage() {
     const [categoryFold, setCategoryFold] = useState("");
     const [categoryDepth, setCategoryDepth] = useState("");
     const [deleteOption, setDeleteOption] = useState('deleteAll');
-    
-    useEffect(() => {
-      const storedCategoryId = localStorage.getItem('categoryId');
-      const storedCategorySubject = localStorage.getItem('categorySubject');
-      const storedCategoryCountVisible = localStorage.getItem('categoryCountVisible');
-      const storedCategoryVisible = localStorage.getItem('categoryVisible');
-      const storedCategoryType = localStorage.getItem('categoryType');
-      const storedCategoryListVisible = localStorage.getItem('categoryListVisible');
-      const storedCategoryFold = localStorage.getItem('categoryFold');
-      const storedCategoryDepth = localStorage.getItem('categoryDepth');
-
-        axios({
-            method: "get",
-            url: "/api/admin/category/list",
-        }).then((res) => {
-            setData(res.data);
-            console.log(res.data);
-            console.log("storedCategoryId : " + storedCategoryId + "\n");
-            console.log("storedCategorySubject : " + storedCategorySubject + "\n");
-            console.log("storedCategoryCountVisible : " + storedCategoryCountVisible + "\n");
-            console.log("storedCategoryVisible : " + storedCategoryVisible + "\n");
-            console.log("storedCategoryType : " + storedCategoryType + "\n");
-            console.log("storedCategoryListVisible : " + storedCategoryListVisible + "\n");
-            console.log("storedCategoryFold : " + storedCategoryFold + "\n");
-            console.log("storedCategoryDepth : " + storedCategoryDepth + "\n");
-
-            if(storedCategoryId !== null){
-              const initialCategory = res.data.find((mapper) => mapper.id === parseInt(storedCategoryId));
-              handleCategoryClick(initialCategory);
-            }
-            
-            localStorage.removeItem('categoryId');
-            localStorage.removeItem('categorySubject');
-            localStorage.removeItem('categoryCountVisible');
-            localStorage.removeItem('categoryVisible');
-            localStorage.removeItem('categoryType');
-            localStorage.removeItem('categoryListVisible');
-            localStorage.removeItem('categoryFold');
-            localStorage.removeItem('categoryDepth');
-        });
-    }, [])
+    const [requestTime, setRequestTime] = useState(new Date());
 
     const handleCategoryClick = (mapper) => {
         setSelectedCategory(mapper);
@@ -90,10 +51,11 @@ export default function AdminCatePage() {
           .post('/api/admin/createCategory', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            window.location.reload();
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 카테고리 생성 : ', error);
           });
       };
 
@@ -102,10 +64,11 @@ export default function AdminCatePage() {
           .post('/api/admin/createCategoryLine', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            window.location.reload();
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 구분선 생성 : ', error);
           });
       };
 
@@ -114,10 +77,13 @@ export default function AdminCatePage() {
           .post('/api/admin/deleteCategory', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            window.location.reload();
+            document.querySelector(".deletePopUp").style.display = "none";
+            document.querySelector(".deletePopUpBackGround").style.display = "none"
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 카테고리 or 구분선 삭제 : ', error);
           });
       };
 
@@ -126,10 +92,13 @@ export default function AdminCatePage() {
           .post('/api/admin/deleteCategoryRef', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            window.location.reload();
+            document.querySelector(".deletePopUp").style.display = "none";
+            document.querySelector(".deletePopUpBackGround").style.display = "none"
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 부모 카테고리 & 자식 카테고리 전부 삭제 : ', error);
           });
       };
 
@@ -144,18 +113,11 @@ export default function AdminCatePage() {
           })
           .then((response) => {
             console.log(response.data);
-            localStorage.setItem('categoryId', categoryId);
-            localStorage.setItem('categorySubject', categorySubject);
-            localStorage.setItem('categoryCountVisible', categoryCountVisible);
-            localStorage.setItem('categoryVisible', categoryVisible);
-            localStorage.setItem('categoryType', categoryType);
-            localStorage.setItem('categoryListVisible', categoryListVisible);
-            localStorage.setItem('categoryFold', categoryFold);
-            localStorage.setItem('categoryDepth', categoryDepth);
-            window.location.reload();
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 카테고리 수정 : ', error);
           });
       };
 
@@ -164,18 +126,11 @@ export default function AdminCatePage() {
           .post('/api/admin/updateCategoryUp', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            localStorage.setItem('categoryId', categoryId);
-            localStorage.setItem('categorySubject', categorySubject);
-            localStorage.setItem('categoryCountVisible', categoryCountVisible);
-            localStorage.setItem('categoryVisible', categoryVisible);
-            localStorage.setItem('categoryType', categoryType);
-            localStorage.setItem('categoryListVisible', categoryListVisible);
-            localStorage.setItem('categoryFold', categoryFold);
-            localStorage.setItem('categoryDepth', categoryDepth);
-            window.location.reload();
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 카테고리 위로 : ', error);
           });
       };
 
@@ -184,18 +139,11 @@ export default function AdminCatePage() {
           .post('/api/admin/updateCategoryDown', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            localStorage.setItem('categoryId', categoryId);
-            localStorage.setItem('categorySubject', categorySubject);
-            localStorage.setItem('categoryCountVisible', categoryCountVisible);
-            localStorage.setItem('categoryVisible', categoryVisible);
-            localStorage.setItem('categoryType', categoryType);
-            localStorage.setItem('categoryListVisible', categoryListVisible);
-            localStorage.setItem('categoryFold', categoryFold);
-            localStorage.setItem('categoryDepth', categoryDepth);
-            window.location.reload();
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 카테고리 아래로 : ', error);
           });
       };
 
@@ -204,18 +152,11 @@ export default function AdminCatePage() {
           .post('/api/admin/updateCategoryTop', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            localStorage.setItem('categoryId', categoryId);
-            localStorage.setItem('categorySubject', categorySubject);
-            localStorage.setItem('categoryCountVisible', categoryCountVisible);
-            localStorage.setItem('categoryVisible', categoryVisible);
-            localStorage.setItem('categoryType', categoryType);
-            localStorage.setItem('categoryListVisible', categoryListVisible);
-            localStorage.setItem('categoryFold', categoryFold);
-            localStorage.setItem('categoryDepth', categoryDepth);
-            window.location.reload();
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 카테고리 맨위로 : ', error);
           });
       };
 
@@ -224,20 +165,23 @@ export default function AdminCatePage() {
           .post('/api/admin/updateCategoryBottom', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            localStorage.setItem('categoryId', categoryId);
-            localStorage.setItem('categorySubject', categorySubject);
-            localStorage.setItem('categoryCountVisible', categoryCountVisible);
-            localStorage.setItem('categoryVisible', categoryVisible);
-            localStorage.setItem('categoryType', categoryType);
-            localStorage.setItem('categoryListVisible', categoryListVisible);
-            localStorage.setItem('categoryFold', categoryFold);
-            localStorage.setItem('categoryDepth', categoryDepth);
-            window.location.reload();
+            //window.location.reload();
+            setRequestTime(new Date());
           })
           .catch((error) => {
-            console.error('Error creating category line:', error);
+            console.error('에러!!! 카테고리 맨아래로 : ', error);
           });
       };
+
+      useEffect(() => {
+          axios({
+              method: "get",
+              url: "/api/admin/category/list",
+          }).then((res) => {
+              setData(res.data);
+              console.log(res.data);
+          });
+      }, [requestTime]);
 
     return (
         <>
@@ -281,11 +225,15 @@ export default function AdminCatePage() {
                                       <input className={styles.set7} type={"radio"} id={"delete1"} name={"delete"} value={"deleteAll"}
                                       checked={deleteOption === 'deleteAll'}
                                       onChange={() => setDeleteOption('deleteAll')} />
-                                      <label htmlFor={"delete1"}>현재 선택한 카테고리의 0개의 글을 모두 삭제합니다.</label><br></br>
+                                      {selectedCategory && (
+                                        <label htmlFor={"delete1"} style={{marginLeft: '5px'}}>현재 선택한 카테고리의 {selectedCategory.postCount}개의 글을 모두 삭제합니다.</label>
+                                      )}<br></br>
                                       <input className={styles.set7} type={"radio"} id={"delete2"}  name={"delete"} value={"deleteRef"}
                                       checked={deleteOption === 'deleteRef'}
                                       onChange={() => setDeleteOption('deleteRef')} />
-                                      <label htmlFor={"delete2"}>하위 카테고리를 포함한 0개의 글을 모두 삭제합니다.</label><br></br>
+                                      {selectedCategory && (
+                                        <label htmlFor={"delete2"} style={{marginLeft: '5px'}}>하위 카테고리를 포함한 {selectedCategory.totalCount}개의 글을 모두 삭제합니다.</label>
+                                      )}<br></br>
                                       <p style={{paddingTop: '16px', paddingLeft: '10px', fontSize: '10px'}}>* 삭제 시 카테고리에 속한 모든 글이 삭제되며, 현재 예약 상태인 글도 모두 삭제됩니다.</p>
                                       <button type="submit" className={`${styles.subBtn }  btn btn-primary mb-3`}
                                       onClick={() => {
@@ -316,7 +264,7 @@ export default function AdminCatePage() {
                                                     {
                                                         mapper.depth === 0
                                                         ? mapper.subject + 
-                                                        (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.postCount + ')')
+                                                        (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.totalCount + ')')
                                                         : ' ㄴ' + mapper.subject +
                                                         (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.postCount + ')')
                                                     }
