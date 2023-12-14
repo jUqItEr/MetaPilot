@@ -70,53 +70,35 @@
 }
 
 .pageController {
-    display: flex;
-    justify-content: center;
     margin-top: 20px;
+    text-align: center;
 }
 
 .pageNumbers {
-    display: flex;
-    margin: 0;
+    list-style-type: none;
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pageNumbers li {
+    margin: 0 5px;
 }
 
 .pageLink {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin: 0px 5px;
-    border: 1px solid black;
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: var(--bs-gray); /* 호버 시 배경색 변경 */
+    color: #fff; /* 텍스트 색상 */
+    border: none;
+    cursor: pointer;
+    font-size: 16px; /* 폰트 크기 */
     border-radius: 4px;
-    width: 30px;
-    height: 30px;
-
-    font-weight: 600;
-    font-size: 12px;
-    text-decoration: none;
 }
 
-.pageLink:hover {
-    background-color: var(--bs-gray-400);
-}
-
-.disabled {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin: 0px 5px;
-    border: 1px solid black;
-    border-radius: 4px;
-    width: 30px;
-    height: 30px;
-
-    font-weight: 600;
-    font-size: 12px;
-
-    cursor: default;
-    text-decoration: none;
+.currentPage {
+    background-color: var(--bs-dark); /* 현재 페이지 배경색 */
 }
 
 @media (max-width: 420px) {
@@ -173,4 +155,17 @@
         padding: 0 10px; 
         box-sizing: border-box; 
     }
+}
+
+
+.currentPage {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: var(--bs-gray); /* 호버 시 배경색 변경 */
+    color: #fff; /* 텍스트 색상 */
+    border: none;
+    cursor: pointer;
+    font-size: 16px; /* 폰트 크기 */
+    border-radius: 4px;
+    background-color: var(--bs-dark);
 }

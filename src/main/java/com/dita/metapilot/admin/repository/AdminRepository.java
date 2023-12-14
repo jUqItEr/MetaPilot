@@ -77,14 +77,14 @@ public interface AdminRepository {
      * @since 2023. 12. 07.
      * @return 삭제된 게시글을 List에 담습니다.
      */
-    List<PostEntity> postDeletedView(PostDeletedDto postDeletedDto);
+    List<PostEntity> postDeletedView(PostSearchDto postSearchDto);
 
     /**
      * <p>댓글 List</p>
      * @since 2023. 12. 08.
      * @return 특정 id의 댓글을 List에 담습니다.
      */
-    List<CommentEntity> commentView(CommentDto commentDto);
+    List<CommentEntity> commentView(CommentSearchDto commentSearchDto);
 
 
 
@@ -147,12 +147,28 @@ public interface AdminRepository {
     boolean deleteCategoryRef(CategoryDto categoryDto);
 
     /**
-     * <p>게시글 삭제</p>
-     * @since 2023. 12. 08.
+     * <p>게시글 임시로 삭제</p>
+     * @since 2023. 12. 14.
      * @param postDto 게시글 데이터를 전송하는 객체
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     boolean deletePost(PostDto postDto);
+
+    /**
+     * <p>임시로 삭제한 게시글을 영구적으로 삭제</p>
+     * @since 2023. 12. 14.
+     * @param postDto 게시글 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    boolean deletePostHard(PostDto postDto);
+
+    /**
+     * <p>임시로 삭제한 게시글을 복구</p>
+     * @since 2023. 12. 14.
+     * @param postDto 게시글 데이터를 전송하는 객체
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    boolean restorePost(PostDto postDto);
 
     /**
      * <p>댓글 삭제</p>

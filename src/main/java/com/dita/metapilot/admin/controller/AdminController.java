@@ -155,9 +155,9 @@ public class AdminController {
      * @return ResponseEntity
      */
     @ResponseBody
-    @PostMapping("/postDeletedList")
-    public ResponseEntity<?> postDeletedView(PostDeletedDto postDeletedDto) {
-        return ResponseEntity.ok(adminService.postDeletedView(postDeletedDto));
+    @GetMapping("/postDeletedList")
+    public ResponseEntity<?> postDeletedView(PostSearchDto postSearchDto) {
+        return ResponseEntity.ok(adminService.postDeletedView(postSearchDto));
     }
 
 
@@ -171,8 +171,8 @@ public class AdminController {
      */
     @ResponseBody
     @GetMapping("/commentList")
-    public ResponseEntity<?> commentView(CommentDto commentDto) {
-        return ResponseEntity.ok(adminService.commentView(commentDto));
+    public ResponseEntity<?> commentView(CommentSearchDto commentSearchDto) {
+        return ResponseEntity.ok(adminService.commentView(commentSearchDto));
     }
 
 
@@ -290,18 +290,52 @@ public class AdminController {
 
 
     /**
-     * <p>게시글 삭제</p>
-     * @since 2023. 12. 08.
+     * <p>게시글 임시로 삭제</p>
+     * @since 2023. 12. 14.
      *
      * @param postDto
      *
-     *      id : 카테고리의 id. 이 값과 일치하는 카테고리를 삭제.
+     *      id : 카테고리의 id. 이 값과 일치하는 게시글의 deleted값을 1로 변경하여 임시로 삭제.
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
     @PostMapping("/deletePost")
     public ResponseEntity<?> deletePost(@Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.deletePost(postDto));
+    }
+
+
+
+    /**
+     * <p>임시로 삭제한 게시글 영구적으로 삭제</p>
+     * @since 2023. 12. 14.
+     *
+     * @param postDto
+     *
+     *      id : 카테고리의 id. 이 값과 일치하는 게시글을 영구적으로 삭제.
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    @ResponseBody
+    @PostMapping("/deletePostHard")
+    public ResponseEntity<?> deletePostHard(@Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.deletePostHard(postDto));
+    }
+
+
+
+    /**
+     * <p>임시로 삭제한 게시글 영구적으로 삭제</p>
+     * @since 2023. 12. 14.
+     *
+     * @param postDto
+     *
+     *      id : 카테고리의 id. 이 값과 일치하는 게시글을 영구적으로 삭제.
+     * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    @ResponseBody
+    @PostMapping("/restorePost")
+    public ResponseEntity<?> restorePost(@Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
+        return ResponseEntity.ok(adminService.restorePost(postDto));
     }
 
 

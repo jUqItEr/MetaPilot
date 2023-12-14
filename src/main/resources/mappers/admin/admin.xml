@@ -55,14 +55,15 @@
         <result property="deleted" column="deleted"/>
         <result property="type" column="type"/>
         <result property="createdAt" column="created_at"/>
+        <result property="nickname" column="nickname"/>
     </resultMap>
 
     <resultMap id="commentEntity" type="com.dita.metapilot.admin.entity.CommentEntity">
         <result property="id" column="id"/>
-        <result property="postTblId" column="post_tbl_id"/>
-        <result property="commentTblRefId" column="comment_tbl_ref_id"/>
-        <result property="commentTblRootId" column="comment_tbl_root_id"/>
-        <result property="userTblId" column="user_tbl_id"/>
+        <result property="postId" column="post_tbl_id"/>
+        <result property="refId" column="comment_tbl_ref_id"/>
+        <result property="rootId" column="comment_tbl_root_id"/>
+        <result property="userId" column="user_tbl_id"/>
         <result property="content" column="content"/>
         <result property="depth" column="depth"/>
         <result property="pos" column="pos"/>
@@ -170,7 +171,6 @@
             id = #{id}
     </update>
 
-
     <!-- Block User. -->
     <insert id="blockUser" parameterType="com.dita.metapilot.admin.dto.UserDto">
         <![CDATA[
@@ -208,27 +208,47 @@
     </select>
 
     <!-- 삭제된 게시글 목록 list -->
-    <select id="postDeletedView" resultMap="postEntity">
+    <select id="postDeletedView" parameterType="com.dita.metapilot.admin.dto.PostSearchDto" resultMap="postEntity">
         <![CDATA[
-            set @userId = #{userTblId};
+            select
+                pt.id, pt.category_tbl_id, pt.user_tbl_id, pt.subject, pt.content, pt.count
+                ,pt.notice, pt.deleted, pt.thumbnail, pt.type, pt.created_at, ut.nickname
+            from
+                post_tbl pt
+            join
+                user_tbl ut
+            on
+                pt.user_tbl_id = ut.id
+            where
+                pt.deleted = 1
 
-            select id, category_tbl_id, user_tbl_id, subject, content, count, notice, deleted, type, created_at
-            from post_tbl
-            where user_tbl_id = @userId and deleted = 1
-            order by created_at desc;
         ]]>
+        <if test='nickname neq null and nickname neq ""'>
+            and ut.nickname like CONCAT('%', #{nickname}, '%')
+        </if>
     </select>
 
     <!-- 댓글 list -->
-    <select id="commentView" resultMap="commentEntity">
+    <select id="commentView" parameterType="com.dita.metapilot.admin.dto.CommentSearchDto" resultMap="commentEntity">
         <![CDATA[
-            select ct.id, ct.post_tbl_id, ct.comment_tbl_ref_id, ct.comment_tbl_root_id, ct.user_tbl_id, ct.content, ct.depth, ct.pos, ct.visible, ct.created_at
-            , pt.id as 'postId', pt.user_tbl_id as 'postUserTblId', pt.subject as 'postSubject', ut.nickname
-            from comment_tbl ct
-            left outer join post_tbl pt
-            on pt.id = ct.post_tbl_id
-            left outer join user_tbl ut
-            on ut.id = ct.user_tbl_id
+            select
+                ct.id, ct.post_tbl_id, ct.comment_tbl_ref_id, ct.comment_tbl_root_id, ct.user_tbl_id, ct.content, ct.depth
+                , ct.pos, ct.visible, ct.created_at, pt.id as 'postId', pt.user_tbl_id as 'postUserTblId', pt.subject as 'postSubject', ut.nickname
+            from
+                comment_tbl ct
+            left outer join
+                post_tbl pt
+            on
+                pt.id = ct.post_tbl_id
+            left outer join
+                user_tbl ut
+            on
+                ut.id = ct.user_tbl_id
+        ]]>
+            <if test='nickname neq null and nickname neq ""'>
+                where ut.nickname like CONCAT('%', #{nickname}, '%')
+            </if>
+        <![CDATA[
             order by ct.created_at desc;
         ]]>
     </select>
@@ -236,15 +256,23 @@
     <!-- 검색한 댓글 list -->
     <select id="commentSearchView" resultMap="commentEntity">
         <![CDATA[
-            select ct.id, ct.post_tbl_id, ct.comment_tbl_ref_id, ct.comment_tbl_root_id, ct.user_tbl_id, ct.content, ct.depth, ct.pos, ct.visible, ct.created_at
-            , pt.id as 'postId', pt.user_tbl_id as 'postUserTblId', pt.subject as 'postSubject', ut.nickname
-            from comment_tbl ct
-            left outer join post_tbl pt
-            on pt.id = ct.post_tbl_id
-            left outer join user_tbl ut
-            on ut.id = ct.user_tbl_id
-            where ut.nickname like CONCAT('%', #{nickname}, '%')
-            order by ct.created_at desc;
+            select
+                ct.id, ct.post_tbl_id, ct.comment_tbl_ref_id, ct.comment_tbl_root_id, ct.user_tbl_id, ct.content, ct.depth, ct.pos
+                , ct.visible, ct.created_at, pt.id as 'postId', pt.user_tbl_id as 'postUserTblId', pt.subject as 'postSubject', ut.nickname
+            from
+                comment_tbl ct
+            left outer join
+                post_tbl pt
+            on
+                pt.id = ct.post_tbl_id
+            left outer join
+                user_tbl ut
+            on
+                ut.id = ct.user_tbl_id
+            where
+                ut.nickname like CONCAT('%', #{nickname}, '%')
+            order by
+                ct.created_at desc;
         ]]>
     </select>
 
@@ -293,12 +321,17 @@
 
             set @id = if(@logic = 4, @refId, @id);
 
-            update category_tbl
-            set pos = pos + 1
-            where pos >= @setPos;
+            update
+                category_tbl
+            set
+                pos = pos + 1
+            where
+                pos >= @setPos;
 
-            insert into category_tbl
-            select null, @id, '게시글', @setDepth, @setPos, 1, 1, 1, 1, 1, 1, now();
+            insert into
+                category_tbl
+            select
+                null, @id, '게시글', @setDepth, @setPos, 1, 1, 1, 1, 1, 1, now();
         ]]>
     </insert>
 
@@ -333,12 +366,17 @@
 
             set @id = if(@logic = 4 or @logic = 5, @refId, @id);
 
-            update category_tbl
-            set pos = pos + 1
-            where pos >= @setPos;
+            update
+                category_tbl
+            set
+                pos = pos + 1
+            where
+                pos >= @setPos;
 
-            insert into category_tbl
-            select null, @id, '-----', @setDepth, @setPos, 0, 1, 1, 1, 1, 1, now();
+            insert into
+                category_tbl
+            select
+                null, @id, '-----', @setDepth, @setPos, 0, 1, 1, 1, 1, 1, now();
         ]]>
     </insert>
 
@@ -362,20 +400,31 @@
             set @logic = if(@depth = 0 and @bottomPos != 0, 1, 0);
             set @logic = if(@id = 1, 2, @logic);
 
-            UPDATE category_tbl
-            SET pos = if(@logic = 2, pos, pos - 1)
-            WHERE pos > @pos;
+            UPDATE
+                category_tbl
+            SET
+                pos = if(@logic = 2, pos, pos - 1)
+            WHERE
+                pos > @pos;
 
-            DELETE FROM category_tbl
-            WHERE id = if(@logic = 2, null, @id);
+            DELETE FROM
+                category_tbl
+            WHERE
+                id = if(@logic = 2, null, @id);
 
-            update category_tbl
-            set depth = if(@logic = 1, 0, depth)
-            where category_tbl_ref_id = @id;
+            update
+                category_tbl
+            set
+                depth = if(@logic = 1, 0, depth)
+            where
+                category_tbl_ref_id = @id;
 
-            update category_tbl
-            set category_tbl_ref_id = if(@logic = 1, 1, category_tbl_ref_id)
-            where category_tbl_ref_id = @id;
+            update
+                category_tbl
+            set
+                category_tbl_ref_id = if(@logic = 1, 1, category_tbl_ref_id)
+            where
+                category_tbl_ref_id = @id;
         ]]>
     </delete>
 
@@ -389,20 +438,26 @@
             set @pos = (select pos from category_tbl where id = @id);
             set @bottomPos = (SELECT COALESCE(MAX(pos), 0) FROM category_tbl where category_tbl_ref_id = @id);
 
-            set @changePos = (select pos
-            from (select * from category_tbl where category_tbl_ref_id = 1) as t
-            where pos > @pos
-            order by pos
+            set @changePos = (select pos from (select * from category_tbl where category_tbl_ref_id = 1) as t
+            where
+                pos > @pos
+            order by
+                pos
             limit 1);
 
             set @difPos = @changePos - @pos;
 
-            delete from category_tbl
-            where pos >= @pos and pos <= 8;
+            delete from
+                category_tbl
+            where
+                pos >= @pos and pos <= 8;
 
-            update category_tbl
-            set pos = pos - @difPos
-            where pos > @pos;
+            update
+                category_tbl
+            set
+                pos = pos - @difPos
+            where
+                pos > @pos;
         ]]>
     </delete>
 
@@ -416,8 +471,8 @@
         ]]>
     </delete>
 
-    <!-- Delete post with post id. -->
-    <delete id="deletePost" parameterType="com.dita.metapilot.admin.dto.PostDto">
+    <!-- 임시로 삭제한 게시글을 영구적으로 삭제 -->
+    <delete id="deletePostHard" parameterType="com.dita.metapilot.admin.dto.PostDto">
         <![CDATA[
             delete from
                 post_tbl
@@ -425,6 +480,30 @@
                 id = ${id}
         ]]>
     </delete>
+
+    <!-- 게시글을 임시로 삭제 -->
+    <update id="deletePost" parameterType="com.dita.metapilot.admin.dto.PostDto">
+        <![CDATA[
+            update
+                post_tbl
+            set
+                deleted = 1
+            where
+                id = #{id}
+        ]]>
+    </update>
+
+    <!-- 게시글 복구 -->
+    <update id="restorePost" parameterType="com.dita.metapilot.admin.dto.PostDto">
+        <![CDATA[
+            update
+                post_tbl
+            set
+                deleted = 0
+            where
+                id = #{id}
+        ]]>
+    </update>
 
     <!-- 카테고리 수정 -->
     <update id="updateCategory" parameterType="com.dita.metapilot.admin.dto.CategoryDto">
@@ -459,7 +538,7 @@
             set @difPos = @pos - @changePos;
 
             set @changeId = (select id
-            from (select * from category_tbl where category_tbl_ref_id = 1) as t
+            from(select * from category_tbl where category_tbl_ref_id = 1) as t
             where pos < @pos
             order by pos DESC
             limit 1);
