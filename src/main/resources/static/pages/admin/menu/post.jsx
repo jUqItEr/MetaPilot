@@ -16,26 +16,10 @@ import AdminSidebar from "../../../layout/admin/sidebar"
  * @since 2023. 12. 14.
  * @returns
  */
-export default function AdminCommentPage() {
+export default function AdminPostPage() {
     const [data, setData] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [requestTime, setRequestTime] = useState(new Date())
-
-    const blockUser = async (userId) => {
-        await axios({
-            method: 'post',
-            params: {
-                userId: userId
-            },
-            url: '/api/admin/createBlockUser'
-        })
-        .then((responses) => {
-            console.log("Block users responses:", responses);
-        })
-        .catch((error) => {
-            console.error("Error blocking users:", error);
-        });
-    };
 
     const checkAll = () => {
         const checkboxAll = $('#flexCheckDefaultAll')
@@ -50,46 +34,58 @@ export default function AdminCommentPage() {
         checkboxAll.prop('checked', checkboxes.length === $('.custom-checkbox:checked').length)
     }
     
-    const deleteComment = async commentId => {
+    const deletePost = async commentId => {
         axios({
             method: 'post',
             data: {
                 id: commentId
             },
-            url: '/api/admin/deleteComment'
+            url: '/api/admin/deletePostHard'
         })
         .then((res) => {
             
         })
     }
 
-    const deleteComments = async () => {
+    const deletePosts = async () => {
         const selected = $('.custom-checkbox:checked')
         const id = selected.map((_, element) => {
             return $(element).data('value')
         })
 
         id.each((_, mapper) => {
-            deleteComment(mapper)
+            deletePost(mapper)
+            console.log("삭제할 id : " + mapper)
         })
-        alert('댓글이 삭제되었습니다.')
+        alert('게시글이 삭제되었습니다.')
         setRequestTime(new Date())
     }
 
-    const deleteCommentsAndBlock = async () => {
+    const restorePost = async commentId => {
+        axios({
+            method: 'post',
+            data: {
+                id: commentId
+            },
+            url: '/api/admin/restorePost'
+        })
+        .then((res) => {
+            
+        })
+    }
+
+    const restorePosts = async () => {
         const selected = $('.custom-checkbox:checked')
-        const userId = new Set()
-
-        selected.each((_, element) => {
-            const mapper = $(element)
-            userId.add(mapper.data('id'))
-
-            deleteComment(mapper.data('value'))
+        const id = selected.map((_, element) => {
+            return $(element).data('value')
         })
-        userId.forEach((userId) => {
-            blockUser(userId)
+
+        id.each((_, mapper) => {
+            restorePost(mapper)
+            restorePost(mapper)
+            console.log("복구할 id : " + mapper)
         })
-        alert('댓글이 삭제되었습니다.')
+        alert('게시글이 복구되었습니다.')
         setRequestTime(new Date())
     }
 
@@ -104,7 +100,7 @@ export default function AdminCommentPage() {
                 params: {
                     nickname: searchText
                 },
-                url: "/api/admin/commentList",
+                url: "/api/admin/postDeletedList",
             }).then((res) => {
                 setData(res.data);
                 console.log(res.data);
@@ -112,7 +108,7 @@ export default function AdminCommentPage() {
         } else {
             axios({
                 method: "get",
-                url: "/api/admin/commentList",
+                url: "/api/admin/postDeletedList",
             }).then((res) => {
                 setData(res.data);
                 console.log(res.data);
@@ -137,8 +133,8 @@ export default function AdminCommentPage() {
                     <AdminSidebar/>
                     {/* content */}
                     <div className={styles.content} >
-                        <div className= {`${styles.pageTitle } border-bottom `}><span className={styles.pageTitleFont}>댓글</span></div>
-                        <label className="text-body-tertiary p-3">내 블로그에 등록된 댓글을 모아서 보면서 사용자 이름(닉네임) 기준으로 차단 설정을 할 수 있습니다</label>
+                        <div className= {`${styles.pageTitle } border-bottom `}><span className={styles.pageTitleFont}>게시글</span></div>
+                        <label className="text-body-tertiary p-3">내 블로그에 등록된 게시글을 모아서 보면서 선택 복구/삭제할 수 있습니다.</label>
                         <div style={{ display: 'flex', alignItems: 'center'}}>
                             <input className='form-control' type='text' id='searchText' style={{width: '200px', marginLeft: '30px'}}/>
                             <button className='btn btn-primary' type='button' style={{marginLeft: '10px'}}
@@ -157,15 +153,15 @@ export default function AdminCommentPage() {
                                 <tbody>
                                 {data && data?.map((mapper) => (
                                     <tr key={mapper.id} data-id={mapper.id}>
-                                        <td><input className="form-check-input custom-checkbox" type="checkbox" data-id={mapper.userId} data-value={mapper.id} onChange={checkEach}/></td>
+                                        <td><input className="form-check-input custom-checkbox" type="checkbox" data-id={mapper.id} data-value={mapper.id} onChange={checkEach}/></td>
                                         <td>
                                             <div className={'fs-5 fw-bold'}>{mapper.nickname} (id : {mapper.id})</div>
-                                            <div className={'fs-6'} style={{ width: '160px', marginRight: '30px', wordWrap: 'break-word', overflowWrap: 'break-word' }}>@{mapper.userId}</div>
+                                            <div className={'fs-6'} style={{ width: '160px', marginRight: '30px', wordWrap: 'break-word', overflowWrap: 'break-word' }}>@{mapper.userTblId}</div>
                                         </td>
                                         <td>
-                                            <div className={'fs-6 fw-bold'}>{mapper.postSubject}</div>
-                                            <div className={'fs-6'}>{mapper.content}</div>
-                                            <div className={'fs-6'}>{mapper.createdAt}</div>
+                                            <div className={'fs-6 fw-bold'}>게시글 제목 : {mapper.subject}</div>
+                                            <div className={'fs-6'}>게시글 내용 : {mapper.content}</div>
+                                            <div className={'fs-6'}>작성일 : {mapper.createdAt}</div>
                                         </td>
                                     </tr>
                                 ))}
@@ -173,10 +169,8 @@ export default function AdminCommentPage() {
                             </table>
                             </div>
                             <div style={{display:'flex', justifyContent:'center'}}>
-                                <button type="submit" className="btn btn-primary fs-5 fw-bold  m-3 px-5 py-1"
-                                    onClick={deleteComments}>삭제</button>
-                                <button type="submit" className="btn btn-primary fs-5 fw-bold m-3 px-5 py-1"
-                                    onClick={deleteCommentsAndBlock}>차단후 삭제</button>
+                                <button type="submit" className="btn btn-primary fs-5 fw-bold  m-3 px-5 py-1" onClick={restorePosts}>복구</button>
+                                <button type="submit" className="btn btn-primary fs-5 fw-bold  m-3 px-5 py-1" onClick={deletePosts}>삭제</button>
                             </div>
                         </div>
                     </div>

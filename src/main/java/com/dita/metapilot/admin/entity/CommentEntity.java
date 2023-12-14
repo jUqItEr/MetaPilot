@@ -9,17 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentEntity {
     private int id;
-    private int postTblId;
-    private int commentTblRefId;
-    private int commentTblRootId;
-    private String userTblId;
+    private int postId;
+    private int refId;
+    private int rootId;
+    private String userId;
     private String content;
     private int depth;
     private int pos;
     private int visible;
     private String createdAt;
-    private int postId;
-    private String postUserTblId;
     private String postSubject;
     private String nickname;
 }
