@@ -98,26 +98,17 @@ export default function AdminCommentPage() {
     }
 
     useEffect(() => {
-        if (searchText !== '') {
-            axios({
-                method: "get",
-                params: {
-                    nickname: searchText
-                },
-                url: "/api/admin/commentList",
-            }).then((res) => {
-                setData(res.data);
-                console.log(res.data);
-            });
-        } else {
-            axios({
-                method: "get",
-                url: "/api/admin/commentList",
-            }).then((res) => {
-                setData(res.data);
-                console.log(res.data);
-            });
-        }
+        // 검색 조건 or 검색 조건 없이 검색 수행
+        axios({
+            method: "get",
+            params: {
+                nickname: searchText
+            },
+            url: '/api/admin/commentList',
+        }).then((res) => {
+            setData(res.data);
+            console.log(res.data);
+        });
         $('#flexCheckDefaultAll').prop('checked', false)
     }, [requestTime, searchText]);
 
