@@ -24,6 +24,7 @@
 		<result property="profileImage" column="profile_image"/>
 		<result property="createdView" column="created_view"/>
 		<result property="categorySubject" column="category_subject"/>
+		<result property="postCount" column="postCount"/>
 	</resultMap>
 
 	<resultMap id="postDto" type="com.dita.metapilot.post.dto.FindPostByHashtagDto">
@@ -261,6 +262,9 @@
 			subject,
 			created_at as createdAt,
 			substring(pt.created_at, 1, 10) as createdDate,
+			id as postId,
+			user_tbl_id as userId,
+			type,
 			(select
 				count(*)
 			from
