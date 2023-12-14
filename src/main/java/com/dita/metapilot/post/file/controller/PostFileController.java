@@ -1,31 +1,24 @@
-package com.dita.metapilot.post.postFile.controller;
+package com.dita.metapilot.post.file.controller;
 
 import com.dita.metapilot.post.dto.PostIdDto;
-import com.dita.metapilot.post.postFile.dto.PostFileDto;
-import com.dita.metapilot.post.postFile.dto.PostFileIdDto;
-import com.dita.metapilot.post.postFile.service.PostFileService;
+import com.dita.metapilot.post.file.dto.PostFileDto;
+import com.dita.metapilot.post.file.dto.PostFileIdDto;
+import com.dita.metapilot.post.file.service.PostFileService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.activation.CommandMap;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor

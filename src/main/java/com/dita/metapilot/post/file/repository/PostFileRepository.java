@@ -1,16 +1,12 @@
 
-package com.dita.metapilot.post.postFile.repository;
+package com.dita.metapilot.post.file.repository;
 
 import com.dita.metapilot.post.dto.PostIdDto;
-import com.dita.metapilot.post.dto.PostResponseDto;
-import com.dita.metapilot.post.postFile.dto.PostFileDto;
-import com.dita.metapilot.post.postFile.dto.PostFileIdDto;
-import com.dita.metapilot.post.postFile.entity.PostFileEntity;
+import com.dita.metapilot.post.file.dto.PostFileDto;
+import com.dita.metapilot.post.file.dto.PostFileIdDto;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface PostFileRepository {

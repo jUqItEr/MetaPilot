@@ -1,13 +1,11 @@
 
-package com.dita.metapilot.post.postFile.service;
+package com.dita.metapilot.post.file.service;
 
 import com.dita.metapilot.post.dto.PostIdDto;
-import com.dita.metapilot.post.postFile.dto.PostFileDto;
-import com.dita.metapilot.post.postFile.dto.PostFileIdDto;
-import com.dita.metapilot.post.postFile.repository.PostFileRepository;
+import com.dita.metapilot.post.file.dto.PostFileDto;
+import com.dita.metapilot.post.file.dto.PostFileIdDto;
+import com.dita.metapilot.post.file.repository.PostFileRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

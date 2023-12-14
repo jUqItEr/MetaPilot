@@ -1,4 +1,4 @@
-package com.dita.metapilot.post.postFile.entity;
+package com.dita.metapilot.post.file.entity;
 
 import lombok.*;
 

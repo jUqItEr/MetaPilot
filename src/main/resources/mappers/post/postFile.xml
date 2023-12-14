@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dita.metapilot.post.postFile.repository.PostFileRepository">
-    <resultMap id="postFile" type="com.dita.metapilot.post.postFile.dto.PostFileDto">
+<mapper namespace="com.dita.metapilot.post.file.repository.PostFileRepository">
+    <resultMap id="postFile" type="com.dita.metapilot.post.file.dto.PostFileDto">
         <result property="postId" column="post_tbl_id" />
         <result property="name" column="name" />
         <result property="originalName" column="original_name" />
@@ -39,7 +39,7 @@
     </insert>
 
     <!-- 게시글 파일 삭제-->
-    <delete id="deleteFile" parameterType="com.dita.metapilot.post.postFile.dto.PostFileIdDto">
+    <delete id="deleteFile" parameterType="com.dita.metapilot.post.file.dto.PostFileIdDto">
         delete from post_file_tbl
         where id = #{id}
     </delete>
@@ -57,7 +57,7 @@
     </select>
 
     <!-- UUID로 원본 파일 이름 가져오기 -->
-    <select id="getOriginalName" resultType="com.dita.metapilot.post.postFile.dto.PostFileDto">
+    <select id="getOriginalName" resultType="com.dita.metapilot.post.file.dto.PostFileDto">
         select original_name as originalName, extension
         from post_file_tbl
         where name = #{name}
