@@ -279,8 +279,16 @@
 			) as postCount
 		from
 			post_tbl pt
-		order by
-			created_at desc
+		<if test='searchValue neq null and searchValue neq ""'>
+			where
+				pt.subject is not null
+				and pt.content is not null
+				and (
+					pt.subject like CONCAT('%',#{searchValue},'%')
+				or  pt.content like CONCAT('%',#{searchValue},'%')
+					)
+		</if>
+		order by pt.created_at desc
 		<if test='limit == "Y"'>
 			limit #{index}, #{count};
 		</if>

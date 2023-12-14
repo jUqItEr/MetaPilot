@@ -197,19 +197,32 @@ const PostList = () => {
                             </select>
                         </div>
                     </div>
+
+                    {/* 검색창 */}
+                    <div>
+                        <select name="" id="">
+                            <option value="">전체보기</option>
+                            <option value="">게시글 제목</option>
+                            <option value="">게시글 내용</option>
+                        </select>
+                        <input type="text" />
+                        <button className={`${styles.searchButton} btn btn-primary`}>검색</button>
+                    </div>
                     
                     <div className={styles.pageController}>
                         <ul className={styles.pageNumbers}>
-                            <li>
-                                <button
-                                type="button"
-                                className={styles.pageLink}
-                                onClick={goToPrevGroup}
-                                disabled={paging.page === 1}
-                                >
-                                이전
-                                </button>
-                            </li>
+                            {/* 이전 버튼 비활성화 */}
+                            {currentPageGroup > 1 && (
+                                <li>
+                                    <button
+                                        type="button"
+                                        className={styles.pageLink}
+                                        onClick={goToPrevGroup}
+                                    >
+                                    이전
+                                    </button>
+                                </li>
+                            )}
                             {Array.from({ length: lastPageInGroup - firstPageInGroup + 1 }, (_, i) => {
                                 const pageNumber = firstPageInGroup + i;
                                 const isCurrentPage = pageNumber === paging.page;
@@ -227,17 +240,20 @@ const PostList = () => {
                                 </li>
                                 );
                             })}
-                            <li>
-                                <button
-                                type="button"
-                                className={styles.pageLink}
-                                onClick={goToNextGroup}
-                                disabled={paging.page === maxPage}
-                                >
-                                다음
-                                </button>
-                            </li>
+                            {/* 다음 버튼 비활성화 */}
+                            {currentPageGroup < Math.ceil(maxPage / paging.count) && (
+                                <li>
+                                    <button
+                                        type="button"
+                                        className={styles.pageLink}
+                                        onClick={goToNextGroup}
+                                    >
+                                    다음
+                                    </button>
+                                </li>
+                            )}
                         </ul>
+                        
                     </div>
                 </div>
                 )}
