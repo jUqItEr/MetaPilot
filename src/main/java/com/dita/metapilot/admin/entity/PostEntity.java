@@ -18,4 +18,5 @@ public class PostEntity {
     private int deleted;
     private int type;
     private String createdAt;
+    private String nickname;
 }
