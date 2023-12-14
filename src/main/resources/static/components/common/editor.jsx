@@ -17,11 +17,17 @@ function RichTextEditor({ initialData }) {
     }
 
     useEffect(() => {
-        setEditorState(
-            EditorState.createWithContent(
-                stateFromHTML(initialData)
+        if (initialData !== undefined) {
+            setEditorState(
+                EditorState.createWithContent(
+                    stateFromHTML(initialData)
+                )
             )
-        )
+        } else {
+            setEditorState(
+                EditorState.createEmpty()
+            )
+        }
     }, [initialData])
 
     return (

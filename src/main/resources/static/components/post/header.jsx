@@ -19,7 +19,10 @@ const PostHeader = ({ pid }) => {
       url: "/api/post/view",
     }).then((res) => {
       setData(res.data);
-      console.log(res.data);
+      
+      if (!res.data || res.data.post === null) {
+        router.push("/404")
+      }
     });
   }, []);
 
@@ -40,23 +43,25 @@ const PostHeader = ({ pid }) => {
           <div className={styles.headerSubList}>
             <div className={styles.headerProfile}>
               <table>
-                <tr>
-                  <td>
-                    <Image
-                      className={styles.headerProfile}
-                      src={data.post?.profileImage || "/image/profile.png"}
-                      alt={"image"}
-                      width={40}
-                      height={40}
-                    />
-                  </td>
-                  <td>
-                  <div className={styles.headerProfileName}><span className={styles.profileNickname}>{data.post?.nickName}</span></div>
-                  </td>
-                  <td>
-                  <div className="headerProfileTime"><span className={styles.profileNickname}>{data.post?.createdView}</span></div>
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td>
+                      <Image
+                        className={styles.headerProfile}
+                        src={data.post?.profileImage || "/image/profile.png"}
+                        alt={"image"}
+                        width={40}
+                        height={40}
+                      />
+                    </td>
+                    <td>
+                    <div className={styles.headerProfileName}><span className={styles.profileNickname}>{data.post?.nickName}</span></div>
+                    </td>
+                    <td>
+                    <div className="headerProfileTime"><span className={styles.profileNickname}>{data.post?.createdView}</span></div>
+                    </td>
+                  </tr>
+                </tbody>
               </table>              
             </div>
             <div className={styles.headerSubDropdown}>

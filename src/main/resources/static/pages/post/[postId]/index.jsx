@@ -86,8 +86,6 @@ const PostPage = ({ postId }) => {
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))
-
-        console.log(postId)
         
         // 게시글 좋아요 리스트
         axios({
