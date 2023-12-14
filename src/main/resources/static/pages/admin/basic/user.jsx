@@ -46,7 +46,6 @@ export default function AdminBlockUserPage() {
             alert("차단할 사용자 아이디를 입력하세요.")
         }
     }
-
     const deleteBlock = userId => {
         axios({
             params: {
@@ -64,8 +63,6 @@ export default function AdminBlockUserPage() {
             console.error('Request error:', err);
         })
     };
-
-
     useEffect(() => {
         axios({
             method: 'get',

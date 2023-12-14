@@ -3,9 +3,9 @@ package com.dita.metapilot.admin.controller;
 import com.dita.metapilot.admin.dto.*;
 import com.dita.metapilot.admin.entity.CmsInfoEntity;
 import com.dita.metapilot.admin.entity.HashtagEntity;
+import com.dita.metapilot.admin.entity.UserRoleEntity;
 import com.dita.metapilot.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,6 +25,18 @@ import javax.validation.Valid;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
+
+    @ResponseBody
+    @GetMapping("/readUserRole")
+    public ResponseEntity<?> readUserRole(UserSearchRoleDto userSearchRoleDto){
+        return ResponseEntity.ok(adminService.readUserRole(userSearchRoleDto));
+    }
+    @ResponseBody
+    @PostMapping("/updateUserRole")
+    public ResponseEntity<?> updateUserRole(UserRoleDto userRoleDto){
+        return ResponseEntity.ok(adminService.updateUserRole(userRoleDto));
+    }
+
     /**
      * <p>CategoryService를 불러옵니다.</p>
      */

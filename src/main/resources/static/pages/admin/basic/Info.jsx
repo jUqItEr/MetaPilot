@@ -44,7 +44,25 @@ export default function AdminBlogInfoPage() {
             console.error('Request error:', err);
         })
     };
-
+    // 이미지 업로드
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('userprofile', file);
+    
+            axios.post('/api/upload', formData)
+                .then((response) => {
+                    // 이미지 URL을 받아서 상태에 저장
+                    setProfileImage(response.data.imageUrl);
+                    // 필요한 경우 다른 처리 수행
+                })
+                .catch((error) => {
+                    console.error('Error uploading image:', error);
+                });
+        }
+    };
+    
     // 반응형
     useEffect(() => {
         axios({
@@ -151,9 +169,9 @@ export default function AdminBlogInfoPage() {
                                     </div>
                                     <div className="input-group col " style={{width:'100%'}}>
                                         {/* 변경할 이미지 파일 선택 */}
-                                        <input type="file" className="form-control " id="inputGroupFile04"
+                                        <input type="file" className="form-control " id="fileInput"
                                                 aria-label="Upload" name={"imgFile"}/>
-                                        <button  type="button" className={`btn btn-primary ps-2 pe-2 `} id=" " >등록</button>
+                                        <button  type="button" className={`btn btn-primary ps-2 pe-2 `} >등록</button>
                                     </div>
                                 </div>
                             </div>

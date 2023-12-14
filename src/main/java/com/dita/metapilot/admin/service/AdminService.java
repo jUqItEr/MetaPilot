@@ -19,6 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminService {
 
+    public List<UserRoleEntity> readUserRole(UserSearchRoleDto userSearchRoleDto){
+        return adminRepository.readUserRole(userSearchRoleDto);
+    }
+
+    public boolean updateUserRole(UserRoleDto userRoleDto){
+        return adminRepository.updateUserRole(userRoleDto);
+    }
+
     /**
      * <p>블로그 Info를 List하는 기능</p>
      * @since 2023. 12. 11.

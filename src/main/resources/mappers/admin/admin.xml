@@ -23,6 +23,11 @@
         <result property="userId" column="user_tbl_id"/>
     </resultMap>
 
+    <resultMap id="userRole" type="com.dita.metapilot.admin.entity.UserRoleEntity">
+        <result property="userId" column="user_tbl_id"/>
+        <result property="roleId" column="role_tbl_id"/>
+    </resultMap>
+
     <resultMap id="categoryEntity" type="com.dita.metapilot.admin.entity.CategoryEntity">
         <result property="id" column="id"/>
         <result property="categoryTblRefId" column="category_tbl_ref_id"/>
@@ -64,6 +69,29 @@
         <result property="visible" column="visible"/>
         <result property="createdAt" column="created_at"/>
     </resultMap>
+
+    <select id="readUserRole" parameterType="com.dita.metapilot.admin.dto.UserSearchRoleDto" resultMap="userRole">
+        select
+            *
+        from
+            user_role_tbl
+        where
+        <if test="type == 1">
+            role_tbl_id = 1
+        </if>
+        <if test="type ==2">
+            role_tbl_id = 2
+        </if>
+    </select>
+
+    <update id="updateUserRole" parameterType="com.dita.metapilot.admin.dto.UserRoleDto">
+        update
+        user_role_tbl
+        set
+        role_tbl_id = #{roleId}
+        where
+        user_tbl_id = #{userId};
+    </update>
 
     <!-- Get CMS Information. -->
     <select id="getCmsInfo" resultType="com.dita.metapilot.admin.entity.CmsInfoEntity">

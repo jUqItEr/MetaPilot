@@ -15,6 +15,11 @@ import java.util.List;
  * */
 @Mapper
 public interface AdminRepository {
+
+    List <UserRoleEntity> readUserRole(UserSearchRoleDto userSearchRoleDto);
+
+    boolean updateUserRole(UserRoleDto userRoleDto);
+
     /**
      * <p>블로그 Info를 List하는 기능</p>
      * @since 2023. 12. 11.

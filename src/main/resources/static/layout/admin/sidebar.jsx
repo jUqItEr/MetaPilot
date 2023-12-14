@@ -87,6 +87,11 @@ export default function AdminSidebar() {
                                         <a className="link-body-emphasis d-inline-flex text-decoration-none rounded">사용자 차단</a>
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link href={"/admin/basic/author"}>
+                                        <a className="link-body-emphasis d-inline-flex text-decoration-none rounded">권한 관리</a>
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
                     </li>
