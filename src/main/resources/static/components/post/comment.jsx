@@ -49,8 +49,6 @@ const CommentsList = ({ postId, comments, setComments }) => {
     const createComment = async () => {
         const content = $('#comment').val()
 
-        console.log(content)
-
         if (content !== '') {
             axios({
                 method: 'post',
@@ -213,7 +211,8 @@ const CommentsList = ({ postId, comments, setComments }) => {
                     
                 </div>
             ))}
-            <div className={styles.postCommentForm}>
+            {user ? (
+                <div className={styles.postCommentForm}>
                 {/* 폼 내용 또는 자식 컴포넌트 */}
                 <div className={styles.commentHandlerForm}>
                     <strong>{user?.nickname}</strong>님의 댓글
@@ -230,10 +229,13 @@ const CommentsList = ({ postId, comments, setComments }) => {
                     </div>
                 </div>
             </div>
+            ) : (
+                <div className={styles.postCommentForm}>
+                    로그인 후 이용해주세요.
+                </div>
+            )}
         </div>
-        
-    );
-    
-};
+    )
+}
 
 export default CommentsList;

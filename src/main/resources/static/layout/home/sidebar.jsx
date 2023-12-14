@@ -1,62 +1,4 @@
-
-{/* <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-    <span class="fs-4">Sidebar</span>
-    </a>
-    <hr/>
-    <ul class="nav nav-pills flex-column mb-auto">
-    <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">
-        
-        Home
-        </a>
-    </li>
-    <li>
-        <a href="#" class="nav-link link-dark">
-        
-        Dashboard
-        </a>
-    </li>
-    <li>
-        <a href="#" class="nav-link link-dark">
-        
-        Orders
-        </a>
-    </li>
-    <li>
-        <a href="#" class="nav-link link-dark">
-        
-        Products
-        </a>
-    </li>
-    <li>
-        <a href="#" class="nav-link link-dark">
-        
-        Customers
-        </a>
-    </li>
-    </ul>
-    <hr/>
-    <div class="dropdown">
-    <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"/>
-        <strong>mdo</strong>
-    </a>
-    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-        <li><a class="dropdown-item" href="#">New project...</a></li>
-        <li><a class="dropdown-item" href="#">Settings</a></li>
-        <li><a class="dropdown-item" href="#">Profile</a></li>
-        <li><hr class="dropdown-divider"/></li>
-        <li><a class="dropdown-item" href="#">Sign out</a></li>
-    </ul>
-    </div>
-    </div> */}
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import styles from '/styles/sidebar.module.css'
-
-import SidebarMenu from 'react-bootstrap-sidebar-menu'
-import { faCookie } from '@fortawesome/free-solid-svg-icons'
+import { Accordion, Card, Button} from 'react-bootstrap'
 
 
 const IndexSidebar = ({ category }) => {
@@ -64,25 +6,6 @@ const IndexSidebar = ({ category }) => {
 
     return (
         <>
-            <SidebarMenu>
-                <SidebarMenu.Header>
-                    <SidebarMenu.Brand>
-                    </SidebarMenu.Brand>
-                    <SidebarMenu.Toggle />
-                </SidebarMenu.Header>
-                <SidebarMenu.Body>
-                    <SidebarMenu.Nav>
-                        <SidebarMenu.Nav.Link>
-                            <SidebarMenu.Nav.Icon>
-                                
-                            </SidebarMenu.Nav.Icon>
-                            <SidebarMenu.Nav.Title>
-                                Test
-                            </SidebarMenu.Nav.Title>
-                        </SidebarMenu.Nav.Link>
-                    </SidebarMenu.Nav>
-                </SidebarMenu.Body>
-            </SidebarMenu>
         </>
     )
 }

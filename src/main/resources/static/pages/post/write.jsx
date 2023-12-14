@@ -4,26 +4,8 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
 
-const PostEdit = ({ categoryId, postId }) => {
+const PostWrite = ({ categoryId }) => {
     const [data, setData] = useState([])
-    const router = useRouter()
-
-    useEffect(() => {
-        axios({
-            method: 'get',
-            params: {
-                postId: 90
-            },
-            url: '/api/post/view'
-        })
-        .then((res) => {
-            setData(res.data)
-            console.log(res.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    }, [])
 
     return (
         <>
@@ -37,7 +19,7 @@ const PostEdit = ({ categoryId, postId }) => {
                 <table className='table'>
                     <tr scope>
                         <td width={90}>게시글 제목</td>
-                        <td><input className='form-control' type='text' placeholder='제목을 입력해주세요.' defaultValue={data?.post?.subject}/></td>
+                        <td><input className='form-control' type='text' placeholder='제목을 입력해주세요.' /></td>
                     </tr>
                 </table>
                 <RichTextEditor initialData={data?.post?.content} />
@@ -46,4 +28,4 @@ const PostEdit = ({ categoryId, postId }) => {
     )
 }
 
-export default PostEdit
+export default PostWrite

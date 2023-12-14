@@ -23,11 +23,11 @@ const IndexHeader = ({ info }) => {
                     </div>
                 </div>
             </header>
-
+{/* 
             <nav className='navbar navbar-expand-md'>
                 <h1>한글 테스트</h1>
                 <ThemeSwitcher />
-            </nav>
+            </nav> */}
         </>
     )
 }

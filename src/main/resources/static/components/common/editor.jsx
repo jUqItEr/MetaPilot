@@ -31,7 +31,7 @@ function RichTextEditor({ initialData }) {
                 editorClassName='editor'
                 toolbarClassName='toolbar-class'
                 toolbar={{
-                    options: ['fontFamily', 'fontSize', 'inline', 'textAlign', 'history', 'list', 'link', 'image'],
+                    options: ['fontFamily', 'fontSize', 'inline', 'textAlign', 'history', 'image', 'list', 'link'],
                     list: {
                         inDropdown: true
                     },

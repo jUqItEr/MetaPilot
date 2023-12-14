@@ -8,6 +8,8 @@ import NoticePost from '../components/common/notice';
 import PostList from '../components/common/postList';
 import PostView from '../components/common/post';
 
+import { Accordion, Card, Button } from 'react-bootstrap'
+
 
 
 const IndexPage = () => {
@@ -41,10 +43,16 @@ const IndexPage = () => {
                 <title>{info.title}</title>
             </Head>
             <IndexHeader info={info} />
-            <IndexSidebar />
-            <TrendPost />
-            <NoticePost />
-            <PostList />
+            <div className='container' role='main'>
+                <div className='col-sm-8'>
+                    <div className='row'>
+                    </div>
+                    <div className='row'><TrendPost /></div>
+                    <div className='row'><NoticePost /></div>
+                    <div className='row'><PostList /></div>
+                    
+                </div>
+            </div>
         </>
     )
 }

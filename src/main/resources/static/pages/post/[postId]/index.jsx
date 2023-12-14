@@ -108,7 +108,6 @@ const PostPage = ({ postId }) => {
             },
             url: '/api/comment/comments',
         }).then((res) => {
-            console.log(res.data)
             setComments(res.data)
         })
 
@@ -133,7 +132,6 @@ const PostPage = ({ postId }) => {
             },
             url: '/api/comment/hasLike',
         }).then((res) => {
-            console.log(res.data)
             setCommentLiked(res.data)
         })
     }, [postId, postLiked, commentLiked, user?.id])

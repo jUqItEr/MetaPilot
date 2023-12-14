@@ -39,16 +39,25 @@ const PostHeader = ({ pid }) => {
           <div className={styles.headerCompoTitle}>{data.post?.subject}</div>
           <div className={styles.headerSubList}>
             <div className={styles.headerProfile}>
-
-              <Image
-                className={styles.headerProfile}
-                src={data.post?.profileImage || "/image/profile.png"}
-                alt={"image"}
-                width={40}
-                height={40}
-              />
-              <div className={styles.headerProfileName}><span className={styles.profileNickname}>{data.post?.nickName}</span></div>
-              <div className="headerProfileTime"><span className={styles.profileNickname}>{data.post?.createdView}</span></div>
+              <table>
+                <tr>
+                  <td>
+                    <Image
+                      className={styles.headerProfile}
+                      src={data.post?.profileImage || "/image/profile.png"}
+                      alt={"image"}
+                      width={40}
+                      height={40}
+                    />
+                  </td>
+                  <td>
+                  <div className={styles.headerProfileName}><span className={styles.profileNickname}>{data.post?.nickName}</span></div>
+                  </td>
+                  <td>
+                  <div className="headerProfileTime"><span className={styles.profileNickname}>{data.post?.createdView}</span></div>
+                  </td>
+                </tr>
+              </table>              
             </div>
             <div className={styles.headerSubDropdown}>
               <div>목록</div>
