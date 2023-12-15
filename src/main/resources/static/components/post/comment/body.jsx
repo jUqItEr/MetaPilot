@@ -3,6 +3,7 @@ import styles from '/styles/post/post.module.css'
 import CommentLike from './response'
 import axios from 'axios'
 import $ from 'jquery'
+import Link from 'next/link'
 
 
 const CommentsList = ({ pid }) => {
@@ -146,10 +147,18 @@ const CommentsList = ({ pid }) => {
     return (
         <div className={styles.commentsWrap}>
             {comments?.map((comment, index) => (
-                <div key={index} className={comment.depth ? styles.commentForm : styles.replyForm}>
+                <div id={`c${comment.id}`} key={index} className={comment.depth ? styles.commentForm : styles.replyForm}>
                     <strong>{comment.nickname}</strong>
                     <p>
-                        <strong>{(comment.refId !== 0 && comment.refId !== comment.rootId) && `@${comment.refNickname}`}&nbsp;</strong>
+                        {
+                            (comment.refId !== 0 && comment.refId !== comment.rootId) && (
+                                <Link href={`#c${comment.refId}`} scroll={false}>
+                                    <a>
+                                        <strong>{`@${comment.refNickname}`}&nbsp;</strong>
+                                    </a>
+                                </Link>
+                            )
+                        }
                         {comment.content}
                     </p>
                     <div className={styles.commentDetails}>
@@ -167,24 +176,20 @@ const CommentsList = ({ pid }) => {
                     {formVisible === comment.id && (
                         <div className={styles.commentForm}>
                             {/* 폼 내용 또는 자식 컴포넌트 */}
-                            <form onSubmit={createCommentSubmit}>
-                                <input type='hidden' name='postId' value={`${pid}`}/>
-                                <input type='hidden' name='userId' value={`${user?.id}`}/>
-                                <div className={styles.commentHandlerForm}>
-                                    <strong>{user?.nickname}</strong>님의 답글
-                                    <div className={`${styles.commentInputGroup} input-group mb-3`}>
-                                        <textarea type='text' className={`${styles.commentTextarea} form-control`} data-id={`c${comment.id}`} name='content'/>
-                                    </div>
+                            <div className={styles.commentHandlerForm}>
+                                <strong>{user?.nickname}</strong>님의 답글
+                                <div className={`${styles.commentInputGroup} input-group mb-3`}>
+                                    <textarea type='text' className={`${styles.commentTextarea} form-control`} data-id={`c${comment.id}`} name='content'/>
                                 </div>
-                                <div className={styles.editorForm}>  
-                                    <div>
-                                        <input className='form-control form-control-sm' data-id={comment.id} type='file' accept='image/png, image/jpeg, image/webp, image/gif'/>
-                                    </div>
-                                    <div className='input-group-append'>
-                                        <button className='btn btn-outline-secondary' type='button' onClick={() => handleComment({...comment, visible: 1 })}>답글 달기</button>
-                                    </div>
+                            </div>
+                            <div className={styles.editorForm}>  
+                                <div>
+                                    <input className='form-control form-control-sm' data-id={comment.id} type='file' accept='image/png, image/jpeg, image/webp, image/gif'/>
                                 </div>
-                            </form>
+                                <div className='input-group-append'>
+                                    <button className='btn btn-outline-secondary' type='button' onClick={() => handleComment({...comment, visible: 1 })}>답글 달기</button>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
