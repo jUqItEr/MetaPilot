@@ -1,5 +1,6 @@
 package com.dita.metapilot.main.service;
 
+import com.dita.metapilot.main.dto.UserDto;
 import com.dita.metapilot.main.entity.CmsInfoEntity;
 import com.dita.metapilot.main.repository.MainRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,5 +13,9 @@ public class MainService {
 
     public CmsInfoEntity getCmsInfo() {
         return mainRepository.getCmsInfo();
+    }
+
+    public boolean hasBlock(UserDto dto) {
+        return mainRepository.hasBlock(dto);
     }
 }

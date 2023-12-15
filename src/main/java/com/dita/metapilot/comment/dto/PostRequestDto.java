@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostIdDto {
+public class PostRequestDto {
 
     private long postId;
+    private int visible;
 }

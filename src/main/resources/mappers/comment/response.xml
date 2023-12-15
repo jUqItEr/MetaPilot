@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dita.metapilot.comment.repository.CommentRepository">
+    <insert id="createResponse"
+            parameterType="com.dita.metapilot.comment.dto.ResponseDto">
+        insert into
+            comment_like_tbl (
+                comment_tbl_id,
+                user_tbl_id
+            )
+        values (
+            #{commentId},
+            #{userId}
+        )
+    </insert>
+
+    <delete id="deleteResponse"
+            parameterType="com.dita.metapilot.comment.dto.ResponseDto">
+        delete from
+            comment_like_tbl
+        where
+            comment_tbl_id = #{commentId}
+        and
+            user_tbl_id = #{userId}
+    </delete>
+
+    <select id="hasResponse"
+            resultType="boolean"
+            parameterType="com.dita.metapilot.comment.dto.ResponseDto">
+        select
+            count(*) > 0
+        from
+            comment_like_tbl
+        where
+            comment_tbl_id = #{commentId}
+        and
+            user_tbl_id = #{userId}
+    </select>
+</mapper>

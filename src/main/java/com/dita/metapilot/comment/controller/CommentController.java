@@ -2,173 +2,125 @@ package com.dita.metapilot.comment.controller;
 
 import com.dita.metapilot.comment.dto.*;
 import com.dita.metapilot.comment.entity.CommentEntity;
-import com.dita.metapilot.comment.repository.CommentRepository;
 import com.dita.metapilot.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
-/*
- * CommentController는 댓글과 관련된 HTTP 요청을 처리합니다.
- * 댓글 추가, 수정, 삭제 그리고 댓글 목록 조회 기능을 제공합니다.
+/**
+ * <p>댓글과 관련된 요청을 처리하는 컨트롤러</p>
  *
- * @param CommentDto       댓글 추가, 수정, 삭제를 위한 정보를 담은 객체
- * @param CommentListDto   댓글 목록 조회를 위한 정보를 담은 객체
- * @param CommentEntity    댓글 데이터를 담은 객체
- * @param RegisterDto      회원가입 요청 정보를 담은 객체
- * @param LikeDto          좋아요 정보를 담은 객체
- * @author Seung yun Lee (@Seungyun)
- * @since 2023. 12. 11.
- * @version 1.0.0
+ * @since   2023. 12. 11.
+ * @author  Kiseok Kang (@jUqItEr)
+ * @author  Seungyun Lee (@Seungyun6857)
+ * @version 2.1.3
  */
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/comment")
 public class CommentController {
+    private final CommentService service;
 
-    private final CommentService commentService;
-    private final CommentRepository commentRepository;
-
-
-    /*
-     * 새로운 댓글 등록
+    /**
+     * <p>댓글 / 답글 / 대댓글을 생성하는 메서드</p>
      *
-     * @param commentDto     등록할 댓글의 정보를 포함한 DTO
-     * @param file           옵션: 업로드할 파일
-     * @param bindingResult  요청 데이터의 검증 결과를 담은 객체
-     * @return               ResponseEntity 객체를 반환하여 댓글 등록 여부 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 댓글 / 답글 / 대댓글 기능이 통합된 데이터 전송용 객체
+     * @return 댓글의 생성 여부를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
      */
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<?> registerComment(@RequestPart("request") CommentDto commentDto, @RequestPart(required = false) MultipartFile file, BindingResult bindingResult) {
-        return ResponseEntity.ok(commentService.saveComment(commentDto, file)); // 댓글 저장 후 결과 반환
+    public ResponseEntity<?> createComment(RefDto dto) {
+        return ResponseEntity.ok(service.createComment(dto));
     }
-
-    /*
-     * 댓글 업데이트
-     *
-     * @param commentDto 업데이트할 댓글의 정보를 포함한 DTO
-     * @return           ResponseEntity 객체를 반환하여 댓글 업데이트 여부 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    @ResponseBody
-    @PostMapping("/updateComment")
-    public ResponseEntity<?> updateComment(CommentDto commentDto) {
-        CommentDto updatedComment = commentService.updateCommentDto(commentDto); // 댓글 업데이트
-        if (updatedComment != null) {
-            return ResponseEntity.ok().build(); // 업데이트 성공
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 업데이트 실패
-        }
-    }
-
-    /*
-     * 댓글 삭제
-     * @param id            삭제할 댓글의 ID
-     * @param commentDto    삭제할 댓글의 정보를 포함한 DTO
-     * @param bindingResult 요청 데이터의 검증 결과를 담은 객체
-     * @return ResponseEntity 객체를 반환하여 댓글 삭제 여부 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    @ResponseBody
-    @PostMapping("/deleteComment")
-    public ResponseEntity<?> deleteComment(CommentIdDto commentIdDto) {
-        boolean isDeleted = commentService.deleteComment(commentIdDto);
-
-        if (isDeleted) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    /*
-     * 댓글 목록 조회
-     *
-     * @return List<CommentEntity> 형태로 댓글 목록을 반환합니다.
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    @ResponseBody
-    @GetMapping("/comments")
-    public List<CommentEntity> commentsByPostId(PostIdDto postIdDto) {
-        Long postId = postIdDto.getPostId(); // postIdDto에서 postId 가져오기
-        return commentService.listCommentsByPostId(postIdDto); // 특정 postId에 해당하는 댓글 목록 반환
-    }
-
 
     /**
-     * 댓글을 생성합니다.
-     * @return                 ResponseEntity 객체를 반환하여 댓글 생성 여부 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * <p>댓글 / 답글 / 대댓글을 삭제하는 메서드</p>
+     *
+     * @param  dto 댓글의 고유값, 댓글 표시 유무, 댓글 내용이 포함된 데이터 전송용 객체
+     * @return 댓글의 삭제 여부를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
      */
     @ResponseBody
-    @PostMapping("/createComment")
-    public ResponseEntity<String> createComment(RefCommentDto refCommentDto) {
-        try {
-            commentService.createComment(refCommentDto);
-
-            if (refCommentDto.getCommentRootId() == 0) {
-                long id = commentService.getRecentCommentId();
-                refCommentDto.setId(id);
-                commentService.updateCommentRootId(refCommentDto);
-            }
-            return ResponseEntity.status(HttpStatus.CREATED).body("Comment created successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create comment");
-        }
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteComment(CommentDto dto) {
+        return ResponseEntity.ok(service.deleteComment(dto));
     }
 
-    /*
-     * 좋아요 정보를 업데이트하는 메서드
+    /**
+     * <p>댓글의 개수를 불러오는 메서드</p>
      *
-     * @param likeDto 좋아요 DTO
-     * @return 업데이트 성공 여부에 따른 ResponseEntity 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 게시글 고유값, 표시 권한이 포함된 데이터 전송용 객체
+     * @return 게시글의 댓글 개수를 반환
+     * @since  2023. 12. 15.
+     * @author Kiseok Kang (@Seungyun)
      */
     @ResponseBody
-    @PostMapping("/likes/update")
-    public ResponseEntity<?> updateLike(LikeDto likeDto) {
-        boolean result = commentService.updateLike(likeDto);
-
-        if (result) {
-            return ResponseEntity.ok("Successfully updated like status");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update like status");
-        }
+    @GetMapping("/count")
+    public ResponseEntity<?> getCommentCount(PostRequestDto dto) {
+        return ResponseEntity.ok(service.getCommentCount(dto));
     }
 
-    /*
-     * 해당 댓글에 대한 사용자의 좋아요 여부를 확인하는 메서드
+    /**
+     * <p>게시글의 댓글 목록을 불러오는 메서드</p>
      *
-     * @param commentId 댓글 ID
-     * @param userId    사용자 ID
-     * @return 사용자의 좋아요 여부에 따른 ResponseEntity 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 게시글 고유값, 표시 권한이 포함된 데이터 전송용 객체
+     * @return 게시글의 댓글 목록을 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
      */
     @ResponseBody
-    @PostMapping("/hasLike")
-    public ResponseEntity<Boolean> hasLike(LikeDto likeDto) {
-        boolean hasLike = commentService.hasLike(likeDto); // likeDto를 전달합니다.
-        return ResponseEntity.ok(hasLike);
+    @GetMapping("/list")
+    public List<CommentEntity> getCommentList(PostRequestDto dto) {
+        return service.getCommentList(dto);
+    }
+
+    /**
+     * <p>댓글 / 답글 / 대댓글을 수정하는 메서드</p>
+     *
+     * @param  dto 댓글의 고유값, 댓글 표시 유무, 댓글 내용이 포함된 데이터 전송용 객체
+     * @return 댓글을 수정한 결과를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
+     */
+    @ResponseBody
+    @PostMapping("/update")
+    public ResponseEntity<?> updateComment(CommentDto dto) {
+        return ResponseEntity.ok(service.updateCommentDto(dto));
+    }
+
+    // ---------------- LikeController 통합
+
+    /**
+     * <p>해당 댓글에 대한 사용자의 좋아요 여부를 확인하는 메서드</p>
+     *
+     * @param dto 사용자의 고유값, 댓글의 고유값이 포함된 데이터 전송용 객체
+     * @return 사용자가 댓글에 호응한 여부를 반환
+     * @since 2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
+     */
+    @ResponseBody
+    @GetMapping("/response/exist")
+    public ResponseEntity<Boolean> hasResponse(@ModelAttribute ResponseDto dto) {
+        return ResponseEntity.ok(service.hasResponse(dto));
+    }
+
+    /**
+     * <p>좋아요 상태를 변경하는 메서드</p>
+     *
+     * @param  dto 사용자의 고유값, 댓글의 고유값이 포함된 데이터 전송용 객체
+     * @return 사용자가 댓글의 호응 상태를 변경한 결과를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
+     */
+    @ResponseBody
+    @PostMapping("/response/update")
+    public ResponseEntity<?> updateResponse(ResponseDto dto) {
+        return ResponseEntity.ok(service.updateResponse(dto));
     }
 }

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import axios from 'axios'
 import PostHeader from '../../../components/post/header'
-import CommentsList from '../../../components/post/comment'
+import CommentsList from '../../../components/post/comment/body'
 import LikesList from '../../../components/post/likes'
 import { useState } from 'react'
 import { useEffect } from 'react'
@@ -23,13 +23,11 @@ export const getServerSideProps = async context => {
 }
 
 const PostPage = ({ postId }) => {
-    const [comments, setComments] = useState([]) //초기 댓글 데이터
     const [likes, setLikes] = useState([])
     const [user, setUser] = useState([])
     const [showComments, setShowComments] = useState(false)
     const [postLiked, setPostLiked] = useState(false) // 게시글에 대한 좋아요 상태
     const [faChevron, setFaChevron] = useState(false) // 공감수 리스트 상태
-    const [commentLiked, setCommentLiked] = useState(false) // 댓글에 대한 좋아요 상태
 
     // 공감수 토글
     const toggleFaChevron = () => {
@@ -99,17 +97,6 @@ const PostPage = ({ postId }) => {
             setLikes(res.data)
         })
 
-        // 댓글 리스트
-        axios({
-            method: 'get',
-            params: {
-                postId: postId, // postId를 prop으로부터 받아오도록 수정했습니다.
-            },
-            url: '/api/comment/comments',
-        }).then((res) => {
-            setComments(res.data)
-        })
-
         // 로그인 되어 있으면 게시글 좋아요 여부 체크
         axios({
             method: 'post',
@@ -121,19 +108,7 @@ const PostPage = ({ postId }) => {
         }).then((res) => {
             setPostLiked(res.data)
         })
-
-        // 로그인 되어 있으면 댓글 좋아요 여부 체크
-        axios({
-            method: 'post',
-            params: {
-                userId: user?.id,
-                commentId: comments.id,
-            },
-            url: '/api/comment/hasLike',
-        }).then((res) => {
-            setCommentLiked(res.data)
-        })
-    }, [postId, postLiked, commentLiked, user?.id])
+    }, [postId, postLiked, user?.id])
 
     return (
         <>
@@ -215,11 +190,7 @@ const PostPage = ({ postId }) => {
 
                         {/* 댓글 목록 */}
                         {showComments && (
-                            <CommentsList
-                                postId={postId}
-                                comments={comments}
-                                setComments={setComments}
-                            />
+                            <CommentsList pid={postId} />
                         )}
 
                         {/* 광고 */}

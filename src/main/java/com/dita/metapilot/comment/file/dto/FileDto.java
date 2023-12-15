@@ -13,6 +13,4 @@ public class FileDto {
     private String originalName; // 파일의 원래 이름
     private String extension; // 파일 확장자
     private long fileSize; // 파일 크기
-
-
 }

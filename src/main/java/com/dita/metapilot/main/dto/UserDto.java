@@ -1,14 +1,12 @@
-package com.dita.metapilot.comment.entity;
+package com.dita.metapilot.main.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class LikeEntity {
-    private long id;
-    private long commentId;
+@NoArgsConstructor
+public class UserDto {
     private String userId;
 }

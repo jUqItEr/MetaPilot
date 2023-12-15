@@ -5,8 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class CommentIdDto {
+@AllArgsConstructor
+public class PostDto {
     private long id;
+    private long postId;
+    private String userId;
+    private String content;
+    private int visible;
+
 }

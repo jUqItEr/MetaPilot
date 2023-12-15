@@ -1,6 +1,7 @@
 package com.dita.metapilot.main.controller;
 
 import com.dita.metapilot.log.dto.SwaggerRespDto;
+import com.dita.metapilot.main.dto.UserDto;
 import com.dita.metapilot.main.entity.CmsInfoEntity;
 import com.dita.metapilot.main.service.MainService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,11 @@ public class MainController {
         return ResponseEntity
                 .ok()
                 .body(new SwaggerRespDto<>(HttpStatus.OK.value(), "Success", entity));
+    }
+
+    @ResponseBody
+    @GetMapping(value="/blocked")
+    public ResponseEntity<?> hasBlock(UserDto dto) {
+        return ResponseEntity.ok(mainService.hasBlock(dto));
     }
 }

@@ -7,9 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 public class CommentDto {
     private long id;
-    private long postId;
-    private Long commentRefId;
-    private Long commentRootId;
-    private String userId;
     private String content;
+    private int visible;
 }

@@ -9,8 +9,8 @@ import org.attoparser.dom.Text;
 public class CommentEntity {
     private long id;
     private long postId;
-    private long commentRefId;
-    private long commentRootId;
+    private long refId;
+    private long rootId;
     private String userId;
     private String content;
     private int depth;
@@ -18,5 +18,6 @@ public class CommentEntity {
     private int visible;
     private String createdAt;
     private String nickname;
+    private String refNickname;
     private int likeCount;
 }

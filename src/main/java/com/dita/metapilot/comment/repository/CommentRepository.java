@@ -7,78 +7,33 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-
 /**
- * <p>댓글 관련 데이터베이스 접근을 위한 Repository 인터페이스 </p>
+ * <p>댓글과 관련된 요청을 처리하는 서비스</p>
  *
- * @param saveComment    댓글을 저장하는 메서드
- * @param updateComment  댓글을 업데이트하는 메서드
- * @param deleteComment  댓글을 삭제하는 메서드
- * @param listComments   댓글 목록을 조회하는 메서드
- * @author Seung yun Lee (@Seungyun)
- * @since 2023. 11. 28.
- * @version 1.0.0
+ * @since   2023. 12. 11.
+ * @author  Kiseok Kang (@jUqItEr)
+ * @author  Seungyun Lee (@Seungyun6857)
+ * @version 1.5.2
  */
-
 @Mapper
 public interface CommentRepository {
-    boolean saveComment(CommentDto commentDto);
-    long updateComment(CommentDto commentDto);
-    boolean deleteComment(CommentIdDto commentIdDto);
-    List<CommentEntity> findByPostId(PostIdDto postIdDto);
-    long getRecentCommentId();
+    boolean createComment(RefDto dto);
 
-    /*
-    default void deleteById(long id) {
-        try {
-            String query = "DELETE FROM comment_tbl WHERE id = ?";
-        } catch (Exception e) {
-            System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
-        }
-    }
-    */
+    boolean deleteComment(CommentDto dto);
 
-    // 댓글 추가
-    boolean addComment(PostCommentDto postCommentDto);
+    boolean updateComment(CommentDto dto);
 
-    boolean updateCommentReference(PostCommentDto postCommentDto);
+    boolean updateRootId(RefDto dto);
 
-    boolean updateCommentRoot(RefCommentDto refCommentDto);
+    long getLastId();
 
-    boolean createComment(RefCommentDto refCommentDto);
-    // 댓글 조회
+    long getTotalCount(PostRequestDto dto);
 
+    List<CommentEntity> getCommentList(PostRequestDto dto);
 
-    /*
-     * 댓글에 좋아요 추가
-     *
-     * @param likeDto 좋아요 DTO
-     * @return 좋아요 추가 성공 여부
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    boolean createLike(LikeDto likeDto);
+    boolean createResponse(ResponseDto dto);
 
-    /*
-     * 댓글에 좋아요 취소
-     *
-     * @param likeDto 좋아요 DTO
-     * @return 좋아요 취소 성공 여부
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    boolean revokeLike(LikeDto likeDto);
+    boolean deleteResponse(ResponseDto dto);
 
-    /*
-     * 특정 댓글에 대한 사용자의 좋아요 여부 확인
-     *
-     * @param likeDto 좋아요 DTO
-     * @return 좋아요 여부 확인 결과
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    boolean hasLike(LikeDto LikeDto);
+    boolean hasResponse(ResponseDto dto);
 }

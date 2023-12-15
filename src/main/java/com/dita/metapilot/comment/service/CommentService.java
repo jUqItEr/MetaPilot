@@ -2,230 +2,136 @@ package com.dita.metapilot.comment.service;
 
 import com.dita.metapilot.comment.dto.*;
 import com.dita.metapilot.comment.entity.CommentEntity;
-import com.dita.metapilot.comment.file.dto.FileIdDto;
 import com.dita.metapilot.comment.repository.CommentRepository;
-import com.dita.metapilot.comment.file.service.FileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
-
-
-/*
- * <p>댓글 서비스 클래스입니다.</p>
- * <p>CommentRepository를 사용하여 댓글 관련 비즈니스 로직을 처리</p>
- * @author Seung yun Lee (@Seungyun)
- * @since 2023. 12. 11.
- * @version 1.0.0
+/**
+ * <p>댓글과 관련된 요청을 처리하는 서비스</p>
+ *
+ * @since   2023. 12. 11.
+ * @author  Kiseok Kang (@jUqItEr)
+ * @author  Seungyun Lee (@Seungyun6857)
+ * @version 2.1.0
  */
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CommentService {
+    private final CommentRepository repository;
 
-
-    private final CommentRepository commentRepository;
-    private FileService fileService;
-
-    @Autowired
-    public CommentService(CommentRepository commentRepository, FileService fileService) {
-        this.commentRepository = commentRepository;
-        this.fileService = fileService;
-    }
-
-    /*
-     * 댓글을 저장하는 메서드
+    /**
+     * <p>댓글 / 답글 / 대댓글을 생성하는 메서드</p>
      *
-     * @param commentDto 저장할 댓글 정보
-     * @return 저장 성공 여부
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 댓글 / 답글 / 대댓글 기능이 통합된 데이터 전송용 객체
+     * @return 댓글의 생성 여부를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
      */
-    public boolean saveComment(CommentDto commentDto){
-        boolean result = false;
+    public boolean createComment(RefDto dto) {
+        // 만약 답글이나 대댓글이 아닐 경우, 자기 자신을 루트로 삼아야 함.
+        boolean result = repository.createComment(dto);
 
-        result = commentRepository.saveComment(commentDto);
-        long commentId = commentRepository.getRecentCommentId();
-        MultipartFile file = null;
-        if (file != null) {
-            result &= fileService.createFile(file, new FileIdDto(commentId));
-        }
-
-        return result;
-    }
-
-    /*
-     * 댓글을 업데이트하는 메서드
-     *
-     * @param commentDto 업데이트할 댓글 정보
-     * @return 업데이트된 댓글 정보
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    public CommentDto updateCommentDto (CommentDto commentDto){
-        commentRepository.updateComment(commentDto);
-        return commentDto;
-    }
-
-    /*
-     * 댓글을 삭제하는 메서드
-     *
-     * @param commentDto 삭제할 댓글 정보
-     * @return 삭제된 댓글 정보
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    public boolean deleteComment(CommentIdDto commentIdDto) {
-        try {
-            // 주어진 ID를 사용하여 댓글을 삭제하는 데이터베이스 조작 메서드 호출
-            return commentRepository.deleteComment(commentIdDto);
-        } catch (Exception e) {
-            // 예외 발생 시 로깅하고 삭제 실패로 처리
-            System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
-            return false;
-        }
-    }
-
-
-    /*
-     * 댓글 목록을 조회하는 메서드
-     *
-     * @return 댓글 목록 (CommentEntity 리스트 형태)
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-
-    public List<CommentEntity> listCommentsByPostId(PostIdDto postIdDto) {
-        return commentRepository.findByPostId(postIdDto);
-    }
-
-
-
-
-    /*
-     * 댓글을 ID를 이용해 삭제하는 메서드
-     *
-     * @param id 삭제할 댓글 ID
-     * @return 삭제 성공 여부
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    /*
-    public boolean deleteCommentById(CommentIdDto commentIdDto) {
-        try {
-            // 주어진 ID를 사용하여 댓글을 삭제하는 데이터베이스 조작 메서드 호출
-            return commentRepository.deleteComment(commentIdDto);
-        } catch (Exception e) {
-            // 예외 발생 시 로깅하고 삭제 실패로 처리
-            System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
-            return false;
-        }
-    }
-    */
-
-    /*
-     * 댓글을 저장하고 파일을 첨부하는 메서드
-     *
-     * @param commentDto 댓글 정보
-     * @param file       첨부할 파일
-     * @return 저장 및 파일 첨부 성공 여부
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
-     */
-    public boolean saveComment(CommentDto commentDto, MultipartFile file) {
-        boolean result = false;
-
-        // 댓글 저장
-        result = commentRepository.saveComment(commentDto);
-
-        // 저장된 댓글의 ID 가져오기
-        long commentId = commentRepository.getRecentCommentId();
-
-        // 파일 서비스를 사용하여 파일 저장
-        if (file != null && !file.isEmpty()) {
-            result &= fileService.createFile(file, new FileIdDto(commentId));
+        if (dto.getRootId() == 0) {
+            dto.setId(repository.getLastId());
+            result &= repository.updateRootId(dto);
         }
         return result;
     }
 
-
-
-    /*
-     * PostCommentDto를 사용하여 댓글을 생성하는 메서드
+    /**
+     * <p>댓글 / 답글 / 대댓글을 삭제하는 메서드</p>
      *
-     * @param postCommentDto 생성할 댓글 정보를 담은 객체
-     * @return 생성된 댓글 정보를 담은 객체(PostCommentDto)
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 댓글의 고유값, 댓글 표시 유무, 댓글 내용이 포함된 데이터 전송용 객체
+     * @return 댓글의 삭제 여부를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
      */
-    public PostCommentDto createComment(PostCommentDto postCommentDto) {
-        commentRepository.addComment(postCommentDto);
-        commentRepository.updateCommentReference(postCommentDto);
-        return postCommentDto;
+    public boolean deleteComment(CommentDto dto) {
+        boolean result = false;
+
+        try {
+            result = repository.deleteComment(dto);
+        } catch (Exception e) {
+            // 예외 발생 시 로깅하고 삭제 실패로 처리
+            System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
+        }
+        return result;
     }
-    
-    
-    /*
-     * RefCommentDto를 사용하여 댓글에 답글을 생성하는 메서드
+
+    /**
+     * <p>댓글의 개수를 불러오는 메서드</p>
      *
-     * @param refCommentDto 생성할 댓글 정보를 담은 객체
-     * @return 생성된 댓글 정보를 담은 객체(RefCommentDto)
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 게시글 고유값, 표시 권한이 포함된 데이터 전송용 객체
+     * @return 게시글의 댓글 개수를 반환
+     * @since  2023. 12. 15.
+     * @author Kiseok Kang (@Seungyun)
      */
-    public RefCommentDto createComment(RefCommentDto refCommentDto) {
-        commentRepository.createComment(refCommentDto);
-        return refCommentDto;
+    public long getCommentCount(PostRequestDto dto) {
+        return repository.getTotalCount(dto);
     }
 
-    public boolean updateCommentRootId(RefCommentDto refCommentDto) {
-        return commentRepository.updateCommentRoot(refCommentDto);
-    }
-
-    public long getRecentCommentId() {
-        return commentRepository.getRecentCommentId();
-    }
-
-    /*
-     * 댓글의 좋아요 여부를 확인하는 메서드
+    /**
+     * <p>게시글의 댓글 목록을 불러오는 메서드</p>
      *
-     * @param likeDto 댓글 좋아요 정보를 담은 DTO
-     * @return 해당 댓글에 대해 사용자가 좋아요를 눌렀는지 여부를 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 게시글 고유값, 표시 권한이 포함된 데이터 전송용 객체
+     * @return 게시글의 댓글 목록을 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
      */
-    public boolean hasLike(LikeDto likeDto) {
-        return commentRepository.hasLike(likeDto);
+    public List<CommentEntity> getCommentList(PostRequestDto dto) {
+        return repository.getCommentList(dto);
     }
 
-    /*
-     * 댓글의 좋아요를 추가 또는 취소하는 메서드
+    /**
+     * <p>댓글 / 답글 / 대댓글을 수정하는 메서드</p>
      *
-     * @param likeDto 댓글 좋아요 정보를 담은 DTO
-     * @return 댓글에 성공적으로 좋아요를 추가하거나 취소했을 때 true 반환
-     * @author Seung yun Lee (@Seungyun)
-     * @since 2023. 12. 11.
-     * @version 1.0.0
+     * @param  dto 댓글의 고유값, 댓글 표시 유무, 댓글 내용이 포함된 데이터 전송용 객체
+     * @return 댓글을 수정한 결과를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
      */
-    public boolean updateLike(LikeDto likeDto) {
-        boolean hasLike = commentRepository.hasLike(likeDto);
+    public boolean updateCommentDto(CommentDto dto){
+        return repository.updateComment(dto);
+    }
 
-        if (hasLike) {
-            return commentRepository.revokeLike(likeDto);
+    // ---------------- LikeController 통합
+
+    /**
+     * <p>해당 댓글에 대한 사용자의 좋아요 여부를 확인하는 메서드</p>
+     *
+     * @param dto 사용자의 고유값, 댓글의 고유값이 포함된 데이터 전송용 객체
+     * @return 사용자가 댓글에 호응한 여부를 반환
+     * @since 2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
+     */
+    public boolean hasResponse(ResponseDto dto) {
+        return repository.hasResponse(dto);
+    }
+
+    /**
+     * <p>좋아요 상태를 변경하는 메서드</p>
+     *
+     * @param  dto 사용자의 고유값, 댓글의 고유값이 포함된 데이터 전송용 객체
+     * @return 사용자가 댓글의 호응 상태를 변경한 결과를 반환
+     * @since  2023. 12. 13.
+     * @author Seungyun Lee (@Seungyun6857)
+     */
+    public boolean updateResponse(ResponseDto dto) {
+        boolean hasResponse = repository.hasResponse(dto);
+        boolean result;
+
+        // 호응이 되어 있는지의 여부를 확인함
+        if (hasResponse) {
+            // 만약 호응이 되어 있다면 취소
+            result = repository.deleteResponse(dto);
         } else {
-            return commentRepository.createLike(likeDto);
+            // 만약 호응이 되어 있지 않다면 생성
+            result = repository.createResponse(dto);
         }
+        return result;
     }
 }

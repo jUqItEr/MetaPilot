@@ -7,11 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCommentDto {
-    private long id;
-    private long postId;
-    private String userId;
-    private String content;
-    private int visible;
+public class ResponseDto {
+    private long commentId; // 수정된 필드명
+    private String userId; // 수정된 필드명
 
 }

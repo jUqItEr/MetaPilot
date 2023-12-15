@@ -28,7 +28,6 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
-    console.log(localStorage.getItem("user"));
     getInfo();
   }, []);
 

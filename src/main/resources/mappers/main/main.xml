@@ -18,4 +18,14 @@
         from
             blog_info_tbl bi
     </select>
+
+    <!-- Get the state of user has been blocked. -->
+    <select id="hasBlock" parameterType="com.dita.metapilot.main.dto.UserDto" resultType="boolean">
+        select
+            if (count(*) = 1, 1, 0)
+        from
+            block_tbl
+        where
+            user_tbl_id = #{userId}
+    </select>
 </mapper>

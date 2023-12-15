@@ -11,12 +11,12 @@ const CommentLike = ({ comment }) => {
         setUser(JSON.parse(localStorage.getItem('user')))
 
         axios({
-            method: 'post',
+            method: 'get',
             params: {
                 commentId: comment?.id,
                 userId: user?.id
             },
-            url: '/api/comment/hasLike'
+            url: '/api/comment/response/exist'
         })
         .then((res) => {
             setLikes(res.data)

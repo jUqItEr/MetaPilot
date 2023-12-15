@@ -14,6 +14,4 @@ public class FileEntity {
     private String originalName;
     private String extension;
     private long fileSize;
-
-
 }
