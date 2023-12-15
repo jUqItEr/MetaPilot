@@ -92,7 +92,7 @@ public class UserController {
      * @return 사용자의 정보를 판단하여 결과값 반환
      */
     @ResponseBody
-    @PostMapping("/api/user/principal")
+    @PostMapping("/api/token/principal")
     public ResponseEntity<?> getPrincipal() {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = principalDetails.getUser();

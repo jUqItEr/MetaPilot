@@ -18,15 +18,13 @@ const Auth = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token')
-
-        console.log(token)
-
+        
         axios({
             headers: {
                 'Authorization': token
             },
             method: 'post',
-            url: '/api/user/principal'
+            url: '/api/token/principal'
         })
         .then((res) => {
             if (isValidJSON(res.data)) {
