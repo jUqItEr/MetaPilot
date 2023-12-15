@@ -61,7 +61,7 @@ public class PostController {
      * @since 2023. 12. 03.
      */
     @ResponseBody
-    @PostMapping("/hashtag/find")
+    @PostMapping("/hashtag/search")
     public List<PostDto> findPostByHashtag(@RequestBody List<String> hashtags) {
         return postService.findPostByHashtag(hashtags);
     }
@@ -74,7 +74,7 @@ public class PostController {
      * @since
      */
     @ResponseBody
-    @GetMapping("/likesList")
+    @GetMapping("/response/list")
     public List<PostLikesDto> getLikesList(PostIdDto postIdDto) {
         return postService.getLikesList(postIdDto);
     }
@@ -111,7 +111,7 @@ public class PostController {
      * @since 2023. 12. 01.
      */
     @ResponseBody
-    @PostMapping("/hasLike")
+    @PostMapping("/response/exist")
     public ResponseEntity<Boolean> hasLike(PostResponseDto postResponseDto) {
         return ResponseEntity.ok(postService.haslike(postResponseDto));
     }
@@ -139,7 +139,7 @@ public class PostController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/updateLike")
+    @PostMapping("/response/update")
     public ResponseEntity<Boolean> updateLike(PostResponseDto postResponseDto) {
         return ResponseEntity.ok(postService.updateLike(postResponseDto));
     }
@@ -159,7 +159,7 @@ public class PostController {
     }
 
     @ResponseBody
-    @GetMapping("/page/view")
+    @GetMapping("/page")
     public ResponseEntity<List<PostEntity>> postPageView(PagingDto pagingDto) {
         return ResponseEntity.ok(postService.getPostPageView(pagingDto));
     }
