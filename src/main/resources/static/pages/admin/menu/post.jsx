@@ -13,7 +13,7 @@ import AdminSidebar from "../../../layout/admin/sidebar"
  * @returns
  * 
  * @author Ha Seong Kim
- * @since 2023. 12. 14.
+ * @since 2023. 12. 15.
  * @returns
  */
 export default function AdminPostPage() {
@@ -40,7 +40,7 @@ export default function AdminPostPage() {
             data: {
                 id: commentId
             },
-            url: '/api/admin/deletePostHard'
+            url: '/api/admin/post/deleteHard'
         })
         .then((res) => {
             
@@ -67,7 +67,7 @@ export default function AdminPostPage() {
             data: {
                 id: commentId
             },
-            url: '/api/admin/restorePost'
+            url: '/api/admin/post/restore'
         })
         .then((res) => {
             
@@ -93,6 +93,12 @@ export default function AdminPostPage() {
         setSearchText($('#searchText').val())
     }
 
+    const searchUserEnter = (e) => {
+        if(e.key === 'Enter') {
+            searchUser();
+        }
+    }
+
     useEffect(() => {
         if (searchText !== '') {
             axios({
@@ -100,7 +106,7 @@ export default function AdminPostPage() {
                 params: {
                     nickname: searchText
                 },
-                url: "/api/admin/postDeletedList",
+                url: "/api/admin/post/deletedList",
             }).then((res) => {
                 setData(res.data);
                 console.log(res.data);
@@ -108,7 +114,7 @@ export default function AdminPostPage() {
         } else {
             axios({
                 method: "get",
-                url: "/api/admin/postDeletedList",
+                url: "/api/admin/post/deletedList",
             }).then((res) => {
                 setData(res.data);
                 console.log(res.data);
@@ -136,7 +142,7 @@ export default function AdminPostPage() {
                         <div className= {`${styles.pageTitle } border-bottom `}><span className={styles.pageTitleFont}>게시글</span></div>
                         <label className="text-body-tertiary p-3">내 블로그에 등록된 게시글을 모아서 보면서 선택 복구/삭제할 수 있습니다.</label>
                         <div style={{ display: 'flex', alignItems: 'center'}}>
-                            <input className='form-control' type='text' id='searchText' style={{width: '200px', marginLeft: '30px'}}/>
+                            <input className='form-control' type='text' id='searchText' style={{width: '200px', marginLeft: '30px'}} onKeyDown={(e) => searchUserEnter(e)}/>
                             <button className='btn btn-primary' type='button' style={{marginLeft: '10px'}}
                                 onClick={searchUser}>검색</button>
                         </div>
@@ -155,7 +161,7 @@ export default function AdminPostPage() {
                                     <tr key={mapper.id} data-id={mapper.id}>
                                         <td><input className="form-check-input custom-checkbox" type="checkbox" data-id={mapper.id} data-value={mapper.id} onChange={checkEach}/></td>
                                         <td>
-                                            <div className={'fs-5 fw-bold'}>{mapper.nickname} (id : {mapper.id})</div>
+                                            <div className={'fs-5 fw-bold'}>{mapper.nickname}</div>
                                             <div className={'fs-6'} style={{ width: '160px', marginRight: '30px', wordWrap: 'break-word', overflowWrap: 'break-word' }}>@{mapper.userTblId}</div>
                                         </td>
                                         <td>

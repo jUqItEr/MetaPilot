@@ -13,7 +13,7 @@ import AdminSidebar from "../../../layout/admin/sidebar"
  * @returns
  * 
  * @author Ha Seong Kim
- * @since 2023. 12. 14.
+ * @since 2023. 12. 15.
  * @returns
  */
 export default function AdminCommentPage() {
@@ -27,7 +27,7 @@ export default function AdminCommentPage() {
             params: {
                 userId: userId
             },
-            url: '/api/admin/createBlockUser'
+            url: '/api/admin/blockUser/create'
         })
         .then((responses) => {
             console.log("Block users responses:", responses);
@@ -56,7 +56,7 @@ export default function AdminCommentPage() {
             data: {
                 id: commentId
             },
-            url: '/api/admin/deleteComment'
+            url: '/api/admin/comment/delete'
         })
         .then((res) => {
             
@@ -97,14 +97,19 @@ export default function AdminCommentPage() {
         setSearchText($('#searchText').val())
     }
 
+    const searchUserEnter = (e) => {
+        if(e.key === 'Enter') {
+            searchUser();
+        }
+    }
+
     useEffect(() => {
-        // 검색 조건 or 검색 조건 없이 검색 수행
         axios({
             method: "get",
             params: {
                 nickname: searchText
             },
-            url: '/api/admin/commentList',
+            url: '/api/admin/comment/list',
         }).then((res) => {
             setData(res.data);
             console.log(res.data);
@@ -131,7 +136,7 @@ export default function AdminCommentPage() {
                         <div className= {`${styles.pageTitle } border-bottom `}><span className={styles.pageTitleFont}>댓글</span></div>
                         <label className="text-body-tertiary p-3">내 블로그에 등록된 댓글을 모아서 보면서 사용자 이름(닉네임) 기준으로 차단 설정을 할 수 있습니다</label>
                         <div style={{ display: 'flex', alignItems: 'center'}}>
-                            <input className='form-control' type='text' id='searchText' style={{width: '200px', marginLeft: '30px'}}/>
+                            <input className='form-control' type='text' id='searchText' style={{width: '200px', marginLeft: '30px'}} onKeyDown={(e) => searchUserEnter(e)}/>
                             <button className='btn btn-primary' type='button' style={{marginLeft: '10px'}}
                                 onClick={searchUser}>검색</button>
                         </div>
@@ -150,13 +155,13 @@ export default function AdminCommentPage() {
                                     <tr key={mapper.id} data-id={mapper.id}>
                                         <td><input className="form-check-input custom-checkbox" type="checkbox" data-id={mapper.userId} data-value={mapper.id} onChange={checkEach}/></td>
                                         <td>
-                                            <div className={'fs-5 fw-bold'}>{mapper.nickname} (id : {mapper.id})</div>
+                                            <div className={'fs-5 fw-bold'}>{mapper.nickname}</div>
                                             <div className={'fs-6'} style={{ width: '160px', marginRight: '30px', wordWrap: 'break-word', overflowWrap: 'break-word' }}>@{mapper.userId}</div>
                                         </td>
                                         <td>
-                                            <div className={'fs-6 fw-bold'}>{mapper.postSubject}</div>
-                                            <div className={'fs-6'}>{mapper.content}</div>
-                                            <div className={'fs-6'}>{mapper.createdAt}</div>
+                                            <div className={'fs-6 fw-bold'}>게시글 : {mapper.postSubject}</div>
+                                            <div className={'fs-6'}>댓글 내용 : {mapper.content}</div>
+                                            <div className={'fs-6'}>작성일 : {mapper.createdAt}</div>
                                         </td>
                                     </tr>
                                 ))}

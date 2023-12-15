@@ -155,7 +155,7 @@ public class AdminController {
      * @return ResponseEntity
      */
     @ResponseBody
-    @GetMapping("/postDeletedList")
+    @GetMapping("/post/deletedList")
     public ResponseEntity<?> postDeletedView(PostSearchDto postSearchDto) {
         return ResponseEntity.ok(adminService.postDeletedView(postSearchDto));
     }
@@ -170,7 +170,7 @@ public class AdminController {
      * @return ResponseEntity
      */
     @ResponseBody
-    @GetMapping("/commentList")
+    @GetMapping("/comment/list")
     public ResponseEntity<?> commentView(CommentSearchDto commentSearchDto) {
         return ResponseEntity.ok(adminService.commentView(commentSearchDto));
     }
@@ -185,7 +185,7 @@ public class AdminController {
      * @return ResponseEntity
      */
     @ResponseBody
-    @GetMapping("/commentSearchList")
+    @GetMapping("/comment/searchList")
     public ResponseEntity<?> commentSearchView(CommentSearchDto commentSearchDto) {
         return ResponseEntity.ok(adminService.commentSearchView(commentSearchDto));
     }
@@ -209,7 +209,7 @@ public class AdminController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/createCategory")
+    @PostMapping("/category/create")
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.createCategory(categoryDto));
     }
@@ -225,7 +225,7 @@ public class AdminController {
      * @since 2023. 11. 29.
      */
     @ResponseBody
-    @PostMapping("/createCategoryLine")
+    @PostMapping("/category/createLine")
     public ResponseEntity<?> createCategoryLine(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.createCategoryLine(categoryUpDownDto));
     }
@@ -238,7 +238,7 @@ public class AdminController {
      * @return 사용자 차단.
      */
     @ResponseBody
-    @PostMapping("/createBlockUser")
+    @PostMapping("/blockUser/create")
     public ResponseEntity<?> createBlockUser(UserDto dto) {
         return ResponseEntity.ok(adminService.createBlockUser(dto));
     }
@@ -251,7 +251,7 @@ public class AdminController {
      * @return 차단된 유저를 차단 해제 합니다.
      */
     @ResponseBody
-    @PostMapping("/deleteBlockUser")
+    @PostMapping("/blockUser/delete")
     public ResponseEntity<?> deleteBlockUser(UserDto dto) {
         return ResponseEntity.ok(adminService.deleteBlockUser(dto));
     }
@@ -268,7 +268,7 @@ public class AdminController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/deleteCategory")
+    @PostMapping("/category/delete")
     public ResponseEntity<?> deleteCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.deleteCategory(categoryDto));
     }
@@ -282,7 +282,7 @@ public class AdminController {
      * @param categoryDto
      */
     @ResponseBody
-    @PostMapping("/deleteCategoryRef")
+    @PostMapping("/category/deleteRef")
     public ResponseEntity<?> deleteCategoryRef(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.deleteCategoryRef(categoryDto));
     }
@@ -299,7 +299,7 @@ public class AdminController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/deletePost")
+    @PostMapping("/post/delete")
     public ResponseEntity<?> deletePost(@Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.deletePost(postDto));
     }
@@ -316,7 +316,7 @@ public class AdminController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/deletePostHard")
+    @PostMapping("/post/deleteHard")
     public ResponseEntity<?> deletePostHard(@Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.deletePostHard(postDto));
     }
@@ -324,7 +324,7 @@ public class AdminController {
 
 
     /**
-     * <p>임시로 삭제한 게시글 영구적으로 삭제</p>
+     * <p>임시로 삭제한 게시글 복구</p>
      * @since 2023. 12. 14.
      *
      * @param postDto
@@ -333,7 +333,7 @@ public class AdminController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/restorePost")
+    @PostMapping("/post/restore")
     public ResponseEntity<?> restorePost(@Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.restorePost(postDto));
     }
@@ -349,7 +349,7 @@ public class AdminController {
      * @return 성공적으로 완료되면 true, 그렇지 않으면 false를 반환합니다.
      */
     @ResponseBody
-    @PostMapping("/deleteComment")
+    @PostMapping("/comment/delete")
     public ResponseEntity<?> deleteComment(@Valid @RequestBody CommentDto commentDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.deleteComment(commentDto));
     }
@@ -373,7 +373,7 @@ public class AdminController {
      * @since 2023. 11. 30.
      */
     @ResponseBody
-    @PostMapping("/updateCategory")
+    @PostMapping("/category/update")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.updateCategory(categoryDto));
     }
@@ -387,7 +387,7 @@ public class AdminController {
      * @since 2023. 12. 07.
      */
     @ResponseBody
-    @PostMapping("/updateCategoryUp")
+    @PostMapping("/category/updateUp")
     public ResponseEntity<?> updateCategoryUp(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.updateCategoryUp(categoryUpDownDto));
     }
@@ -401,7 +401,7 @@ public class AdminController {
      * @since 2023. 12. 07.
      */
     @ResponseBody
-    @PostMapping("/updateCategoryDown")
+    @PostMapping("/category/updateDown")
     public ResponseEntity<?> updateCategoryDown(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.updateCategoryDown(categoryUpDownDto));
     }
@@ -415,7 +415,7 @@ public class AdminController {
      * @since 2023. 12. 10.
      */
     @ResponseBody
-    @PostMapping("/updateCategoryTop")
+    @PostMapping("/category/updateTop")
     public ResponseEntity<?> updateCategoryTop(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.updateCategoryTop(categoryUpDownDto));
     }
@@ -429,7 +429,7 @@ public class AdminController {
      * @since 2023. 12. 10.
      */
     @ResponseBody
-    @PostMapping("/updateCategoryBottom")
+    @PostMapping("/category/updateBottom")
     public ResponseEntity<?> updateCategoryBottom(@Valid @RequestBody CategoryUpDownDto categoryUpDownDto, BindingResult bindingResult) {
         return ResponseEntity.ok(adminService.updateCategoryBottom(categoryUpDownDto));
     }
