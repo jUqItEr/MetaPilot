@@ -48,7 +48,7 @@ const PostPage = ({ postId }) => {
                     postId: postId,
                     userId: user.id,
                 },
-                url: '/api/post/updateLike',
+                url: '/api/post/response/update',
             }).then((res) => {
                 setPostLiked(!postLiked)
             })
@@ -94,7 +94,7 @@ const PostPage = ({ postId }) => {
             params: {
                 postId: postId, // postId를 prop으로부터 받아오도록 수정했습니다.
             },
-            url: '/api/post/likesList',
+            url: '/api/post/response/list',
         }).then((res) => {
             setLikes(res.data)
         })
@@ -117,7 +117,7 @@ const PostPage = ({ postId }) => {
                 postId: postId,
                 userId: user?.id,
             },
-            url: '/api/post/hasLike',
+            url: '/api/post/response/exist',
         }).then((res) => {
             setPostLiked(res.data)
         })

@@ -39,7 +39,7 @@ const PostList = () => {
             page: paging.page,
             count: paging.count,
           },
-          url: "/api/post/page/view",
+          url: "/api/post/page",
         }).then((res) => {
           const postCount = res.data[0].postCount
           setPostTotalCount(postCount)
