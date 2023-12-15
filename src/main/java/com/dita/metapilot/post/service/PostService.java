@@ -107,8 +107,22 @@ public class PostService {
         return result;
     }
 
+    /**
+     * <p>게시글 리스트를 불러오는 메서드</p>
+     *
+     * @return 불러온 게시글 리스트를 반환.
+     */
     public List<PostEntity> getPostPageView(PagingDto pagingDto) {
         return postRepository.getPagingView(pagingDto);
+    }
+
+    /**
+     * <p>게시글 리스트 페이지에서 전체 게시글 개수를 가져오는 메서드</p>
+     *
+     * @return 전체 게시글 개수를 반환.
+     */
+    public int getPostCount(PagingDto pagingDto) {
+        return postRepository.getPostCount(pagingDto);
     }
 
     /**

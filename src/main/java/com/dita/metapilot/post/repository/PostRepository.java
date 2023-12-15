@@ -91,6 +91,13 @@ public interface PostRepository {
     List<PostPopularDto> getPopularPosts();
 
     /**
+     * 게시글 리스트 페이지에서 전체 게시글 개수를 가져오는 메서드.
+     *
+     * @return 전체 게시글 개수를 반환.
+     */
+    int getPostCount(PagingDto pagingDto);
+
+    /**
      * 게시글을 조회하는 메서드.
      *
      * @param postIdDto 게시글 번호가 담긴 DTO.
@@ -153,6 +160,11 @@ public interface PostRepository {
      */
     long getRecentPostId();
 
+    /**
+     * 게시글 리스트를 가져오는 메서드.
+     *
+     * @return 게시글 리스트를 반환.
+     */
     List<PostEntity> getPagingView(PagingDto pagingDto);
 
     /**
