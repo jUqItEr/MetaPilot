@@ -16,7 +16,7 @@ import { faDisplay } from "@fortawesome/free-solid-svg-icons"
  * @since 2023. 12. 04.
  *
  * @author Ha Seong Kim
- * @since 2023. 12. 14.
+ * @since 2023. 12. 15.
  * @returns
  */
 
@@ -32,6 +32,7 @@ export default function AdminCatePage() {
     const [categoryFold, setCategoryFold] = useState("");
     const [categoryDepth, setCategoryDepth] = useState("");
     const [deleteOption, setDeleteOption] = useState('deleteAll');
+    const [totalPostCount, setTotalPostCount] = useState(0);
     const [requestTime, setRequestTime] = useState(new Date());
 
     const handleCategoryClick = (mapper) => {
@@ -48,10 +49,9 @@ export default function AdminCatePage() {
 
     const createCategory = (categoryId) => {
         axios
-          .post('/api/admin/createCategory', { id: categoryId })
+          .post('/api/admin/category/create', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -61,10 +61,9 @@ export default function AdminCatePage() {
 
     const createCategoryLine = (categoryId) => {
         axios
-          .post('/api/admin/createCategoryLine', { id: categoryId })
+          .post('/api/admin/category/createLine', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -74,12 +73,11 @@ export default function AdminCatePage() {
 
       const deleteCategory = (categoryId) => {
         axios
-          .post('/api/admin/deleteCategory', { id: categoryId })
+          .post('/api/admin/category/delete', { id: categoryId })
           .then((response) => {
             console.log(response.data);
             document.querySelector(".deletePopUp").style.display = "none";
             document.querySelector(".deletePopUpBackGround").style.display = "none"
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -89,12 +87,11 @@ export default function AdminCatePage() {
 
       const deleteCategoryRef = (categoryId) => {
         axios
-          .post('/api/admin/deleteCategoryRef', { id: categoryId })
+          .post('/api/admin/category/deleteRef', { id: categoryId })
           .then((response) => {
             console.log(response.data);
             document.querySelector(".deletePopUp").style.display = "none";
             document.querySelector(".deletePopUpBackGround").style.display = "none"
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -104,7 +101,7 @@ export default function AdminCatePage() {
 
       const updateCategory = (categoryId, categorySubject, categoryType, categoryVisible, categoryCountVisible) => {
         axios
-          .post('/api/admin/updateCategory', {
+          .post('/api/admin/category/update', {
             id: categoryId,
             subject: categorySubject,
             type : categoryType,
@@ -113,7 +110,6 @@ export default function AdminCatePage() {
           })
           .then((response) => {
             console.log(response.data);
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -123,10 +119,9 @@ export default function AdminCatePage() {
 
       const updateCategoryUp = (categoryId) => {
         axios
-          .post('/api/admin/updateCategoryUp', { id: categoryId })
+          .post('/api/admin/category/updateUp', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -136,10 +131,9 @@ export default function AdminCatePage() {
 
       const updateCategoryDown = (categoryId) => {
         axios
-          .post('/api/admin/updateCategoryDown', { id: categoryId })
+          .post('/api/admin/category/updateDown', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -149,10 +143,9 @@ export default function AdminCatePage() {
 
       const updateCategoryTop = (categoryId) => {
         axios
-          .post('/api/admin/updateCategoryTop', { id: categoryId })
+          .post('/api/admin/category/updateTop', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -162,10 +155,9 @@ export default function AdminCatePage() {
 
       const updateCategoryBottom = (categoryId) => {
         axios
-          .post('/api/admin/updateCategoryBottom', { id: categoryId })
+          .post('/api/admin/category/updateBottom', { id: categoryId })
           .then((response) => {
             console.log(response.data);
-            //window.location.reload();
             setRequestTime(new Date());
           })
           .catch((error) => {
@@ -179,6 +171,13 @@ export default function AdminCatePage() {
               url: "/api/admin/category/list",
           }).then((res) => {
               setData(res.data);
+
+              const sum = res.data.reduce((accumulator, currentMapper) => {
+                return accumulator + currentMapper.postCount;
+              }, 0);
+
+              setTotalPostCount(sum);
+
               console.log(res.data);
           });
       }, [requestTime]);
@@ -258,13 +257,15 @@ export default function AdminCatePage() {
                                    <div className="list-group">
                                         {data?.map((mapper) => {
                                             return (
-                                                <button key={mapper.id} type="button" style={{fontWeight: mapper.id === 1 ? "bold" : "normal"}}
+                                                <button key={mapper.id} type="button" style={{fontWeight: mapper.id === 1 ? "bold" : "normal"
+                                                , backgroundColor: mapper.id === categoryId ? "#ECECEC" : "white"}}
                                                 className={`list-group-item list-group-item-action ${selectedCategory === mapper ? styles.selected : ''}`}
                                                 onClick={() => handleCategoryClick(mapper)} >
                                                     {
                                                         mapper.depth === 0
                                                         ? mapper.subject + 
-                                                        (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.totalCount + ')')
+                                                        (mapper.type === 0 || mapper.countVisible === 0 ? ''
+                                                          : (mapper.id === 1 ? ' (' + totalPostCount + ')' : ' (' + mapper.totalCount + ')'))
                                                         : ' ㄴ' + mapper.subject +
                                                         (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.postCount + ')')
                                                     }

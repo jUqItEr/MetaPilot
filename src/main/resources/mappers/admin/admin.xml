@@ -688,6 +688,7 @@
             set @logic = if(@depth = 0 and @topPos != 0 and @topPos2 != 0, 4, @logic);
             set @logic = if(@depth = 0 and @topPos = 0 and @topPos2 != 0, 5, @logic);
             set @logic = if(@depth = 1 and @difPos != 1, 7, @logic);
+            set @logic = if(@depth = 1, 7, @logic);
             set @logic = if(@depth = 1 and (@difPos = 1 or @pos = @lastPos), 6, @logic);
 
             update category_tbl
