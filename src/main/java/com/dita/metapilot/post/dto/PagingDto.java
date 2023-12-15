@@ -13,6 +13,8 @@ public class PagingDto {
     private int page;
     private int count;
     private int index;
+    private String userId;
+    private int categoryId;
     
     private String searchValue; //검색어
     private String option; //옵션

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import styles from "/styles/common/postList.module.css"
 
 const PostList = () => {
+    const [user, setUser] = useState([])
     const [postList, setPostList] = useState([])
     const [paging, setPaging] = useState({
         limit: 5, // 한 페이지에 보이는 게시글수
@@ -12,6 +13,7 @@ const PostList = () => {
     })
     const [isListVisible, setIsListVisible] = useState(true)
     const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
+    const [isDeleteboxVisible, setIsDeleteboxVisible] = useState(false)
     const start = (paging.page -1) * paging.count
     const end = start + paging.count
 
@@ -32,23 +34,42 @@ const PostList = () => {
     }
 
     useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem('user')))
+        
         axios({
-          method: "get",
-          params: {
-            limit: paging.limit,
-            page: paging.page,
-            count: paging.count,
-          },
-          url: "/api/post/page",
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            },
+            method: "get",
+            params: {
+                categoryId: 1, // 카테고리 id 받아올수있게 수정
+                userId: user?.id,
+            },
+            url: "/api/post/count",
         }).then((res) => {
-          const postCount = res.data[0].postCount
-          setPostTotalCount(postCount)
-          setPostList(res.data)
-          
-          const tempMaxPage = Math.ceil(postCount / paging.count) //전체 게시글 갯수
+            const postCount = res.data // 조건에 만족하는 전체 게시글수
+            setPostTotalCount(postCount)
 
-          // 전체 페이지 갯수
-          setMaxPage(tempMaxPage) // 8페이지
+            const tempMaxPage = Math.ceil(postCount / paging.count); // 한 페이지 보여질 게시글수 계산
+            setMaxPage(tempMaxPage);
+        });
+
+        axios({
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            },
+            method: "get",
+            params: {
+                limit: paging.limit,
+                page: paging.page,
+                count: paging.count,
+                userId: user?.id,
+                categoryId: 1, // 카테고리 id 받아올수있게 수정
+            },
+            url: "/api/post/page",
+        }).then((res) => {
+          setPostList(res.data)
+          const tempMaxPage = maxPage
           
           const nextPageGroup = Math.ceil(paging.page / paging.count)
           setCurrentPageGroup(nextPageGroup)
@@ -62,16 +83,18 @@ const PostList = () => {
           console.error('l: ', newLastPageInGroup)
           console.error('next group: ', nextPageGroup)
           console.error('max page: ', maxPage)
-        })
-      }, [paging.page, paging.count])
+        });
+      }, [paging.page, paging.count, user?.id, maxPage])
 
     // 목록 표시/숨기기 함수
     const toggleListVisibility = () => {
         setIsListVisible(!isListVisible)
     }
 
+    // 글관리 눌릴시 삭제 표시/숨기기 함수
     const toggleCheckboxVisibility = () => {
         setIsCheckboxVisible(!isCheckboxVisible)
+        setIsDeleteboxVisible(!isDeleteboxVisible)
     }
 
     // 이전 페이지 그룹으로 이동하는 함수
@@ -128,9 +151,6 @@ const PostList = () => {
         }
     }
 
-    console.log(maxPage)
-    console.log("현재 페이지 : " + paging.page)
-
     return(
         <>
         
@@ -182,6 +202,9 @@ const PostList = () => {
                         <div>
                             <button type="button" className="btn btn-secondary"
                                 onClick={toggleCheckboxVisibility}>글관리</button>
+                            {isDeleteboxVisible && (
+                                <button type="button" className="btn btn-secondary">삭제</button>
+                            )}
                         </div>
                         <div class="form-group">
                             <select 
@@ -199,6 +222,7 @@ const PostList = () => {
                     </div>
 
                     {/* 검색창 */}
+                    {/* 
                     <div>
                         <select name="" id="">
                             <option value="">전체보기</option>
@@ -207,7 +231,9 @@ const PostList = () => {
                         </select>
                         <input type="text" />
                         <button className={`${styles.searchButton} btn btn-primary`}>검색</button>
-                    </div>
+                    </div> 
+                    */}
+                    
                     
                     <div className={styles.pageController}>
                         <ul className={styles.pageNumbers}>

@@ -92,6 +92,18 @@ public class PostController {
     }
 
     /**
+     * <p>게시글 리스트 페이지의 게시글 개수를 조회하는 컨트롤러 메서드</p>
+     *
+     * @return
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/count")
+    public ResponseEntity<?> getPostCount(PagingDto pagingDto) {
+        return ResponseEntity.ok(postService.getPostCount(pagingDto));
+    }
+
+    /**
      * <p>인기 게시글 리스트를 반환하는 컨트롤러 메서드</p>
      *
      * @return 인기 게시글 리스트를 반환
@@ -158,6 +170,13 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostView(postIdDto));
     }
 
+    /**
+     * <p>게시글 리스트 페이지를 조회하는 컨트롤러 메서드</p>
+     *
+     * @param pagingDto 페이징 정보가 담긴 DTO.
+     * @return 조회된 게시글 리스트를 반환
+     * @since
+     */
     @ResponseBody
     @GetMapping("/page")
     public ResponseEntity<List<PostEntity>> postPageView(PagingDto pagingDto) {
