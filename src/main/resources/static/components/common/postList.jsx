@@ -181,17 +181,19 @@ const PostList = () => {
                     </div>
                     {postList.slice(start, end).map((postList, index) => (
                         <div className={styles.postListTitle} key={index}>
-                            <Link href={`/post/${postList.postId}`}>
-                                <a>
-                                    <div className={styles.postList}>
-                                        {isCheckboxVisible && (
-                                            <input type="checkbox" defaultValue={"0"}/>
-                                        )}
-                                    <span className={styles.postListTitles}>{postList.subject}</span>
-                                    <span className={styles.postListCommentCount}>({postList.commentCount})</span>
+                            <div className={styles.postCheckbox}>
+                                {isCheckboxVisible && (
+                                    <input type="checkbox" defaultValue={"0"}/>
+                                )}
+                                <Link href={`/post/${postList.postId}`}>
+                                    <a>
+                                        <div className={styles.postList}>
+                                            <span className={styles.postListTitles}>{postList.subject}</span>
+                                            <span className={styles.postListCommentCount}>({postList.commentCount})</span>
+                                        </div>
+                                    </a>
+                                </Link>
                             </div>
-                                </a>
-                            </Link>
                         <div>
                             <span>{postList.createdDate}</span>
                         </div>
