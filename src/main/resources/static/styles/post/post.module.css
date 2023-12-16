@@ -193,6 +193,31 @@
     width: 95%;
   }
 
+  .editor {
+    display: flex;
+  }
+
+  .inputForm {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .editorCheckbox {
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--bs-blue);
+  }
+
+  .editorLabel {
+    width: 100%;
+    font-size: 14px;
+    color: #ddd;
+  }
+
   .dropdownArrow {
     border: none;
     background-color: transparent;

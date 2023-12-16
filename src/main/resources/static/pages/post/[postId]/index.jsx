@@ -126,7 +126,7 @@ const PostPage = ({ postId }) => {
                         {/* hashtag */}
                         <div className={styles.hashtagBox}>
                             <div>
-                                <Link href=''>
+                                <Link href='/'>
                                     <a>
                                         <span className={styles.hashtag}>#후쿠오카</span>
                                     </a>

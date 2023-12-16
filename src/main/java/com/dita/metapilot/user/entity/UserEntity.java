@@ -37,5 +37,5 @@ public class UserEntity {
     private String profileImage;
     private String createdAt;
     private String visitedAt;
-    private UserRoleEntity userRoleEntities;
+    private UserRoleEntity role;
 }
