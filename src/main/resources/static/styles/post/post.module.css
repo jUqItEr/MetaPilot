@@ -58,7 +58,10 @@
 }
 
 .footerContainer {
+  width: 100%;
     border: 1px solid black;
+    overflow: hidden;
+
 }
 .footerBtnContainer {
     display: flex;
@@ -99,12 +102,10 @@
     border-radius: 5px;
     display: inline-flex;
     align-items: center;
-    background-color: var(--bs-gray-100);
 }
 
 .likeButton {
     border: none;
-    background-color: var(--bs-gray-100);
 }
 
   .likeIcon {
@@ -120,18 +121,37 @@
   .postCommentForm {
     margin: 0 auto;
     margin-top: 50px;
-    border-left: 2px solid #eee;
-    padding: 4px 0;
+    border-left: 2px solid var(--bs-gray-100);
+    padding: 10px 4px;
     width: 100%;
     border: 1px solid black;
   }
 
   .commentForm {
-    margin-left: 20px;
-    border-left: 2px solid #eee;
-    padding: 4px 0;
-    width: 95%;
-    border: 1px solid black;
+    margin-left: 50px;
+    padding: 10px 4px;
+    width: 92%;
+    border-bottom: 1px solid black;
+  }
+
+  /* .tlqkfForm {
+    width: 100%;
+    border-bottom: 1px solid black;
+  } */
+
+  .testForm {
+    margin-left: 30px;
+
+  }
+
+  .commentHeader {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .menuIcon {
+    width: 20px;
+    font-size: 14px;
   }
 
   .commentHandlerForm {
@@ -141,10 +161,20 @@
   }
 
   .replyForm {
-    border-left: 2px solid #eee;
-    padding: 4px 0;
+    padding: 10px 4px;
     width: 97%;
-    border: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+  .replyCommentForm {
+    padding: 10px 4px;
+    width: 97%;
+    border-bottom: 1px solid black;
+  }
+
+  .replyForm:first-child {
+    padding: 10px 4px;
+    width: 97%;
+    border-top: 1px solid black;
   }
 
   .commentInputGroup {
@@ -152,8 +182,8 @@
   }
 
   .commentTextarea {
-    height: 100px; /* 높이 설정 */
-    line-height: 100px; /* 내부 텍스트의 세로 정렬을 위해 */
+    height: 100px;
+    line-height: 100px;
   }
 
   .editorForm {
@@ -206,7 +236,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
   }
 
   .likesButton {
@@ -218,8 +248,8 @@
   }
 
   .faChevronLeft, .faChevronRight {
-    font-size: 10px;  
-  } 
+    font-size: 10px;
+  }
 
   .faChevronIcon {
     width: 15px;  /* 원하는 너비 */
@@ -229,7 +259,32 @@
     align-items: center; /* 세로 방향 중앙 정렬 */
   }
 
+  .menuIcon {
+    width: 5px;  /* 원하는 너비 */
+    height: 15px; /* 원하는 높이 */
+    display: flex; /* 아이콘을 flex 아이템으로 만들기 */
+    justify-content: center; /* 가로 방향 중앙 정렬 */
+    align-items: center; /* 세로 방향 중앙 정렬 */
+  }
+
+  .menuItem {
+    position: relative;
+  }
+
+  .commentMenu {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0px;
+    z-index: 1;
+    background-color: white;
+  }
+
+
+
   .commentsWrap {
+    width: 100%;
     padding-left: 20px;
     margin-top: 10px;
   }

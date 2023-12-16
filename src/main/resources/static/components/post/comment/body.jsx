@@ -4,18 +4,21 @@ import CommentLike from './response'
 import axios from 'axios'
 import $ from 'jquery'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsis, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 
 
 const CommentsList = ({ pid }) => {
     const [comments, setComments] = useState([])
     const [user, setUser] = useState([])
+    const [menuVisible, setMenuVisible] = useState([])
     const [formVisible, setFormVisible] = useState({})
     const [requestTime, setRequestTime] = useState(new Date())
 
     // File Handler 부분이라 남겨둠
     const createCommentSubmit = async (e) => {
         // e.preventDefault()
-        
+
         // const content = e.target.content.value
 
         // if (content !== '') {
@@ -48,12 +51,12 @@ const CommentsList = ({ pid }) => {
         //     alert('답글을 작성하려면 내용을 입력해주세요.')
         // }
 
-        
+
     }
 
     /**
      * 댓글 / 답글 작성 통합 메서드
-     * 
+     *
      * @author Kiseok Kang
      * @since 2024. 12. 14.
      * @version 2.1.0
@@ -122,9 +125,17 @@ const CommentsList = ({ pid }) => {
             console.log(err)
         })
     }
-    
+
     const toggleFormVisible = ({ id }) => {
         setFormVisible(prevState => (prevState === id ? null : id))
+    }
+
+    // 메뉴 토글 핸들러
+    const toggleMenu = (id) => {
+        setMenuVisible(prevState => ({
+            ...prevState,
+            [id]: !prevState[id]
+        }));
     }
 
     useEffect(() => {
@@ -148,7 +159,26 @@ const CommentsList = ({ pid }) => {
         <div className={styles.commentsWrap}>
             {comments?.map((comment, index) => (
                 <div id={`c${comment.id}`} key={index} className={comment.depth ? styles.commentForm : styles.replyForm}>
-                    <strong>{comment.nickname}</strong>
+                    <div className={styles.commentHeader}>
+                        <strong>{comment.nickname}</strong>
+                        <div className={styles.menu}>
+                            <button type="button" className="btn" onClick={() => toggleMenu(comment.id)}>
+                                <span className={styles.menuIcon}>
+                                    <FontAwesomeIcon icon={faEllipsisVertical} size='1x' />
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    {menuVisible[comment.id] && (
+                        <div className={styles.menuItem}>
+                            <div></div>
+                            <div className={styles.commentMenu}>
+                                <button className="btn">수정</button>
+                                <button className="btn">삭제</button>
+                            </div>
+                        </div>
+
+                    )}
                     <p>
                         {
                             (comment.refId !== 0 && comment.refId !== comment.rootId) && (
@@ -174,23 +204,25 @@ const CommentsList = ({ pid }) => {
                         </div>
                     </div>
                     {formVisible === comment.id && (
-                        <div className={styles.commentForm}>
-                            {/* 폼 내용 또는 자식 컴포넌트 */}
-                            <div className={styles.commentHandlerForm}>
-                                <strong>{user?.nickname}</strong>님의 답글
-                                <div className={`${styles.commentInputGroup} input-group mb-3`}>
-                                    <textarea type='text' className={`${styles.commentTextarea} form-control`} data-id={`c${comment.id}`} name='content'/>
+
+                            <div className={styles.testForm}>
+                                {/* 폼 내용 또는 자식 컴포넌트 */}
+                                <div className={styles.commentHandlerForm}>
+                                    <strong>{user?.nickname}</strong>님의 답글
+                                    <div className={`${styles.commentInputGroup} input-group mb-3`}>
+                                        <textarea type='text' className={`${styles.commentTextarea} form-control`} data-id={`c${comment.id}`} name='content'/>
+                                    </div>
+                                </div>
+                                <div className={styles.editorForm}>
+                                    <div>
+                                        <input className='form-control form-control-sm' data-id={comment.id} type='file' accept='image/png, image/jpeg, image/webp, image/gif'/>
+                                    </div>
+                                    <div className='input-group-append'>
+                                        <button className='btn btn-outline-secondary' type='button' onClick={() => handleComment({...comment, visible: 1 })}>답글 달기</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className={styles.editorForm}>  
-                                <div>
-                                    <input className='form-control form-control-sm' data-id={comment.id} type='file' accept='image/png, image/jpeg, image/webp, image/gif'/>
-                                </div>
-                                <div className='input-group-append'>
-                                    <button className='btn btn-outline-secondary' type='button' onClick={() => handleComment({...comment, visible: 1 })}>답글 달기</button>
-                                </div>
-                            </div>
-                        </div>
+
                     )}
                 </div>
             ))}
