@@ -87,7 +87,7 @@
 	<update id="deletePost" parameterType="com.dita.metapilot.post.dto.PostIdDto">
 		<!-- 게시글 삭제시 휴지통으로 보내기(delete => 1) -->
 		<![CDATA[
-        update post_tbl set deleted = 1 where id = #{postId}
+        	update post_tbl set deleted = 1 where id = #{postId}
         ]]>
 	</update>
 

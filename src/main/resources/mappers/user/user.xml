@@ -6,27 +6,27 @@
 <mapper namespace="com.dita.metapilot.user.repository.UserRepository">
 
     <resultMap id="userEntity" type="com.dita.metapilot.user.entity.UserEntity">
-        <result property="id" column="id" javaType="String"></result>
-        <result property="nickname" column="nickname"></result>
-        <result property="password" column="password"></result>
-        <result property="email" column="email"></result>
-        <result property="socialId" column="social_id"></result>
-        <result property="provider" column="provider"></result>
-        <result property="profileImage" column="profile_image"></result>
-        <result property="createdAt" column="created_at"></result>
-        <result property="visitedAt" column="visited_at"></result>
-        <collection property="userRoleEntities" resultMap="userRoleEntities"></collection>
+        <result property="id" column="id" javaType="String"/>
+        <result property="nickname" column="nickname"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="socialId" column="social_id"/>
+        <result property="provider" column="provider"/>
+        <result property="profileImage" column="profile_image"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="visitedAt" column="visited_at"/>
+        <collection property="role" resultMap="userRoleEntities"/>
     </resultMap>
 
     <resultMap id="userRoleEntities" type="com.dita.metapilot.user.entity.UserRoleEntity">
-        <result property="roleId" column="user_role_id"></result>
-        <result property="userId" column="user_tbl_id"></result>
-        <collection property="roleEntity" resultMap="roleEntity"></collection>
+        <result property="roleId" column="user_role_id"/>
+        <result property="userId" column="user_tbl_id"/>
+        <collection property="roleEntity" resultMap="roleEntity"/>
     </resultMap>
 
     <resultMap id="roleEntity" type="com.dita.metapilot.user.entity.RoleEntity">
-        <result property="id" column="role_id"></result>
-        <result property="name" column="role_name"></result>
+        <result property="id" column="role_id"></result/>
+        <result property="name" column="role_name"></result/>
     </resultMap>
 
     <!-- 회원가입 -->
