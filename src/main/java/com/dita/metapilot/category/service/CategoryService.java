@@ -2,6 +2,7 @@ package com.dita.metapilot.category.service;
 
 import com.dita.metapilot.category.dto.CategoryDto;
 import com.dita.metapilot.category.dto.CategoryPostDto;
+import com.dita.metapilot.category.entity.CategoryCountEntity;
 import com.dita.metapilot.category.entity.CategoryEntity;
 import com.dita.metapilot.category.entity.CategoryPostEntity;
 import com.dita.metapilot.category.repository.CategoryRepository;
@@ -146,8 +147,23 @@ public class CategoryService {
      * @since 2023. 12. 04.
      * @return 카테고리의 헤더를 List에 담습니다.
      */
+    public List<CategoryCountEntity> categoryPostCount() {
+        return categoryRepository.categoryPostCount();
+    }
+
+
+
+
+    /**
+     * <p>카테고리의 헤더를 List하는 기능</p>
+     * @since 2023. 12. 04.
+     * @return 카테고리의 헤더를 List에 담습니다.
+     */
     public List<CategoryEntity> categoryHeader() {
         return categoryRepository.categoryHeader();
     }
+
+
+
 
 }

@@ -2,6 +2,7 @@ package com.dita.metapilot.category.repository;
 
 import com.dita.metapilot.category.dto.CategoryDto;
 import com.dita.metapilot.category.dto.CategoryPostDto;
+import com.dita.metapilot.category.entity.CategoryCountEntity;
 import com.dita.metapilot.category.entity.CategoryEntity;
 import com.dita.metapilot.category.entity.CategoryPostEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -111,5 +112,8 @@ public interface CategoryRepository {
     List<CategoryEntity> categoryHeader();
 
     CategoryEntity getCategoryInfo(int id);
+
+
+    List<CategoryCountEntity> categoryPostCount();
 
 }
