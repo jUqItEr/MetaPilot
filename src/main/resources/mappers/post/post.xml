@@ -25,6 +25,7 @@
 		<result property="createdView" column="created_view"/>
 		<result property="categorySubject" column="category_subject"/>
 		<result property="postCount" column="postCount"/>
+		<result property="categoryType" column="categoryType"/>
 	</resultMap>
 
 	<resultMap id="postDto" type="com.dita.metapilot.post.dto.FindPostByHashtagDto">
@@ -46,6 +47,22 @@
 		<result property="categorySubject" column="category_subject"/>
 		<result property="thumbnail" column="thumbnail"/>
 		<result property="subject" column="subject"/>
+	</resultMap>
+
+	<resultMap id="categoryDataList" type="com.dita.metapilot.post.entity.CategoryPostEntity">
+		<result property="categoryId" column="categoryId"/>
+		<result property="categorySubject" column="categorySubject"/>
+		<result property="id" column="id"/>
+		<result property="categoryTblId" column="category_tbl_id"/>
+		<result property="userTblId" column="user_tbl_id"/>
+		<result property="subject" column="subject"/>
+		<result property="content" column="content"/>
+		<result property="count" column="count"/>
+		<result property="notice" column="notice"/>
+		<result property="deleted" column="deleted"/>
+		<result property="thumbnail" column="thumbnail"/>
+		<result property="type" column="type"/>
+		<result property="createdAt" column="created_at"/>
 	</resultMap>
 
 	<!-- 해시태그 생성 -->
@@ -259,6 +276,7 @@
 	<!-- 게시글 페이징 -->
 	<select id = "getPagingView" parameterType="com.dita.metapilot.post.dto.PagingDto" resultType="com.dita.metapilot.post.entity.PostEntity">
 			select
+				cat.type as 'categoryType',
 				pt.id as postId,
 				pt.subject,
 				pt.category_tbl_id as categoryId,
@@ -273,6 +291,7 @@
 				post_tbl pt
 			left outer join user_tbl ut on pt.user_tbl_id = ut.id
 			left outer join user_role_tbl urt on pt.user_tbl_id = urt.user_tbl_id
+			left outer join category_tbl cat on cat.id = pt.category_tbl_id
 			where
 				(pt.type = 0 and pt.category_tbl_id = #{categoryId} and deleted = 0)
 				or
@@ -343,4 +362,22 @@
         where id = #{postId}
         ]]>
 	</update>
+
+	<!-- 카테고리 id를 통해 게시글 조회 -->
+	<select id="categoryDataList" parameterType="com.dita.metapilot.post.dto.PostSearchDto" resultMap="categoryDataList">
+		select
+			ct.id as 'categoryId', ct.subject as 'categorySubject', pt.id, pt.category_tbl_id, pt.user_tbl_id
+			, pt.subject , pt.content , pt.count, pt.notice, pt.deleted, pt.thumbnail, pt.type, pt.created_at
+		from
+			category_tbl ct
+		join
+			post_tbl pt
+		on
+			ct.id = pt.category_tbl_id
+		where
+			ct.id = #{id}
+		order by
+			pt.created_at desc;
+	</select>
+
 </mapper>

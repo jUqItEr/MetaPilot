@@ -1,15 +1,16 @@
 import axios from "axios"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import Image from "next/image";
 import styles from "/styles/common/postList.module.css"
 
-const PostList = ({ categoryId }) => {
+const PostListImageType = ({ categoryId }) => {
     const [user, setUser] = useState([])
     const [postList, setPostList] = useState([])
     const [paging, setPaging] = useState({
-        limit: 5, // 한 페이지에 보이는 게시글수
+        limit: 16, // 한 페이지에 보이는 게시글수
         page: 1, // 현재 페이지 번호
-        count: 5, // 페이지당 게시글 수
+        count: 16, // 페이지당 게시글 수
     })
     const [isListVisible, setIsListVisible] = useState(true)
     const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
@@ -25,16 +26,6 @@ const PostList = ({ categoryId }) => {
 
     const [categorySubject, setCategorySubject] = useState("")
     const [categoryType, setCategoryType] = useState(1)
-
-    const handlePaging = (e) => {
-        const pageSize = parseInt(e.target.value)
-        setPaging((prev) => ({
-            ...prev,
-            limit: pageSize,
-            count: pageSize,
-            page: 1,
-        }))
-    }
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))
@@ -81,13 +72,14 @@ const PostList = ({ categoryId }) => {
           setFirstPageInGroup(newFirstPageInGroup)
           setLastPageInGroup(newLastPageInGroup)
 
+          setCategoryType(res.data.categoryType)
+
           console.error('paging content : ', paging)
           console.error('f: ', newFirstPageInGroup)
           console.error('l: ', newLastPageInGroup)
           console.error('next group: ', nextPageGroup)
           console.error('max page: ', maxPage)
         });
-
         axios({
             method: "get",
             params: {
@@ -170,50 +162,39 @@ const PostList = ({ categoryId }) => {
         <>
         
         
-        <div className={styles.postListWrap}>
+        <div className={styles.postListWrap} style={categoryType === 2 ? {display: 'block'} : {display: 'none'}}>
             <hr/>
-            <div className={styles.postListContainer}>
-                <div className={styles.postListHeader}>
-                    <div className={styles.postListGroup}>
-                        <span className={styles.postListAll}>{categorySubject}</span>
-                        <span className={styles.postListCount}>{postTotalCount}</span>
-                    </div>
-                    <div>
-                        <span className={styles.postListToggle} onClick={toggleListVisibility}>
-                            {isListVisible ? "목록닫기" : "목록열기"}
-                        </span>
-                    </div>
-                </div>
+            <div /*className={styles.postListContainer}*/>
                 {isListVisible && (
-                <div className={styles.postListBlock}>
-                    <div className={styles.postListSubHeader}>
-                        <div>
-                            <span className={styles.postListSubject}>글 제목</span>
-                        </div>
-                        <div>
-                            <span className={styles.postListSubject}>작성일</span>
-                        </div>
-                    </div>
-                    {postList.slice(start, end).map((postList, index) => (
-                        <div className={styles.postListTitle} key={index}>
-                            <div className={styles.postCheckbox}>
-                                {isCheckboxVisible && (
-                                    <input type="checkbox" defaultValue={"0"}/>
-                                )}
+                <div /*className={styles.postListBlock}*/>
+                    <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                        {postList.slice(start, end).map((postList, index) => (
+                            <div /*className={styles.postListTitle}*/ key={index}
+                                style={{marginLeft: '8px', marginBottom: '16px', fontSize: '14px'}}>
                                 <Link href={`/post/${postList.postId}`}>
                                     <a>
-                                        <div className={styles.postList}>
-                                            <span className={styles.postListTitles}>{postList.subject}</span>
-                                            <span className={styles.postListCommentCount}>({postList.commentCount})</span>
+                                        <Image
+                                            className={styles.popularImage}
+                                            //src={"/image/emptyImage.jpg"}
+                                            src={postList.thumbnail || "/image/emptyImage.jpg"}
+                                            alt={"image"}
+                                            width={150}
+                                            height={150}
+                                        /><br/>
+                                        <div style={{fontSize: '18px'}}>
+                                            {postList.subject}
+                                            {isCheckboxVisible && (
+                                                <input type="checkbox" defaultValue={"0"} style={{marginLeft: '5px'}}/>
+                                            )}
                                         </div>
+                                        <div>{postList.createdAt}</div>
+                                        <span style={{marginRight: '8px'}}>댓글 : {postList.commentCount}</span>
+                                        <span>좋아요 : {postList.likeCount}</span>
                                     </a>
                                 </Link>
                             </div>
-                        <div>
-                            <span>{postList.createdDate}</span>
-                        </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                     
                     <div className={styles.postListSelectGroup}>
                         <div>
@@ -223,34 +204,7 @@ const PostList = ({ categoryId }) => {
                                 <button type="button" className="btn btn-secondary">삭제</button>
                             )}
                         </div>
-                        <div class="form-group">
-                            <select 
-                                class="form-control mb-3"
-                                value={paging.limit}
-                                onChange={handlePaging}
-                            >
-                                <option value="5">5줄 보기</option>
-                                <option value="10">10줄 보기</option>
-                                <option value="15">15줄 보기</option>
-                                <option value="20">20줄 보기</option>
-                                <option value="30">30줄 보기</option>
-                            </select>
-                        </div>
                     </div>
-
-                    {/* 검색창 */}
-                    {/* 
-                    <div>
-                        <select name="" id="">
-                            <option value="">전체보기</option>
-                            <option value="">게시글 제목</option>
-                            <option value="">게시글 내용</option>
-                        </select>
-                        <input type="text" />
-                        <button className={`${styles.searchButton} btn btn-primary`}>검색</button>
-                    </div> 
-                    */}
-                    
                     
                     <div className={styles.pageController}>
                         <ul className={styles.pageNumbers}>
@@ -308,4 +262,4 @@ const PostList = ({ categoryId }) => {
     )
 }
 
-export default PostList
+export default PostListImageType

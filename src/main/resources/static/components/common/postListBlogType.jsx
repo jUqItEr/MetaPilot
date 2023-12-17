@@ -1,9 +1,10 @@
 import axios from "axios"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import Image from "next/image";
 import styles from "/styles/common/postList.module.css"
 
-const PostList = ({ categoryId }) => {
+const PostListBlogType = ({ categoryId }) => {
     const [user, setUser] = useState([])
     const [postList, setPostList] = useState([])
     const [paging, setPaging] = useState({
@@ -22,7 +23,7 @@ const PostList = ({ categoryId }) => {
     const [firstPageInGroup, setFirstPageInGroup] = useState(1)
     const [lastPageInGroup, setLastPageInGroup] = useState(5)
     const [maxPage, setMaxPage] = useState(0)
-
+    
     const [categorySubject, setCategorySubject] = useState("")
     const [categoryType, setCategoryType] = useState(1)
 
@@ -170,48 +171,43 @@ const PostList = ({ categoryId }) => {
         <>
         
         
-        <div className={styles.postListWrap}>
+        <div className={styles.postListWrap} style={categoryType === 1 ? {display: 'block'} : {display: 'none'}}>
             <hr/>
             <div className={styles.postListContainer}>
-                <div className={styles.postListHeader}>
-                    <div className={styles.postListGroup}>
-                        <span className={styles.postListAll}>{categorySubject}</span>
-                        <span className={styles.postListCount}>{postTotalCount}</span>
-                    </div>
-                    <div>
-                        <span className={styles.postListToggle} onClick={toggleListVisibility}>
-                            {isListVisible ? "목록닫기" : "목록열기"}
-                        </span>
-                    </div>
-                </div>
                 {isListVisible && (
                 <div className={styles.postListBlock}>
-                    <div className={styles.postListSubHeader}>
-                        <div>
-                            <span className={styles.postListSubject}>글 제목</span>
-                        </div>
-                        <div>
-                            <span className={styles.postListSubject}>작성일</span>
-                        </div>
-                    </div>
                     {postList.slice(start, end).map((postList, index) => (
                         <div className={styles.postListTitle} key={index}>
-                            <div className={styles.postCheckbox}>
-                                {isCheckboxVisible && (
-                                    <input type="checkbox" defaultValue={"0"}/>
-                                )}
-                                <Link href={`/post/${postList.postId}`}>
-                                    <a>
-                                        <div className={styles.postList}>
-                                            <span className={styles.postListTitles}>{postList.subject}</span>
-                                            <span className={styles.postListCommentCount}>({postList.commentCount})</span>
-                                        </div>
-                                    </a>
-                                </Link>
-                            </div>
-                        <div>
-                            <span>{postList.createdDate}</span>
-                        </div>
+                            <Link href={`/post/${postList.postId}`}>
+                                <a>
+                                    <div className={styles.postList} style={{display: 'flex'}}>
+                                        {isCheckboxVisible && (
+                                            <input type="checkbox" defaultValue={"0"}/>
+                                        )}
+                                        <Image
+                                            className={styles.popularImage}
+                                            //src={"/image/emptyImage.jpg"}
+                                            src={postList.thumbnail || "/image/emptyImage.jpg"}
+                                            alt={"image"}
+                                            width={150}
+                                            height={150}
+                                        />
+                                        <span className={styles.postListTitles} style={{marginLeft: '26px'}}>
+                                            <div style={{fontSize: '26px'}}>
+                                                {postList.subject}
+                                            </div>
+                                            <div style={{fontSize: '14px', marginTop: '10px'}}>
+                                                {postList.content}
+                                            </div>
+                                            <div style={{fontSize: '16px', marginTop: '50px'}}>
+                                                <span style={{marginRight: '10px'}}>{postList.createdDate}</span>
+                                                <span style={{marginRight: '10px'}}>댓글 : {postList.commentCount} </span>
+                                                <span>좋아요 : {postList.likeCount} </span>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </a>
+                            </Link>
                         </div>
                     ))}
                     
@@ -237,20 +233,6 @@ const PostList = ({ categoryId }) => {
                             </select>
                         </div>
                     </div>
-
-                    {/* 검색창 */}
-                    {/* 
-                    <div>
-                        <select name="" id="">
-                            <option value="">전체보기</option>
-                            <option value="">게시글 제목</option>
-                            <option value="">게시글 내용</option>
-                        </select>
-                        <input type="text" />
-                        <button className={`${styles.searchButton} btn btn-primary`}>검색</button>
-                    </div> 
-                    */}
-                    
                     
                     <div className={styles.pageController}>
                         <ul className={styles.pageNumbers}>
@@ -308,4 +290,4 @@ const PostList = ({ categoryId }) => {
     )
 }
 
-export default PostList
+export default PostListBlogType
