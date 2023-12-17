@@ -57,7 +57,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
         if (user != null) {
-            UserRoleEntity userRoleEntity = user.getUserRoleEntities();
+            UserRoleEntity userRoleEntity = user.getRole();
             if (userRoleEntity != null) {
                 RoleEntity role = userRoleEntity.getRoleEntity();
                 if (role != null) {

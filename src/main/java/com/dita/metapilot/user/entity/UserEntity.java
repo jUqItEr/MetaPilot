@@ -38,4 +38,5 @@ public class UserEntity {
     private String createdAt;
     private String visitedAt;
     private UserRoleEntity role;
+
 }

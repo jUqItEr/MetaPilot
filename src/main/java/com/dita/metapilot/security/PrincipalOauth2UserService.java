@@ -73,7 +73,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     .nickname(oAuth2UserInfo.getName())
                     .provider(oAuth2UserInfo.getProvider())
                     .socialId(oAuth2UserInfo.getEmail())
-                    .userRoleEntities(userRoleEntity)
+                    .role(userRoleEntity)
                     .build();
             socialRepository.createUser(user); //소셜 회원가입
             socialRepository.createRole(user); //소셜 권한추가
