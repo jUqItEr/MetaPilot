@@ -23,11 +23,14 @@ export const getServerSideProps = async context => {
 }
 
 const PostPage = ({ postId }) => {
+    const [commentCount, setCommentCount] = useState(0)
+    const [data, setData] = useState([])
     const [likes, setLikes] = useState([])
     const [user, setUser] = useState([])
     const [showComments, setShowComments] = useState(false)
     const [postLiked, setPostLiked] = useState(false) // 게시글에 대한 좋아요 상태
     const [faChevron, setFaChevron] = useState(false) // 공감수 리스트 상태
+    const [requestTime, setRequestTime] = useState(new Date())
 
     // 공감수 토글
     const toggleFaChevron = () => {
@@ -47,7 +50,7 @@ const PostPage = ({ postId }) => {
                     userId: user.id,
                 },
                 url: '/api/post/response/update',
-            }).then((res) => {
+            }).then(_ => {
                 setPostLiked(!postLiked)
             })
         } else {
@@ -63,14 +66,6 @@ const PostPage = ({ postId }) => {
         setShowComments(!showComments)
     }
 
-    // 댓글의 답글, 답글의 답글 폼 위치 잡는 함수
-    // const toggleFormVisibility = (id, type) => {
-    //     setFormVisibility(prevState => ({
-    //         ...prevState,
-    //         [type]: prevState[type] === id ? null : id
-    //     }))
-    // }
-
     // 공유하기 버튼
     const handleShareClick = () => {
         navigator.clipboard
@@ -85,6 +80,29 @@ const PostPage = ({ postId }) => {
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))
+
+        axios({
+            method: "get",
+            params: {
+                postId: postId,
+            },
+            url: "/api/post/view",
+        }).then((res) => {
+            setData(res.data)
+
+            if (!res.data || res.data.post === null) {
+                router.push("/404")
+            }
+        })
+
+        axios({
+            method: 'get',
+            params: {
+                postId: postId
+            },
+            url: '/api/comment/count'
+        })
+        .then(res => setCommentCount(res.data))
         
         // 게시글 좋아요 리스트
         axios({
@@ -108,7 +126,7 @@ const PostPage = ({ postId }) => {
         }).then((res) => {
             setPostLiked(res.data)
         })
-    }, [postId, postLiked, user?.id])
+    }, [postId, postLiked, requestTime, user?.id])
 
     return (
         <>
@@ -118,20 +136,22 @@ const PostPage = ({ postId }) => {
             </Head>
             <div className='wrap'>
                 <div className='container'>
-                    <PostHeader pid={postId} />
+                    <PostHeader post={data?.post} />
                     <main className={styles.mainContainer}>
                         <PostContent />
                     </main>
                     <footer className={styles.footerContainer}>
                         {/* hashtag */}
                         <div className={styles.hashtagBox}>
-                            <div>
-                                <Link href='/'>
-                                    <a>
-                                        <span className={styles.hashtag}>#후쿠오카</span>
-                                    </a>
-                                </Link>
-                            </div>
+                            {data?.hashtags?.map((mapper, idx) => (
+                                <div key={idx}>
+                                    <Link href='#'>
+                                        <a>
+                                            <span className={styles.hashtag}>#{mapper.content}</span>
+                                        </a>
+                                    </Link>
+                                </div>
+                            ))}
                         </div>
                         <div className={styles.footerBtnContainer}>
                             {/* 버튼 left 리스트 */}
@@ -167,9 +187,17 @@ const PostPage = ({ postId }) => {
                                     {/* 댓글 버튼 */}
                                     <button
                                         className={`${styles.commentButton} btn btn-light`}
+                                        style={{
+                                            margin: '5px'
+                                        }}
                                         onClick={toggleComments}
                                     >
-                                        {showComments ? '댓글 숨기기' : '댓글 보기'}
+                                        댓글 {commentCount}개&nbsp;
+                                        {showComments ? (
+                                            <FontAwesomeIcon icon={faChevronUp} width={15} />
+                                        ) : (
+                                            <FontAwesomeIcon icon={faChevronDown} width={15} />
+                                        )}
                                     </button>
                                 </div>
                             </div>
@@ -190,7 +218,11 @@ const PostPage = ({ postId }) => {
 
                         {/* 댓글 목록 */}
                         {showComments && (
-                            <CommentsList pid={postId} />
+                            <CommentsList
+                                pid={postId}
+                                requestTime={requestTime}
+                                setRequestTime={setRequestTime}
+                            />
                         )}
 
                         {/* 광고 */}

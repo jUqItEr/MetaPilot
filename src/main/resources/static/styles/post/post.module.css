@@ -293,6 +293,7 @@
   }
 
   .menuItem {
+    display: none;
     position: relative;
   }
 

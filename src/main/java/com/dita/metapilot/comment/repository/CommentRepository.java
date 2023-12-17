@@ -33,7 +33,7 @@ public interface CommentRepository {
 
     long getRootId(CommentDto dto);
 
-    long getTotalCount(PostRequestDto dto);
+    long getCommentCount(PostRequestDto dto);
 
     List<CommentEntity> getCommentList(PostRequestDto dto);
 

@@ -84,7 +84,7 @@ public class CommentService {
      * @author Kiseok Kang (@Seungyun)
      */
     public long getCommentCount(PostRequestDto dto) {
-        return repository.getTotalCount(dto);
+        return repository.getCommentCount(dto);
     }
 
     /**

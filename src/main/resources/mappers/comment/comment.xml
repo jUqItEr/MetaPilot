@@ -77,15 +77,17 @@
             ct.id = #{id}
     </select>
 
-    <select id="getTotalCount" parameterType="com.dita.metapilot.comment.dto.PostRequestDto" resultType="long">
-        select
-            count(*)
-        from
-            comment_tbl ct
-        where
-            ct.post_tbl_id = #{postId}
-        and
-            ct.visible = #{visible}
+    <select id="getCommentCount" parameterType="com.dita.metapilot.comment.dto.PostRequestDto" resultType="long">
+        <![CDATA[
+            select
+                count(*)
+            from
+                comment_tbl ct
+            where
+                ct.post_tbl_id = #{postId}
+            and
+                ct.visible <> 2
+        ]]>
     </select>
 
     <select id="getCommentList"
@@ -145,7 +147,8 @@
         update
             comment_tbl
         set
-            content = #{content}
+            content = #{content},
+            visible = #{visible}
         where
             id = #{id}
     </update>
