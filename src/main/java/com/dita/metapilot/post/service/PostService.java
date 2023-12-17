@@ -1,6 +1,7 @@
 package com.dita.metapilot.post.service;
 
 import com.dita.metapilot.post.dto.*;
+import com.dita.metapilot.post.entity.CategoryPostEntity;
 import com.dita.metapilot.post.entity.PostEntity;
 import com.dita.metapilot.post.dto.HashtagDto;
 import com.dita.metapilot.post.file.dto.PostFileDto;
@@ -217,4 +218,18 @@ public class PostService {
         }
         return result;
     }
+
+    /**
+     * <p>카테고리 id에 속하는 게시글 정보 불러오기</p>
+     *
+     * @param
+     * @return
+     */
+    public List<CategoryPostEntity> categoryDataList(PostSearchDto postSearchDto) {
+
+        return postRepository.categoryDataList(postSearchDto);
+    }
+
+
+
 }

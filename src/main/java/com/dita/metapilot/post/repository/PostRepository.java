@@ -1,6 +1,7 @@
 package com.dita.metapilot.post.repository;
 
 import com.dita.metapilot.post.dto.*;
+import com.dita.metapilot.post.entity.CategoryPostEntity;
 import com.dita.metapilot.post.entity.PostEntity;
 import com.dita.metapilot.post.dto.PostTagDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -190,5 +191,13 @@ public interface PostRepository {
      * @return 게시글의 정보를 성공적으로 수정하면 true, 그렇지 않으면 false를 반환.
      */
     boolean updatePost(PostDto postDto);
+
+    /**
+     * 카테고리 id 값에 해당하는 게시글 데이터 불러오기
+     *
+     * @param postSearchDto 사용자가 작성한 게시글 정보를 담은 DTO.
+     * @return 카테고리 id를 성공적으로 수정하면 true, 그렇지 않으면 false를 반환.
+     */
+    List<CategoryPostEntity> categoryDataList(PostSearchDto postSearchDto);
 
 }

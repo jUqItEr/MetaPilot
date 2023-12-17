@@ -28,4 +28,5 @@ public class PostEntity {
     private String categorySubject;
     private String createdView;
     private int postCount;
+    private int categoryType;
 }

@@ -1,13 +1,120 @@
-import { Accordion, Card, Button} from 'react-bootstrap'
+import { useRouter } from 'next/router';
 
+import Head from "next/head"
+import Image from 'next/image'
+import axios from 'axios'
+import $ from 'jquery'
+import {useEffect, useState} from "react"
+import { color } from "framer-motion"
+import { faDisplay } from "@fortawesome/free-solid-svg-icons"
+import IndexHeader from "../../layout/home/header"
+import PostList from "../../components/common/list"
 
-const IndexSidebar = ({ category }) => {
-    console.log(category)
+/**
+ * Rendering the category page.
+ *
+ * @author Ha Seong Kim
+ * @since 2023. 12. 17.
+ * @returns
+ */
+
+const SideBarPage = () => {
+    const router = useRouter();
+    const [data, setData] = useState([]);
+    const [ category, setCategory ] = useState([])
+    const [ info, setInfo ] = useState([])
+    const [selectedCategory, setSelectedCategory] = useState(null)
+    const [categoryId, setCategoryId] = useState(1)
+    const [categorySubject, setCategorySubject] = useState("")
+    const [categoryCountVisible, setCategoryCountVisible] = useState("")
+    const [categoryVisible, setCategoryVisible] = useState("")
+    const [categoryType, setCategoryType] = useState("")
+    const [categoryListVisible, setCategoryListVisible] = useState("")
+    const [categoryFold, setCategoryFold] = useState("")
+    const [categoryDepth, setCategoryDepth] = useState("")
+    const [requestTime, setRequestTime] = useState(new Date())
+
+    const categoryClick = (mapper) => {
+        setSelectedCategory(mapper);
+        setCategoryId(mapper.id);
+        setCategorySubject(mapper.subject);
+        setCategoryCountVisible(mapper.countVisible);
+        setCategoryVisible(mapper.visible);
+        setCategoryType(mapper.type);
+        setCategoryListVisible(mapper.listVisible);
+        setCategoryFold(mapper.fold);
+        setCategoryDepth(mapper.depth);
+
+        /*alert(
+            "카테고리 id : " + mapper.id + "\n"
+            + "카테고리 이름 : " + mapper.subject + "\n"
+            + "카테고리 게시글 수 공개 : " + mapper.countVisible + "\n"
+            + "카테고리 공개/비공개 : " + mapper.visible + "\n"
+            + "카테고리 블로그형/이미지형 : " + mapper.type + "\n"
+            + "카테고리 게시글 보여지는지 : " + mapper.listVisible + "\n"
+            + "카테고리 접었는지 : " + mapper.fold + "\n"
+            + "카테고리 자식인지 부모인지 : " + mapper.depth + "\n"
+        );*/
+
+        if(mapper.id === 1) {
+            router.push(`/`);
+        } else {
+            router.push(`/${mapper.id}`);
+        }
+    };
+
+      useEffect(() => {
+          const getCategory = () => {
+            axios({
+                method: 'get',
+                url: '/api/category/list'
+            })
+            .then((res) => {
+                console.log(res.data)
+                setCategory(res.data)
+            })
+          }
+
+          const getInfo = () => {
+            axios({
+                method: 'get',
+                url: '/api/info'
+            })
+            .then((res) => {
+                setInfo(res.data.data)
+            })
+          }
+
+          getCategory()
+          getInfo()
+      }, [requestTime]);
 
     return (
         <>
+            <Head>
+                <title>카테고리 - {`${info.title}`}</title>
+                <meta property='og:title' content='카테고리 리스트' key='title'/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            </Head>
+            <div>
+                <div /*className="d-flex flex-nowrap"*/>
+                    {/* content */}
+                    <div style={{display: 'block'}}>
+                        {category?.map((mapper) => {
+                            return (
+                                <button key={mapper.id} onClick={() => categoryClick(mapper)}>
+                                    {
+                                        mapper.subject
+                                    }
+                                </button>
+                            )
+                        })}
+                        <PostList categoryId={categoryId} />
+                    </div>
+                </div>
+            </div>
         </>
     )
-}
+};
 
-export default IndexSidebar
+export default SideBarPage
