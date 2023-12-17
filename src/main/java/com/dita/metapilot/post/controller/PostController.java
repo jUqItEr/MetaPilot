@@ -1,6 +1,7 @@
 package com.dita.metapilot.post.controller;
 
 import com.dita.metapilot.post.dto.*;
+import com.dita.metapilot.post.entity.CategoryPostEntity;
 import com.dita.metapilot.post.entity.PostEntity;
 import com.dita.metapilot.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -191,4 +192,16 @@ public class PostController {
         return ResponseEntity.ok(postService.getPost(postIdDto));
     }
     */
+
+    /**
+     * <p>인기 게시글 리스트를 반환하는 컨트롤러 메서드</p>
+     *
+     * @return 인기 게시글 리스트를 반환
+     * @since 2023. 12. 05.
+     */
+    @ResponseBody
+    @GetMapping("/categoryDataList")
+    public List<CategoryPostEntity> categoryDataList(PostSearchDto postSearchDto) {
+        return postService.categoryDataList(postSearchDto);
+    }
 }
