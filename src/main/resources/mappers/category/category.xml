@@ -30,6 +30,24 @@
         <result property="createdAt" column="created_at"></result>
     </resultMap>
 
+    <resultMap id="categoryCountEntity" type="com.dita.metapilot.category.entity.CategoryCountEntity">
+        <result property="id" column="id"></result>
+        <result property="refId" column="category_tbl_ref_id"></result>
+        <result property="subject" column="subject"></result>
+        <result property="depth" column="depth"></result>
+        <result property="pos" column="pos"></result>
+        <result property="type" column="type"></result>
+        <result property="fold" column="fold"></result>
+        <result property="visible" column="visible"></result>
+        <result property="countVisible" column="count_visible"></result>
+        <result property="listVisible" column="list_visible"></result>
+        <result property="listCount" column="list_count"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="allCount" column="allCount"></result>
+        <result property="refCount" column="refCount"></result>
+        <result property="count" column="count"></result>
+    </resultMap>
+
 
 
     <select id="getCategoryInfo" parameterType="int" resultMap="categoryEntity">
@@ -237,6 +255,20 @@
             where `type` & 8 > 0
             order by pos asc
         ]]>
+    </select>
+
+    <!-- 카테고리에 속한 게시글 수 list -->
+    <select id="categoryPostCount" resultMap="categoryCountEntity">
+        select
+            ct.id, ct.category_tbl_ref_id, ct.subject, ct.depth, ct.pos, ct.type
+            , ct.visible, ct.fold, ct.count_visible, ct.list_visible, ct.list_count
+            , (select count(*) from category_tbl c join post_tbl pt on c.id = pt.category_tbl_id where pt.deleted != 1) as 'allCount'
+            , (select count(*) from category_tbl c join post_tbl pt on c.id = pt.category_tbl_id where pt.deleted != 1 and (c.id = ct.id or c.category_tbl_ref_id = ct.id)) as 'refCount'
+            , (select count(*) from category_tbl c join post_tbl pt on c.id = pt.category_tbl_id where pt.deleted != 1 and c.id = ct.id) as 'count'
+        from
+            category_tbl ct
+        order by
+            ct.pos asc;
     </select>
 
 </mapper>
