@@ -3,12 +3,13 @@ import { useRouter } from 'next/router';
 import Head from "next/head"
 import Image from 'next/image'
 import axios from 'axios'
-import $ from 'jquery'
+import $, { post } from 'jquery'
 import {useEffect, useState} from "react"
 import { color } from "framer-motion"
 import { faDisplay } from "@fortawesome/free-solid-svg-icons"
-import IndexHeader from "../../layout/home/header"
+import IndexHeader from "./header"
 import PostList from "../../components/common/list"
+/* edd */
 
 /**
  * Rendering the category page.
@@ -33,11 +34,14 @@ const SideBarPage = () => {
     const [categoryFold, setCategoryFold] = useState("")
     const [categoryDepth, setCategoryDepth] = useState("")
     const [requestTime, setRequestTime] = useState(new Date())
+    
+    const [totalPostCount, setTotalPostCount] = useState(0);
 
     const categoryClick = (mapper) => {
         setSelectedCategory(mapper);
         setCategoryId(mapper.id);
         setCategorySubject(mapper.subject);
+        
         setCategoryCountVisible(mapper.countVisible);
         setCategoryVisible(mapper.visible);
         setCategoryType(mapper.type);
@@ -57,9 +61,9 @@ const SideBarPage = () => {
         );*/
 
         if(mapper.id === 1) {
-            router.push(`/`);
+            router.push(`/category`);
         } else {
-            router.push(`/${mapper.id}`);
+            router.push(`/category/${mapper.id}`);
         }
     };
 
@@ -87,6 +91,21 @@ const SideBarPage = () => {
 
           getCategory()
           getInfo()
+
+          axios({
+            method: "get",
+            url: "/api/admin/category/list",
+        }).then((res) => {
+            setData(res.data);
+
+            const sum = res.data.reduce((accumulator, currentMapper) => {
+              return accumulator + currentMapper.postCount;
+            }, 0);
+
+            setTotalPostCount(sum);
+
+            console.log("edd", res.data);
+        });
       }, [requestTime]);
 
     return (
@@ -97,19 +116,28 @@ const SideBarPage = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             </Head>
             <div>
-                <div /*className="d-flex flex-nowrap"*/>
+                <div /*className="d-flex flex-nowrap"*/style={{ width: '200px'}}>
                     {/* content */}
-                    <div style={{display: 'block'}}>
-                        {category?.map((mapper) => {
-                            return (
-                                <button key={mapper.id} onClick={() => categoryClick(mapper)}>
-                                    {
-                                        mapper.subject
-                                    }
-                                </button>
-                            )
-                        })}
-                        <PostList categoryId={categoryId} />
+                    <div  style={{maxHeight:'400px', overflowY: 'auto', width:'260px'}}>
+                        <div className="list-group">
+                            {data?.map((mapper) => {
+                                return (
+                                    <button key={mapper.id} type="button" style={{fontWeight: mapper.id === 1 ? "bold" : "normal"
+                                    , backgroundColor: mapper.id === categoryId ? "#ECECEC" : "white"}}
+                                    className={`list-group-item list-group-item-action`}
+                                    onClick={() => categoryClick(mapper)} >
+                                        {
+                                            mapper.depth === 0
+                                            ? mapper.subject + 
+                                            (mapper.type === 0 || mapper.countVisible === 0 ? ''
+                                                : (mapper.id === 1 ? ' (' + totalPostCount + ')' : ' (' + mapper.totalCount + ')'))
+                                            : ' ㄴ' + mapper.subject +
+                                            (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.postCount + ')')
+                                        }
+                                    </button>
+                                )
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
