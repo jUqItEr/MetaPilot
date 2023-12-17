@@ -19,5 +19,6 @@ public class CommentEntity {
     private String createdAt;
     private String nickname;
     private String refNickname;
+    private String profileImage;
     private int likeCount;
 }

@@ -16,6 +16,7 @@
         <result property="createdAt" column="created_at"/>
         <result property="nickname" column="nickname"/>
         <result property="refNickname" column="ref_nickname"/>
+        <result property="profileImage" column="profile_image"/>
         <result property="likeCount" column="likes"/>
     </resultMap>
 
@@ -67,6 +68,15 @@
             comment_tbl
     </select>
 
+    <select id="getRootId" parameterType="com.dita.metapilot.comment.dto.CommentDto" resultType="long">
+        select
+            comment_tbl_root_id
+        from
+            comment_tbl ct
+        where
+            ct.id = #{id}
+    </select>
+
     <select id="getTotalCount" parameterType="com.dita.metapilot.comment.dto.PostRequestDto" resultType="long">
         select
             count(*)
@@ -84,6 +94,7 @@
         select
             ct.*,
             ut.nickname,
+            ut.profile_image,
             ut2.nickname as ref_nickname,
             (
                 select
@@ -110,10 +121,23 @@
         where
             ct.post_tbl_id = #{postId}
         and
-            ct.visible = #{visible}
+            ct.visible >= #{visible}
         order by
             comment_tbl_root_id,
             id
+    </select>
+
+    <select id="hasSibling" parameterType="com.dita.metapilot.comment.dto.CommentDto" resultType="boolean">
+        <![CDATA[
+            select
+                count(*) > 1
+            from
+                comment_tbl ct
+            where
+                ct.comment_tbl_root_id = #{id}
+            and
+                ct.visible <> 2
+        ]]>
     </select>
 
     <update id="updateComment"
@@ -122,6 +146,17 @@
             comment_tbl
         set
             content = #{content}
+        where
+            id = #{id}
+    </update>
+
+    <update id="updateRootComment" parameterType="com.dita.metapilot.comment.dto.CommentDto">
+        update
+            comment_tbl
+        set
+            content = '댓글이 삭제되었습니다.',
+            created_at = null,
+            visible = 2
         where
             id = #{id}
     </update>

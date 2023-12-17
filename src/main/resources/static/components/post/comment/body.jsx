@@ -5,7 +5,7 @@ import axios from 'axios'
 import $ from 'jquery'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsis, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 
 
 const CommentsList = ({ pid }) => {
@@ -14,8 +14,8 @@ const CommentsList = ({ pid }) => {
     const [menuVisible, setMenuVisible] = useState([])
     const [formVisible, setFormVisible] = useState({})
     const [requestTime, setRequestTime] = useState(new Date())
-    const [editingCommentId, setEditingCommentId] = useState(null);
-    const [editingContent, setEditingContent] = useState("");
+    const [editingCommentId, setEditingCommentId] = useState(null)
+    const [editingContent, setEditingContent] = useState('')
 
     // File Handler 부분이라 남겨둠
     const createCommentSubmit = async (e) => {
@@ -54,6 +54,23 @@ const CommentsList = ({ pid }) => {
         // }
 
 
+    }
+
+    const deleteComment = async ({ id }) => {
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            await axios({
+                method: 'post',
+                params: {
+                    id: id
+                },
+                url: '/api/comment/delete'
+            })
+            .then(_ => { 
+                alert('댓글이 삭제되었습니다.')
+                setRequestTime(new Date())
+            })
+            .catch(_ => console.error('댓글 삭제 실패'))
+        }
     }
 
     /**
@@ -110,46 +127,26 @@ const CommentsList = ({ pid }) => {
         }
     }
 
-    const deleteComment = async ({ id }) => {
-        if (confirm("댓글을 삭제하시겠습니까?")) {
-            try {
-                await axios({
-                    method: "post",
-                    params: {
-                        id: id
-                    },
-                    url: "/api/comment/delete"  
-                })
-                .then(_ => { 
-                    alert('댓글이 삭제되었습니다.')
-                    setRequestTime(new Date())
-                })
-            } catch (error) {
-                console.error("댓글 삭제 실패");
-            }
-        }
-    }
-
     const updateComment = async ({ id }) => {
         if (!editingContent.trim()) {
-            alert("수정할 댓글 내용을 입력해주세요.")
+            alert('수정할 댓글 내용을 입력해주세요.')
             return
         }
         try {
             await axios({
-                method: "post",
+                method: 'post',
                 params: {
                     id: id,
                     content: content
                 },
-                url: "/api/comment/update"
+                url: '/api/comment/update'
             })
             .then(_ => {
-                alert("댓글이 수정되었습니다.")
+                alert('댓글이 수정되었습니다.')
                 setRequestTime(new Date())
             })
         } catch (error) {
-            console.error("댓글 수정 실패")
+            console.error('댓글 수정 실패')
         }
     }
 
@@ -180,14 +177,14 @@ const CommentsList = ({ pid }) => {
         setMenuVisible(prevState => ({
             ...prevState,
             [id]: !prevState[id]
-        }));
+        }))
     }
 
     // 댓글 수정 폼 토글
     const toggleEditForm = (comment) => {
-        setEditingCommentId(comment.id);
-        setEditingContent(comment.content);
-    };
+        setEditingCommentId(comment.id)
+        setEditingContent(comment.content)
+    }
 
     useEffect(() => {
         // 사용자 정보 불러오기
@@ -211,10 +208,10 @@ const CommentsList = ({ pid }) => {
             {comments?.map((comment, index) => (
                 <div id={`c${comment.id}`} key={index} className={comment.depth ? styles.commentForm : styles.replyForm}>
                     <div className={styles.commentHeader}>
-                        <strong>{comment.nickname}</strong>
-                        {user?.id === comment.userId && (
+                        <strong>{comment.visible != 2 && comment.nickname}</strong>
+                        {(user?.id === comment.userId && comment.visible !== 2) && (
                             <div className={styles.menu}>
-                                <button type="button" className="btn" onClick={() => toggleMenu(comment.id)}>
+                                <button type='button' className='btn' onClick={() => toggleMenu(comment.id)}>
                                     <span className={styles.menuIcon}>
                                         <FontAwesomeIcon icon={faEllipsisVertical} size='1x' />
                                     </span>
@@ -226,38 +223,36 @@ const CommentsList = ({ pid }) => {
                         <div className={styles.menuItem}>
                             <div></div>
                             <div className={styles.commentMenu}>
-                                <button className="btn" onClick={() => toggleEditForm(comment)}>수정</button>
-                                <button className="btn" onClick={() => deleteComment(comment)}>삭제</button>
+                                <button className='btn' onClick={() => toggleEditForm(comment)}>수정</button>
+                                <button className='btn' onClick={() => deleteComment(comment)}>삭제</button>
                             </div>
                         </div>
-
                     )}
                     <p>
+                        {/* 대댓글 */}
                         {
                             (comment.refId !== 0 && comment.refId !== comment.rootId) && (
-                                <Link href={`#c${comment.refId}`} scroll={false}>
+                                <Link href={`${comment.refNickname !== null ? '#c' + comment.refId : '#'}`} scroll={false}>
                                     <a>
-                                        <strong>{`@${comment.refNickname}`}&nbsp;</strong>
+                                        <strong>{`@${comment.refNickname !== null ? comment.refNickname : ''}`}&nbsp;</strong>
                                     </a>
                                 </Link>
                             )
                         }
                         {comment.content}
                     </p>
-                    <div className={styles.commentDetails}>
-                        <span>{comment.createdAt}</span>
-                        <div>
-                            <button className='btn' onClick={() => toggleFormVisible(comment)}>
-                                답글
-                            </button>
-                            <button className='btn' onClick={() => toggleLike(comment)}>
-                                <CommentLike comment={comment} />
-                                {comment.likeCount}
-                            </button>
+                    {comment.visible !== 2 && (
+                        <div className={styles.commentDetails}>
+                            <span>{comment.createdAt}</span>
+                            <div>
+                                <button className='btn' onClick={() => toggleFormVisible(comment)}>답글</button>
+                                <button className='btn' onClick={() => toggleLike(comment)}>
+                                    <CommentLike comment={comment} />
+                                    {comment.likeCount}
+                                </button>
+                            </div>
                         </div>
-
-
-                    </div>
+                    )}
                     {formVisible === comment.id && (
                         <div className={styles.testForm}>
                             {/* 폼 내용 또는 자식 컴포넌트 */}
@@ -271,8 +266,8 @@ const CommentsList = ({ pid }) => {
                                 <div className={styles.editor}>
                                     <input className='form-control form-control-sm' id='formFileSm' type='file'/>
                                     <div className={styles.inputForm}>
-                                        <input type="checkbox" id="formcheck" className={styles.editorCheckbox}/>
-                                        <label htmlFor="formcheck" className={styles.editorLabel}>비밀댓글</label>
+                                        <input type='checkbox' id='formcheck' className={styles.editorCheckbox}/>
+                                        <label htmlFor='formcheck' className={styles.editorLabel}>비밀댓글</label>
                                     </div>
                                 </div>
                                 <div className='input-group-append'>
@@ -296,8 +291,8 @@ const CommentsList = ({ pid }) => {
                     <div className={styles.editor}>
                         <input className='form-control form-control-sm' id='formFileSm' type='file'/>
                         <div className={styles.inputForm}>
-                            <input type="checkbox" id="formcheck" className={styles.editorCheckbox}/>
-                            <label htmlFor="formcheck" className={styles.editorLabel}>비밀댓글</label>
+                            <input type='checkbox' id='formcheck' className={styles.editorCheckbox}/>
+                            <label htmlFor='formcheck' className={styles.editorLabel}>비밀댓글</label>
                         </div>
                     </div>
                     <div className='input-group-append'>
