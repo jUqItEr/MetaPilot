@@ -1,3 +1,21 @@
-.container {
-    width: 280px;
+.side {
+    width: 15%;
+}
+
+.hidden {
+    display: none;
+}
+
+.toggleButton {
+    display: none;
+}
+
+@media (max-width: 420px) {
+    .toggleButton {
+        display: block;
+    }
+
+    .side {
+        width: 15%;
+    }
 }

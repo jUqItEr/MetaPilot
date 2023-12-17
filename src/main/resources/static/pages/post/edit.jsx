@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
 import dynamic from "next/dynamic"
+import styles from '/styles/post/edit.module.css'
 
 const RichTextEditor = dynamic(
     () => import("../../components/common/editor"),
@@ -44,19 +45,34 @@ const PostEdit = ({ categoryId, postId }) => {
             <Head>
                 <title>게시글 {postId ? '수정' : '작성'}</title>
             </Head>
-            <header>
-                <button className='btn btn-primary' type='button'>발행</button>
-            </header>
+            
             <div className='container'>
+                <header className={styles.editHeader}>
+                    <div></div>
+                    <div className={styles.headerButton}>
+                        <button className='btn btn-secondary' type='button'>임시저장</button>
+                        <button className='btn btn-primary' type='button'>발행</button>
+                    </div>
+                </header>
                 <table>
                     <tbody>
-                        <tr>
-                            <td width={90}>게시글 제목</td>
-                            <td><input className='form-control' type='text' placeholder='제목을 입력해주세요.' /></td>
+                        <tr className={styles.editTitle}>
+                            <div className={styles.editSecret}>
+                                <td width={90}>제목</td>
+                                <td><input className='form-control' type='text' placeholder='제목을 입력해주세요.' /></td>
+                                
+                                <input type="checkbox" id="formcheck" className={styles.editorCheckbox}/>
+                                <label htmlFor="formcheck" className={styles.editorLabel}>비밀댓글</label>
+                                <input className={`${styles.editFile} form-control form-control-sm`} id='formFileSm' type='file'/>
+                            </div>
+                            {/* <div className={styles.editFile}>
+                                <input className='form-control form-control-sm' id='formFileSm' type='file'/>
+                            </div> */}
                         </tr>
                     </tbody>
                 </table>
                 <RichTextEditor initialData={data?.post?.content} />
+                
             </div>
         </>
     )

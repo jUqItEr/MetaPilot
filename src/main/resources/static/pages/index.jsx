@@ -7,6 +7,7 @@ import TrendPost from "../components/common/trend";
 import NoticePost from "../components/common/notice";
 import PostList from "../components/common/postList";
 import Auth from "./account/auth";
+import styles from '/styles/index.module.css'
 
 const IndexPage = () => {
   const [info, setInfo] = useState([]);
@@ -38,10 +39,17 @@ const IndexPage = () => {
       </Head>
       <Auth/>
       <IndexHeader info={info} />
-      <IndexSidebar />
-      <TrendPost />
-      <NoticePost />
-      <PostList />
+      {/* 여기에 flex */}
+      <div className={styles.mainWrap}>
+        
+        <div className="container">
+          <TrendPost />
+          <NoticePost />
+          <PostList />
+        </div>
+        <IndexSidebar />
+      </div>
+      
     </>
   );
 };
