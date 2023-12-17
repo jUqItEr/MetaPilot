@@ -5,24 +5,12 @@ import IndexHeader from "../../layout/home/header";
 import IndexSidebar from "../../layout/home/sidebar";
 import TrendPost from "../../components/common/trend";
 import NoticePost from "../../components/common/notice";
-import PostList from "../../components/common/postList"
+import PostList from "../../components/common/postList";
 import PostListImageType from "../../components/common/postListImageType"
 import PostListBlogType from "../../components/common/postListBlogType"
 import Auth from "../account/auth";
 
-export const getServerSideProps = async context => {
-  const { id } = context.params
-
-  console.error(context.params)
-
-  return {
-      props: {
-          id: id
-      }
-  }
-}
-
-const IndexPage = ({ id }) => {
+const IndexPage = () => {
   const [info, setInfo] = useState([]);
 
   /**
@@ -43,7 +31,7 @@ const IndexPage = ({ id }) => {
 
   useEffect(() => {
     getInfo();
-  }, [id]);
+  }, []);
 
   return (
     <>
@@ -55,9 +43,9 @@ const IndexPage = ({ id }) => {
       <IndexSidebar />
       <TrendPost />
       <NoticePost />
-      <PostList categoryId={id} />
-      <PostListImageType categoryId={id} />
-      <PostListBlogType categoryId={id} />
+      <PostList categoryId={1} />
+      <PostListImageType categoryId={1} />
+      <PostListBlogType categoryId={1} />
     </>
   );
 };
