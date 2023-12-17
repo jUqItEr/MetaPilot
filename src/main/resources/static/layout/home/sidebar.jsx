@@ -9,7 +9,6 @@ import { color } from "framer-motion"
 import { faDisplay } from "@fortawesome/free-solid-svg-icons"
 import IndexHeader from "./header"
 import PostList from "../../components/common/list"
-/* edd */
 
 /**
  * Rendering the category page.
@@ -94,16 +93,9 @@ const SideBarPage = () => {
 
           axios({
             method: "get",
-            url: "/api/admin/category/list",
+            url: "/api/category/count",
         }).then((res) => {
             setData(res.data);
-
-            const sum = res.data.reduce((accumulator, currentMapper) => {
-              return accumulator + currentMapper.postCount;
-            }, 0);
-
-            setTotalPostCount(sum);
-
             console.log("edd", res.data);
         });
       }, [requestTime]);
@@ -123,16 +115,19 @@ const SideBarPage = () => {
                             {data?.map((mapper) => {
                                 return (
                                     <button key={mapper.id} type="button" style={{fontWeight: mapper.id === 1 ? "bold" : "normal"
-                                    , backgroundColor: mapper.id === categoryId ? "#ECECEC" : "white"}}
+                                    , backgroundColor: mapper.id === categoryId ? "#ECECEC" : "white"
+                                    , display: mapper.visible === 0 ? 'none' : 'block'}}
+                                    /* ↑↑↑↑↑ category의 visible 컬럼이 0(비공개 카테고리)이면 표시하지 않습니다 */
                                     className={`list-group-item list-group-item-action`}
                                     onClick={() => categoryClick(mapper)} >
                                         {
-                                            mapper.depth === 0
+                                            (mapper.depth === 0
                                             ? mapper.subject + 
                                             (mapper.type === 0 || mapper.countVisible === 0 ? ''
-                                                : (mapper.id === 1 ? ' (' + totalPostCount + ')' : ' (' + mapper.totalCount + ')'))
+                                                : (mapper.id === 1 ? ' (' + mapper.allCount + ')' : ' (' + mapper.refCount + ')'))
                                             : ' ㄴ' + mapper.subject +
-                                            (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.postCount + ')')
+                                            (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.count + ')'))
+                                            + ' mapper.fold = ' + mapper.fold /* ←----------< 만약 이 값이 0이면 자식 카테고리 접어서 안 보이게 해주세요*/
                                         }
                                     </button>
                                 )

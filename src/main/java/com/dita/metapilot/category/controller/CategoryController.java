@@ -233,5 +233,10 @@ public class CategoryController {
     public ResponseEntity<?> getCategoryInfo(@Valid CategoryDto categoryDto) {
         return ResponseEntity.ok(categoryService.getCategoryInfo(categoryDto.getId()));
     }
-    //이 주석은 보이는 대로 지우세요.
+
+    @ResponseBody
+    @GetMapping("/count")
+    public ResponseEntity<?> categoryPostCount() {
+        return ResponseEntity.ok(categoryService.categoryPostCount());
+    }
 }
