@@ -2,6 +2,7 @@ import axios from "axios"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import styles from "/styles/common/postList.module.css"
+import $ from 'jquery'
 
 const PostList = ({ categoryId }) => {
     const [user, setUser] = useState([])
@@ -11,10 +12,11 @@ const PostList = ({ categoryId }) => {
         page: 1, // 현재 페이지 번호
         count: 5, // 페이지당 게시글 수
     })
+    const [selectedPost, setSelectedPost] = useState([]); // 삭제할 선택된 post
     const [isListVisible, setIsListVisible] = useState(true)
     const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
-    const [isDeleteboxVisible, setIsDeleteboxVisible] = useState(false)
-    const start = (paging.page -1) * paging.count
+    const [requestTime, setRequestTime] = useState(new Date())
+    const start = (paging.page - 1) * paging.count
     const end = start + paging.count
 
     const [postTotalCount, setPostTotalCount] = useState(0)
@@ -38,7 +40,7 @@ const PostList = ({ categoryId }) => {
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))
-        
+
         axios({
             headers: {
                 'Authorization': localStorage.getItem('token')
@@ -71,21 +73,21 @@ const PostList = ({ categoryId }) => {
             },
             url: "/api/post/page",
         }).then((res) => {
-          setPostList(res.data)
-          const tempMaxPage = maxPage
-          
-          const nextPageGroup = Math.ceil(paging.page / paging.count)
-          setCurrentPageGroup(nextPageGroup)
-          const newFirstPageInGroup = (nextPageGroup - 1) * paging.count + 1
-          const newLastPageInGroup = Math.min(nextPageGroup * paging.count, tempMaxPage)
-          setFirstPageInGroup(newFirstPageInGroup)
-          setLastPageInGroup(newLastPageInGroup)
+            setPostList(res.data)
+            const tempMaxPage = maxPage
 
-          console.error('paging content : ', paging)
-          console.error('f: ', newFirstPageInGroup)
-          console.error('l: ', newLastPageInGroup)
-          console.error('next group: ', nextPageGroup)
-          console.error('max page: ', maxPage)
+            const nextPageGroup = Math.ceil(paging.page / paging.count)
+            setCurrentPageGroup(nextPageGroup)
+            const newFirstPageInGroup = (nextPageGroup - 1) * paging.count + 1
+            const newLastPageInGroup = Math.min(nextPageGroup * paging.count, tempMaxPage)
+            setFirstPageInGroup(newFirstPageInGroup)
+            setLastPageInGroup(newLastPageInGroup)
+
+            console.error('paging content : ', paging)
+            console.error('f: ', newFirstPageInGroup)
+            console.error('l: ', newLastPageInGroup)
+            console.error('next group: ', nextPageGroup)
+            console.error('max page: ', maxPage)
         });
 
         axios({
@@ -99,7 +101,46 @@ const PostList = ({ categoryId }) => {
             setCategorySubject(res.data.subject)
             setCategoryType(res.data.type)
         });
-      }, [paging.page, paging.count, user?.id, maxPage, categoryId])
+    }, [paging.page, paging.count, requestTime, user?.id, maxPage, categoryId,])
+
+    // 게시글 선택 체크박스 함수
+    const handleCheckbox = (e, postId) => {
+        const isChecked = e.target.checked
+
+        setSelectedPost((prev) => (
+            isChecked ? [...prev, postId] : prev.filter((selectedPostId) => selectedPostId !== postId)
+            // true면 선택한 postId, false면 초기화된 배열 반환
+        ));
+    }
+
+    // 게시글 삭제 함수
+    const handleDelete = () => {
+        if (selectedPost.length > 0) {
+            const postIds = selectedPost.map(String)
+
+            if (confirm('선택한 포스트를 삭제하시겠습니까?')) {
+                axios({
+                    headers: {
+                        'Authorization': localStorage.getItem('token'),
+                        'Content-Type': 'application/json',
+                    },
+                    method: "post",
+                    data: {
+                        postIds: postIds,
+                    },
+                    url: "/api/post/delete-multiple",
+                }).then((res) => {
+                    alert('삭제되었습니다');
+                    setSelectedPost([]);
+                    setRequestTime(new Date())
+                    $('input[type=checkbox]').prop('checked', false) // 게시글 삭제 후 체크박스 초기화
+                }).catch((error) => {
+                    console.error('Post Delete Error: ', error);
+                    alert('삭제에 실패했습니다');
+                });
+            }
+        }
+    }
 
     // 목록 표시/숨기기 함수
     const toggleListVisibility = () => {
@@ -109,53 +150,57 @@ const PostList = ({ categoryId }) => {
     // 글관리 눌릴시 삭제 표시/숨기기 함수
     const toggleCheckboxVisibility = () => {
         setIsCheckboxVisible(!isCheckboxVisible)
-        setIsDeleteboxVisible(!isDeleteboxVisible)
+    }
+
+    // 권한없을시 글관리 버튼 표시 여부 함수
+    const showManageButton = () => {
+        return user?.role?.roleEntity?.id !== 1
     }
 
     // 이전 페이지 그룹으로 이동하는 함수
     const goToPrevGroup = () => {
         alert("이전 버튼 눌러짐")
         if (currentPageGroup > 1) {
-        const prevPageGroup = currentPageGroup - 1;
-        const newFirstPageInGroup = (prevPageGroup - 1) * paging.count + 1;
-        const newLastPageInGroup = Math.min(
-            prevPageGroup * paging.count,
-            maxPage
-        );
-    
-        setCurrentPageGroup(prevPageGroup);
-        setFirstPageInGroup(newFirstPageInGroup);
-        setLastPageInGroup(newLastPageInGroup);
-        setPaging((prevPaging) => ({
-            ...prevPaging,
-            page: newFirstPageInGroup, // 페이지 그룹의 첫 번째 페이지로 이동
-        }));
+            const prevPageGroup = currentPageGroup - 1;
+            const newFirstPageInGroup = (prevPageGroup - 1) * paging.count + 1;
+            const newLastPageInGroup = Math.min(
+                prevPageGroup * paging.count,
+                maxPage
+            );
+
+            setCurrentPageGroup(prevPageGroup);
+            setFirstPageInGroup(newFirstPageInGroup);
+            setLastPageInGroup(newLastPageInGroup);
+            setPaging((prevPaging) => ({
+                ...prevPaging,
+                page: newFirstPageInGroup, // 페이지 그룹의 첫 번째 페이지로 이동
+            }));
         }
     };
-  
+
 
     // 다음 페이지 그룹으로 이동하는 함수
     const goToNextGroup = () => {
         alert("다음 버튼 눌러짐")
         if (currentPageGroup < Math.ceil(maxPage / paging.count)) {
-        const nextPageGroup = currentPageGroup + 1;
-        const newFirstPageInGroup = (nextPageGroup - 1) * paging.count + 1;
-        const newLastPageInGroup = Math.min(
-            nextPageGroup * paging.count,
-            maxPage
-        );
-    
-        setCurrentPageGroup(nextPageGroup);
-        setFirstPageInGroup(newFirstPageInGroup);
-        setLastPageInGroup(newLastPageInGroup);
-        setPaging((prevPaging) => ({
-            ...prevPaging,
-            page: newFirstPageInGroup, // 페이지 그룹의 첫 번째 페이지로 이동
-        }));
+            const nextPageGroup = currentPageGroup + 1;
+            const newFirstPageInGroup = (nextPageGroup - 1) * paging.count + 1;
+            const newLastPageInGroup = Math.min(
+                nextPageGroup * paging.count,
+                maxPage
+            );
+
+            setCurrentPageGroup(nextPageGroup);
+            setFirstPageInGroup(newFirstPageInGroup);
+            setLastPageInGroup(newLastPageInGroup);
+            setPaging((prevPaging) => ({
+                ...prevPaging,
+                page: newFirstPageInGroup, // 페이지 그룹의 첫 번째 페이지로 이동
+            }));
         }
     };
-  
-    
+
+
     // 페이지 이동 함수
     const goToPage = (pageNumber) => {
         if (pageNumber >= 1 && pageNumber <= maxPage) {
@@ -166,80 +211,95 @@ const PostList = ({ categoryId }) => {
         }
     }
 
-    return(
+    return (
         <>
-        
-        
-        <div className={styles.postListWrap}>
-            <hr/>
-            <div className={styles.postListContainer}>
-                <div className={styles.postListHeader}>
-                    <div className={styles.postListGroup}>
-                        <span className={styles.postListAll}>{categorySubject}</span>
-                        <span className={styles.postListCount}>{postTotalCount}</span>
-                    </div>
-                    <div>
-                        <span className={styles.postListToggle} onClick={toggleListVisibility}>
-                            {isListVisible ? "목록닫기" : "목록열기"}
-                        </span>
-                    </div>
-                </div>
-                {isListVisible && (
-                <div className={styles.postListBlock}>
-                    <div className={styles.postListSubHeader}>
-                        <div>
-                            <span className={styles.postListSubject}>글 제목</span>
-                        </div>
-                        <div>
-                            <span className={styles.postListSubject}>작성일</span>
-                        </div>
-                    </div>
-                    {postList.slice(start, end).map((postList, index) => (
-                        <div className={styles.postListTitle} key={index}>
-                            <div className={styles.postCheckbox}>
-                                {isCheckboxVisible && (
-                                    <input type="checkbox" defaultValue={"0"}/>
-                                )}
-                                <Link href={`/post/${postList.postId}`}>
-                                    <a>
-                                        <div className={styles.postList}>
-                                            <span className={styles.postListTitles}>{postList.subject}</span>
-                                            <span className={styles.postListCommentCount}>({postList.commentCount})</span>
-                                        </div>
-                                    </a>
-                                </Link>
-                            </div>
-                        <div>
-                            <span>{postList.createdDate}</span>
-                        </div>
-                        </div>
-                    ))}
-                    
-                    <div className={styles.postListSelectGroup}>
-                        <div>
-                            <button type="button" className="btn btn-secondary"
-                                onClick={toggleCheckboxVisibility}>글관리</button>
-                            {isDeleteboxVisible && (
-                                <button type="button" className="btn btn-secondary">삭제</button>
-                            )}
-                        </div>
-                        <div class="form-group">
-                            <select 
-                                class="form-control mb-3"
-                                value={paging.limit}
-                                onChange={handlePaging}
-                            >
-                                <option value="5">5줄 보기</option>
-                                <option value="10">10줄 보기</option>
-                                <option value="15">15줄 보기</option>
-                                <option value="20">20줄 보기</option>
-                                <option value="30">30줄 보기</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    {/* 검색창 */}
-                    {/* 
+
+            <div className={styles.postListWrap}>
+                <hr />
+                <div className={styles.postListContainer}>
+                    <div className={styles.postListHeader}>
+                        <div className={styles.postListGroup}>
+                            <span className={styles.postListAll}>{categorySubject}</span>
+                            <span className={styles.postListCount}>{postTotalCount}</span>
+                        </div>
+                        <div>
+                            <span className={styles.postListToggle} onClick={toggleListVisibility}>
+                                {isListVisible ? "목록닫기" : "목록열기"}
+                            </span>
+                        </div>
+                    </div>
+                    {isListVisible && (
+                        <div className={styles.postListBlock}>
+                            <div className={styles.postListSubHeader}>
+                                <div>
+                                    <span className={styles.postListSubject}>글 제목</span>
+                                </div>
+                                <div>
+                                    <span className={styles.postListSubject}>작성일</span>
+                                </div>
+                            </div>
+                            {postList.slice(start, end).map((postList, index) => (
+                                <div className={styles.postListTitle} key={index}>
+                                    <div className={styles.postCheckbox}>
+                                        {isCheckboxVisible && (
+                                            <input
+                                                type="checkbox"
+                                                defaultValue={'postList.postId'}
+                                                onChange={(e) => handleCheckbox(e, postList.postId)}
+                                            />
+                                        )}
+                                        &nbsp;&nbsp;&nbsp;
+                                        <Link href={`/post/${postList.postId}`}>
+                                            <a>
+                                                <div className={styles.postList}>
+                                                    <span className={styles.postListTitles}>{postList.subject}</span>
+                                                    <span className={styles.postListCommentCount}>({postList.commentCount})</span>
+                                                </div>
+                                            </a>
+                                        </Link>
+                                    </div>
+                                    <div>
+                                        <span>{postList.createdDate}</span>
+                                    </div>
+                                </div>
+                            ))}
+
+                            <div className={styles.postListSelectGroup}>
+                                <div>
+                                    {showManageButton() && (
+                                        <button type="button" className="btn btn-secondary"
+                                            onClick={toggleCheckboxVisibility}>글관리
+                                        </button>
+                                    )}
+                                    &nbsp;&nbsp;&nbsp;
+                                    {isCheckboxVisible && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={handleDelete}
+                                            disabled={selectedPost.length === 0}
+                                        >삭제
+                                        </button>
+                                    )}
+                                </div>
+                                <div class="form-group">
+                                    <select
+                                        class="form-control mb-3"
+                                        value={paging.limit}
+                                        onChange={handlePaging}
+                                    >
+                                        <option value="5">5줄 보기</option>
+                                        <option value="10">10줄 보기</option>
+                                        <option value="15">15줄 보기</option>
+                                        <option value="20">20줄 보기</option>
+                                        <option value="30">30줄 보기</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* 검색창 */}
+                            {/* 
                     <div>
                         <select name="" id="">
                             <option value="">전체보기</option>
@@ -250,58 +310,58 @@ const PostList = ({ categoryId }) => {
                         <button className={`${styles.searchButton} btn btn-primary`}>검색</button>
                     </div> 
                     */}
-                    
-                    
-                    <div className={styles.pageController}>
-                        <ul className={styles.pageNumbers}>
-                            {/* 이전 버튼 비활성화 */}
-                            {currentPageGroup > 1 && (
-                                <li>
-                                    <button
-                                        type="button"
-                                        className={styles.pageLink}
-                                        onClick={goToPrevGroup}
-                                    >
-                                    이전
-                                    </button>
-                                </li>
-                            )}
-                            {Array.from({ length: lastPageInGroup - firstPageInGroup + 1 }, (_, i) => {
-                                const pageNumber = firstPageInGroup + i;
-                                const isCurrentPage = pageNumber === paging.page;
-                                const buttonStyle = isCurrentPage ? styles.currentPage : styles.pageLink;
 
-                                return (
-                                <li key={i}>
-                                    <button
-                                    type="button"
-                                    className={buttonStyle}
-                                    onClick={() => goToPage(pageNumber)}
-                                    >
-                                    {pageNumber}
-                                    </button>
-                                </li>
-                                );
-                            })}
-                            {/* 다음 버튼 비활성화 */}
-                            {currentPageGroup < Math.ceil(maxPage / paging.count) && (
-                                <li>
-                                    <button
-                                        type="button"
-                                        className={styles.pageLink}
-                                        onClick={goToNextGroup}
-                                    >
-                                    다음
-                                    </button>
-                                </li>
-                            )}
-                        </ul>
-                        
-                    </div>
+
+                            <div className={styles.pageController}>
+                                <ul className={styles.pageNumbers}>
+                                    {/* 이전 버튼 비활성화 */}
+                                    {currentPageGroup > 1 && (
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className={styles.pageLink}
+                                                onClick={goToPrevGroup}
+                                            >
+                                                이전
+                                            </button>
+                                        </li>
+                                    )}
+                                    {Array.from({ length: lastPageInGroup - firstPageInGroup + 1 }, (_, i) => {
+                                        const pageNumber = firstPageInGroup + i;
+                                        const isCurrentPage = pageNumber === paging.page;
+                                        const buttonStyle = isCurrentPage ? styles.currentPage : styles.pageLink;
+
+                                        return (
+                                            <li key={i}>
+                                                <button
+                                                    type="button"
+                                                    className={buttonStyle}
+                                                    onClick={() => goToPage(pageNumber)}
+                                                >
+                                                    {pageNumber}
+                                                </button>
+                                            </li>
+                                        );
+                                    })}
+                                    {/* 다음 버튼 비활성화 */}
+                                    {currentPageGroup < Math.ceil(maxPage / paging.count) && (
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className={styles.pageLink}
+                                                onClick={goToNextGroup}
+                                            >
+                                                다음
+                                            </button>
+                                        </li>
+                                    )}
+                                </ul>
+
+                            </div>
+                        </div>
+                    )}
                 </div>
-                )}
             </div>
-        </div>
 
 
         </>

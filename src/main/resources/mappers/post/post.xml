@@ -108,6 +108,21 @@
         ]]>
 	</update>
 
+	<!-- 여러 게시글 삭제 -->
+	<update id="deletePosts" parameterType="com.dita.metapilot.post.dto.PostIdsDto">
+		<!-- 게시글 삭제시 휴지통으로 보내기(delete => 1) -->
+		update
+			post_tbl
+		set
+			deleted = 1
+		where
+			id
+		in
+		<foreach item="postId" collection="postIds" open="(" separator="," close=")">
+			#{postId}
+		</foreach>
+	</update>
+
 	<!-- 해시태그로 게시글 검색 -->
 	<select id="findPostByHashtag" resultMap="postDto">
 		select

@@ -49,6 +49,16 @@ public class PostService {
     }
 
     /**
+     * <p>여러개의 게시글들을 삭제하는 메서드</p>
+     *
+     * @param postIdsDto 여러 게시글들의 번호가 담긴 DTO.
+     * @return 성공적으로 게시글을 삭제했을 때 true 반환
+     */
+    public boolean deletePosts(PostIdsDto postIdsDto) {
+        return postRepository.deletePosts(postIdsDto);
+    }
+
+    /**
      * <p>해시태그로 게시글을 조회하는 메서드</p>
      *
      * @param hashtags 생성된 해시태그.
