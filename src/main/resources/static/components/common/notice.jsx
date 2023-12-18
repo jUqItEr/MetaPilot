@@ -12,7 +12,6 @@ const NoticePost = () => {
       method: "get",
       url: "/api/post/notice",
     }).then((res) => {
-      console.log(res.data);
       setNotice(res.data);
     });
   }, []);
