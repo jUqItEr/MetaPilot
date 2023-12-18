@@ -72,6 +72,7 @@ const IndexHeader = ({ info }) => {
                     </button>
                 </div>
             </header>
+
 {/* 
             <nav className='navbar navbar-expand-md'>
                 <h1>한글 테스트</h1>
