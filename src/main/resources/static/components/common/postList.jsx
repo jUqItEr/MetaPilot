@@ -73,6 +73,7 @@ const PostList = ({ categoryId }) => {
             },
             url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
+            console.log("postList 속 res.data : ", res.data)
             setPostList(res.data)
             const tempMaxPage = maxPage
 
@@ -122,7 +123,7 @@ const PostList = ({ categoryId }) => {
                     data: {
                         postIds: postIds,
                     },
-                    url: "/api/post/delete-multiple",
+                    url: "/api/post/delete",
                 }).then((res) => {
                     alert('삭제되었습니다');
                     setSelectedPost([]);
@@ -144,6 +145,7 @@ const PostList = ({ categoryId }) => {
     // 글관리 눌릴시 삭제 표시/숨기기 함수
     const toggleCheckboxVisibility = () => {
         setIsCheckboxVisible(!isCheckboxVisible)
+        $('input[type=checkbox]').prop('checked', false)
     }
 
     // 권한없을시 글관리 버튼 표시 여부 함수
@@ -202,6 +204,7 @@ const PostList = ({ categoryId }) => {
                 ...paging,
                 page: pageNumber,
             })
+            $('input[type=checkbox]').prop('checked', false)
         }
     }
 

@@ -103,7 +103,7 @@ const SideBarPage = () => {
             url: "/api/category/count",
         }).then((res) => {
             setData(res.data);
-            console.log("edd", res.data);
+            //console.log("edd", res.data);
         });
       }, [requestTime]);
 
