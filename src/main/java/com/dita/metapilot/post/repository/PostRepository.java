@@ -177,6 +177,13 @@ public interface PostRepository {
     List<PostEntity> getPagingView(PagingDto pagingDto);
 
     /**
+     * 전체 게시글 리스트를 가져오는 메서드.
+     *
+     * @return 게시글 리스트를 반환.
+     */
+    List<PostEntity> getPagingViewAll(PagingDto pagingDto);
+
+    /**
      * 게시글에 연결된 좋아요를 취소하는 메서드.
      *
      * @param postResponseDto 게시글 번호와 사용자의 ID를 담은 DTO.
