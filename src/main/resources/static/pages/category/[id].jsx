@@ -1,14 +1,14 @@
 import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import IndexHeader from "../../layout/home/header";
-import IndexSidebar from "../../layout/home/sidebar";
-import TrendPost from "../../components/common/trend";
-import NoticePost from "../../components/common/notice";
-import PostList from "../../components/common/postList"
-import PostListImageType from "../../components/common/postListImageType"
-import PostListBlogType from "../../components/common/postListBlogType"
-import Auth from "../account/auth";
+import IndexHeader from "../layout/home/header";
+import IndexSidebar from "../layout/home/sidebar";
+import TrendPost from "../components/common/trend";
+import NoticePost from "../components/common/notice";
+import PostList from "../components/common/postList"
+import PostListImageType from "../components/common/postListImageType"
+import PostListBlogType from "../components/common/postListBlogType"
+import Auth from "./account/auth";
 
 export const getServerSideProps = async context => {
   const { id } = context.params

@@ -14,11 +14,9 @@ const PostListBlogType = ({ categoryId }) => {
     })
     const [isListVisible, setIsListVisible] = useState(true)
     const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
-    const [isDeleteboxVisible, setIsDeleteboxVisible] = useState(false)
     const start = (paging.page -1) * paging.count
     const end = start + paging.count
 
-    const [postTotalCount, setPostTotalCount] = useState(0)
     const [currentPageGroup, setCurrentPageGroup] = useState(1)
     const [firstPageInGroup, setFirstPageInGroup] = useState(1)
     const [lastPageInGroup, setLastPageInGroup] = useState(5)
@@ -52,7 +50,6 @@ const PostListBlogType = ({ categoryId }) => {
             url: "/api/post/count",
         }).then((res) => {
             const postCount = res.data // 조건에 만족하는 전체 게시글수
-            setPostTotalCount(postCount)
 
             const tempMaxPage = Math.ceil(postCount / paging.count); // 한 페이지 보여질 게시글수 계산
             setMaxPage(tempMaxPage);
@@ -81,12 +78,6 @@ const PostListBlogType = ({ categoryId }) => {
           const newLastPageInGroup = Math.min(nextPageGroup * paging.count, tempMaxPage)
           setFirstPageInGroup(newFirstPageInGroup)
           setLastPageInGroup(newLastPageInGroup)
-
-          console.error('paging content : ', paging)
-          console.error('f: ', newFirstPageInGroup)
-          console.error('l: ', newLastPageInGroup)
-          console.error('next group: ', nextPageGroup)
-          console.error('max page: ', maxPage)
         });
 
         axios({
@@ -110,7 +101,6 @@ const PostListBlogType = ({ categoryId }) => {
     // 글관리 눌릴시 삭제 표시/숨기기 함수
     const toggleCheckboxVisibility = () => {
         setIsCheckboxVisible(!isCheckboxVisible)
-        setIsDeleteboxVisible(!isDeleteboxVisible)
     }
 
     // 이전 페이지 그룹으로 이동하는 함수
@@ -212,13 +202,6 @@ const PostListBlogType = ({ categoryId }) => {
                     ))}
                     
                     <div className={styles.postListSelectGroup}>
-                        <div>
-                            <button type="button" className="btn btn-secondary"
-                                onClick={toggleCheckboxVisibility}>글관리</button>
-                            {isDeleteboxVisible && (
-                                <button type="button" className="btn btn-secondary">삭제</button>
-                            )}
-                        </div>
                         <div class="form-group">
                             <select 
                                 class="form-control mb-3"

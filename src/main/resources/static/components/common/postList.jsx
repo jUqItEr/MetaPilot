@@ -71,7 +71,7 @@ const PostList = ({ categoryId }) => {
                 userId: user?.id,
                 categoryId: categoryId, // 카테고리 id 받아올수있게 수정
             },
-            url: "/api/post/page",
+            url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
             setPostList(res.data)
             const tempMaxPage = maxPage
@@ -82,12 +82,6 @@ const PostList = ({ categoryId }) => {
             const newLastPageInGroup = Math.min(nextPageGroup * paging.count, tempMaxPage)
             setFirstPageInGroup(newFirstPageInGroup)
             setLastPageInGroup(newLastPageInGroup)
-
-            console.error('paging content : ', paging)
-            console.error('f: ', newFirstPageInGroup)
-            console.error('l: ', newLastPageInGroup)
-            console.error('next group: ', nextPageGroup)
-            console.error('max page: ', maxPage)
         });
 
         axios({
@@ -283,9 +277,9 @@ const PostList = ({ categoryId }) => {
                                         </button>
                                     )}
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <select
-                                        class="form-control mb-3"
+                                        className="form-control mb-3"
                                         value={paging.limit}
                                         onChange={handlePaging}
                                     >

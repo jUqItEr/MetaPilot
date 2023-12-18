@@ -198,6 +198,19 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostPageView(pagingDto));
     }
 
+    /**
+     * <p>전체 게시글 리스트 페이지를 조회하는 컨트롤러 메서드</p>
+     *
+     * @param pagingDto 페이징 정보가 담긴 DTO.
+     * @return 조회된 게시글 리스트를 반환
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/pageAll")
+    public ResponseEntity<List<PostEntity>> postPageViewAll(PagingDto pagingDto) {
+        return ResponseEntity.ok(postService.getPostPageViewAll(pagingDto));
+    }
+
     /*
     @ResponseBody
     @PostMapping("/getPost")

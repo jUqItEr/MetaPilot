@@ -13,12 +13,9 @@ const PostListImageType = ({ categoryId }) => {
         count: 16, // 페이지당 게시글 수
     })
     const [isListVisible, setIsListVisible] = useState(true)
-    const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
-    const [isDeleteboxVisible, setIsDeleteboxVisible] = useState(false)
     const start = (paging.page -1) * paging.count
     const end = start + paging.count
 
-    const [postTotalCount, setPostTotalCount] = useState(0)
     const [currentPageGroup, setCurrentPageGroup] = useState(1)
     const [firstPageInGroup, setFirstPageInGroup] = useState(1)
     const [lastPageInGroup, setLastPageInGroup] = useState(5)
@@ -42,7 +39,6 @@ const PostListImageType = ({ categoryId }) => {
             url: "/api/post/count",
         }).then((res) => {
             const postCount = res.data // 조건에 만족하는 전체 게시글수
-            setPostTotalCount(postCount)
 
             const tempMaxPage = Math.ceil(postCount / paging.count); // 한 페이지 보여질 게시글수 계산
             setMaxPage(tempMaxPage);
@@ -73,12 +69,6 @@ const PostListImageType = ({ categoryId }) => {
           setLastPageInGroup(newLastPageInGroup)
 
           setCategoryType(res.data.categoryType)
-
-          console.error('paging content : ', paging)
-          console.error('f: ', newFirstPageInGroup)
-          console.error('l: ', newLastPageInGroup)
-          console.error('next group: ', nextPageGroup)
-          console.error('max page: ', maxPage)
         });
         axios({
             method: "get",
@@ -96,12 +86,6 @@ const PostListImageType = ({ categoryId }) => {
     // 목록 표시/숨기기 함수
     const toggleListVisibility = () => {
         setIsListVisible(!isListVisible)
-    }
-
-    // 글관리 눌릴시 삭제 표시/숨기기 함수
-    const toggleCheckboxVisibility = () => {
-        setIsCheckboxVisible(!isCheckboxVisible)
-        setIsDeleteboxVisible(!isDeleteboxVisible)
     }
 
     // 이전 페이지 그룹으로 이동하는 함수
@@ -183,9 +167,6 @@ const PostListImageType = ({ categoryId }) => {
                                         /><br/>
                                         <div style={{fontSize: '18px'}}>
                                             {postList.subject}
-                                            {isCheckboxVisible && (
-                                                <input type="checkbox" defaultValue={"0"} style={{marginLeft: '5px'}}/>
-                                            )}
                                         </div>
                                         <div>{postList.createdAt}</div>
                                         <span style={{marginRight: '8px'}}>댓글 : {postList.commentCount}</span>
@@ -194,16 +175,6 @@ const PostListImageType = ({ categoryId }) => {
                                 </Link>
                             </div>
                         ))}
-                    </div>
-                    
-                    <div className={styles.postListSelectGroup}>
-                        <div>
-                            <button type="button" className="btn btn-secondary"
-                                onClick={toggleCheckboxVisibility}>글관리</button>
-                            {isDeleteboxVisible && (
-                                <button type="button" className="btn btn-secondary">삭제</button>
-                            )}
-                        </div>
                     </div>
                     
                     <div className={styles.pageController}>
