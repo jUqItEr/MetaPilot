@@ -13,24 +13,47 @@ import AdminSidebar from "../../../layout/admin/sidebar"
  * @since 2023. 12. 07.
  * @returns
  */
-export default function AdminBlogInfoPage() {
+
+function AdminInfoPage() {
     const [isMobile, setIsMobile] = useState(false)
     const [info, setInfo] = useState([])
     const [title, setTitle] = useState("");  // Add state for title
     const [profile, setProfile] = useState("");  // Add state for profileImage
     const [googleAnalytics, setGoogleAnalytics] = useState("");  // Add state for googleAnalytics
     const [profileImage, setProfileImage] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imageURL, setImageURL] = useState(null);
+    const [imgSrc,setImgSrc] = useState("");
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append('image',file);
+
+        if (file && (file.type === "image/jpg" || file.type === "image/png")) {
+
+
+            alert("등록버튼을 눌러 이미지 저장을 계속해주세요.");
+
+        } else {
+            alert("잘못된 파일 형식입니다. jpg, png 만 게시 가능합니다.");
+            event.target.value = "";
+        }
+    };
+
+    const imgSubmit = () => {
+        console.log("업로드된 이미지 URL:", imageURL);
+        // setImgSrc(imageURL);
+    };
 
     // update db
     const updateInfo = () => {
-        console.log("func console log : ",{ id: 1, title: title, profile: profile, googleAnalytics: googleAnalytics });
-
         axios({
             params: {
                 id: 1,
                 title: title,
                 profile: profile,
-                profileImage : "",
+                profileImage : imageURL,
                 googleAnalytics: googleAnalytics
             },
             method: 'post',
@@ -39,30 +62,12 @@ export default function AdminBlogInfoPage() {
         .then((res) => {
             setInfo(res.config.data);
             console.log(res);
+            alert("블로그 정보를 성공적으로 저장하였습니다.");
         })
         .catch((err) => {
             console.error('Request error:', err);
         })
     };
-    // 이미지 업로드
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const formData = new FormData();
-            formData.append('userprofile', file);
-    
-            axios.post('/api/upload', formData)
-                .then((response) => {
-                    // 이미지 URL을 받아서 상태에 저장
-                    setProfileImage(response.data.imageUrl);
-                    // 필요한 경우 다른 처리 수행
-                })
-                .catch((error) => {
-                    console.error('Error uploading image:', error);
-                });
-        }
-    };
-    
     // 반응형
     useEffect(() => {
         axios({
@@ -70,8 +75,12 @@ export default function AdminBlogInfoPage() {
             url: '/api/admin/getBlogInfo'
         })
         .then((res) => {
-            setInfo(res.data[0])
-            console.log(res.data[0])
+            setInfo(res.data)
+            setTitle(res.data.title)
+            setProfile(res.data.profile)
+            // setProfileImage(res.data.)
+            setGoogleAnalytics(res.data.googleAnalytics)
+            console.log(res.data)
         })
         .catch((err) => {
             console.log(err)
@@ -122,7 +131,6 @@ export default function AdminBlogInfoPage() {
         };
     }, []);
 
-
     return (
         <>
             <Head>
@@ -147,16 +155,17 @@ export default function AdminBlogInfoPage() {
                             <div className = {`${styles.setField} border-bottom`}>
                                 <label className={`${styles.label} form-label fw-bold`} htmlFor={"exampleFormControlInput1"} style={{width:'calc(12% + 30px)'}} >블로그 명</label>
                                 <input type="text" className={`${styles.formfield} form-control`}
-                                       id={"title"} value={title} placeholder={info?.title} style={{width:'calc(25% + 100px)'}}
+                                       id={"title"} defaultValue={info?.title} style={{width:'calc(25% + 100px)'}}
                                        name={"title"} onChange={(e) => setTitle(e.target.value)}/>
                                 <label className="text-body-tertiary ps-3" htmlFor={"exampleFormControlInput1"}>한글, 영문, 숫자 혼용가능(한글 기준 25자 이내)</label>
                             </div>
                             {/* 소개 글 */}
                             <div className = {`${styles.setField} border-bottom`}>
                                 <label className={`${styles.label} form-label fw-bold`} htmlFor={"float1ingTextarea1"} style={{width:'calc(12% + 30px)'}}>소개글</label>
-                                <textarea className="form-control" placeholder={info?.profile}
+                                <textarea className="form-control" defaultValue={info?.profile}
                                           id={"profile"} style={{width:'calc( 25% + 100px)',height: '120px'}}
                                           name={"profile"} onChange={(e) => setProfile(e.target.value)}/>
+                                <label className="text-body-tertiary ps-3" htmlFor={"exampleFormControlInput1"}>한글 기준 100자 이내만 표시됩니다.</label>
                             </div>
                             {/* 프로필 이미지*/}
                             <div className = {`${styles.setField} border-bottom `}>
@@ -164,22 +173,25 @@ export default function AdminBlogInfoPage() {
                                 <div style={{width:'calc(45% + 100px)'}}>
                                     <div className="profileImgField" style={{width:'100%'}}>
                                         {/* 예전 이미지*/}
-                                        <img src="/image/logo-kakao.png " className="img-thumbnail" alt="..."/>
-                                        <label className="text-body-tertiary ps-3" style={{width:'100%'}} htmlFor={"exampleFormControlInput2"} name={"profileImage"}> 프로필 이미지는 가로 160px<br/> 섬네일로 생성됩니다.</label>
+                                        {/* db에 이미지 한번도 저장된적 없다면 profile.png src={"/image/profile.png"}
+                                            db에 저장된 이미지가 있다면 adminProfile.png src={info?.profileImage}
+                                            등록버튼을 클릭했고, 선택된 파일이 있다면 src={imageURL}*/}
+                                        <img src = {info?.profileImage || "/image/profile.png"} className="img-thumbnail" alt="..." style={{width:'160px' , height : '160px'}}/>
+                                        <label className="text-body-tertiary ps-3" style={{width:'100%'}} htmlFor={"exampleFormControlInput2"} name={"profileImage"}> 프로필 이미지는 가로 160px 섬네일로 생성됩니다.</label>
                                     </div>
                                     <div className="input-group col " style={{width:'100%'}}>
                                         {/* 변경할 이미지 파일 선택 */}
                                         <input type="file" className="form-control " id="fileInput"
-                                                aria-label="Upload" name={"imgFile"}/>
-                                        <button  type="button" className={`btn btn-primary ps-2 pe-2 `} >등록</button>
+                                                aria-label="Upload" name={"imgFile"}  onChange={handleFileChange} />
+                                        <button  type="button" className={`btn btn-primary ps-2 pe-2`} onClick={imgSubmit}>등록</button>
                                     </div>
                                 </div>
                             </div>
                             {/* 구글 애널리틱스 정보*/}
                             <div className = {`${styles.setField} border-bottom`}>
                                 <label className={`${styles.label} ${styles.googleTitle} form-label fw-bold`} htmlFor={"float1ingTextarea1"} style={{width:'calc(9% + 70px)'}}>구글<br/>애널리틱스<br/>정보</label>
-                                <textarea className="form-control" placeholder={"구글 애널리틱스 정보입니다."} id={"googleAnalytics"}
-                                          style={{width:'calc(25% + 100px)',height: '120px'}} name={"googleAnalytics"}
+                                <textarea className="form-control" id={"googleAnalytics"}
+                                          style={{width:'calc(25% + 100px)',height: '120px'}} name={"googleAnalytics"} defaultValue={info?.googleAnalytics}
                                           onChange={(e) => setGoogleAnalytics(e.target.value)} />
 
                             </div>
@@ -195,3 +207,5 @@ export default function AdminBlogInfoPage() {
         </>
     )
 };
+
+export default AdminInfoPage;
