@@ -37,7 +37,7 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<Boolean> createPost(@RequestBody PostDto postDto) {
+    public ResponseEntity<Boolean> createPost(PostDto postDto) {
         return ResponseEntity.ok(postService.createPost(postDto));
     }
 

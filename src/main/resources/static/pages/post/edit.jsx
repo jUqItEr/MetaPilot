@@ -1,156 +1,79 @@
-import { useRouter } from 'next/router';
-
+import axios from "axios"
+import dynamic from "next/dynamic"
+import styles from '/styles/post/edit.module.css'
+import { useEffect, useState } from "react"
 import Head from "next/head"
-import Image from 'next/image'
-import axios from 'axios'
-import $, { post } from 'jquery'
-import {useEffect, useState} from "react"
-import { color } from "framer-motion"
-import { faDisplay } from "@fortawesome/free-solid-svg-icons"
-import IndexHeader from "./header"
-import PostList from "../../components/common/list"
-import styles from '/styles/sidebar.module.css'
-/* edd */
 
-/**
- * Rendering the category page.
- *
- * @author Ha Seong Kim
- * @since 2023. 12. 17.
- * @returns
- */
+const RichTextEditor = dynamic(
+    () => import("../../components/common/editor"),
+    { ssr: false }
+)
 
-const SideBarPage = () => {
-    const router = useRouter();
-    const [data, setData] = useState([]);
-    const [ category, setCategory ] = useState([])
-    const [ info, setInfo ] = useState([])
-    const [selectedCategory, setSelectedCategory] = useState(null)
-    const [categoryId, setCategoryId] = useState(1)
-    const [categorySubject, setCategorySubject] = useState("")
-    const [categoryCountVisible, setCategoryCountVisible] = useState("")
-    const [categoryVisible, setCategoryVisible] = useState("")
-    const [categoryType, setCategoryType] = useState("")
-    const [categoryListVisible, setCategoryListVisible] = useState("")
-    const [categoryFold, setCategoryFold] = useState("")
-    const [categoryDepth, setCategoryDepth] = useState("")
-    const [requestTime, setRequestTime] = useState(new Date())
-    const [sidebarVisible, setSidebarVisible] = useState(true)
-    const [totalPostCount, setTotalPostCount] = useState(0);
+const PostEdit = ({ categoryId, postId }) => {
+    const [data, setData] = useState([])
 
-    const toggleSidebar = () => {
-        setSidebarVisible(!sidebarVisible);
-    };
-
-    const categoryClick = (mapper) => {
-        setSelectedCategory(mapper);
-        setCategoryId(mapper.id);
-        setCategorySubject(mapper.subject);
-
-        setCategoryCountVisible(mapper.countVisible);
-        setCategoryVisible(mapper.visible);
-        setCategoryType(mapper.type);
-        setCategoryListVisible(mapper.listVisible);
-        setCategoryFold(mapper.fold);
-        setCategoryDepth(mapper.depth);
-
-        /*alert(
-            "카테고리 id : " + mapper.id + "\n"
-            + "카테고리 이름 : " + mapper.subject + "\n"
-            + "카테고리 게시글 수 공개 : " + mapper.countVisible + "\n"
-            + "카테고리 공개/비공개 : " + mapper.visible + "\n"
-            + "카테고리 블로그형/이미지형 : " + mapper.type + "\n"
-            + "카테고리 게시글 보여지는지 : " + mapper.listVisible + "\n"
-            + "카테고리 접었는지 : " + mapper.fold + "\n"
-            + "카테고리 자식인지 부모인지 : " + mapper.depth + "\n"
-        );*/
-
-        if(mapper.id === 1) {
-            router.push(`/category`);
-        } else {
-            router.push(`/category/${mapper.id}`);
-        }
-    };
-
-      useEffect(() => {
-          const getCategory = () => {
+    useEffect(() => {
+        if (postId !== undefined) {
+            // 게시글 수정 모드로 동작
             axios({
                 method: 'get',
-                url: '/api/category/list'
+                params: {
+                    postId: postId
+                },
+                url: '/api/post/view'
             })
             .then((res) => {
+                setData(res.data)
                 console.log(res.data)
-                setCategory(res.data)
             })
-          }
-
-          const getInfo = () => {
-            axios({
-                method: 'get',
-                url: '/api/info'
+            .catch((err) => {
+                console.log(err)
             })
-            .then((res) => {
-                setInfo(res.data.data)
-            })
-          }
-
-          getCategory()
-          getInfo()
-
-          axios({
-            method: "get",
-            url: "/api/admin/category/list",
-        }).then((res) => {
-            setData(res.data);
-
-            const sum = res.data.reduce((accumulator, currentMapper) => {
-              return accumulator + currentMapper.postCount;
-            }, 0);
-
-            setTotalPostCount(sum);
-
-            console.log("edd", res.data);
-        });
-      }, [requestTime]);
+        } else {
+            // axios({
+            //     method: 'post',
+            //     url: '/api/post/create'
+            // })
+            // .then((res) => {})
+        }
+    }, [])
 
     return (
         <>
-            <Head>
-                <title>카테고리 - {`${info.title}`}</title>
-                <meta property='og:title' content='카테고리 리스트' key='title'/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            </Head>
-            <div className={`${styles.side} ${sidebarVisible ? '' : styles.hidden}`}>
-                <div>
-                    {/* content */}
-                    <div>
-                        <div className="list-group">
-                            {data?.map((mapper) => {
-                                return (
-                                    <button
-                                        key={mapper.id}
-                                        type="button"
-                                        style={{fontWeight: mapper.id === 1 ? "bold" : "normal"
-                                        , backgroundColor: mapper.id === categoryId ? "var(--bs-gray-100)" : "var(--bs-gray-100)"}}
-                                        className={`list-group-item list-group-item-action`}
-                                        onClick={() => categoryClick(mapper)} >
-                                        {
-                                            mapper.depth === 0
-                                            ? mapper.subject +
-                                            (mapper.type === 0 || mapper.countVisible === 0 ? ''
-                                                : (mapper.id === 1 ? ' (' + totalPostCount + ')' : ' (' + mapper.totalCount + ')'))
-                                            : ' ㄴ' + mapper.subject +
-                                            (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.postCount + ')')
-                                        }
-                                    </button>
-                                )
-                            })}
-                        </div>
+            {/* <Head>
+                <title>게시글 {postId ? '수정' : '작성'}</title>
+            </Head> */}
+            <div className='container'>
+                <header className={styles.editHeader}>
+                    <div></div>
+                    <div className={styles.headerButton}>
+                        <button className='btn btn-secondary' type='button'>임시저장</button>
+                        <button className='btn btn-primary' type='button'>발행</button>
                     </div>
-                </div>
+                </header>
+                <table>
+                    <tbody>
+                        <tr className={styles.editTitle}>
+                            <div className={styles.editSecret}>
+                                
+                            </div>
+                            <td width={90}>제목</td>
+                                <td><input className='form-control' type='text' placeholder='제목을 입력해주세요.' /></td>
+
+                                <input type="checkbox" id="formcheck" className={styles.editorCheckbox}/>
+                                <label htmlFor="formcheck" className={styles.editorLabel}>비밀댓글</label>
+                                <input className={`${styles.editFile} form-control form-control-sm`} id='formFileSm' type='file'/>
+                            {/* <div className={styles.editFile}>
+                                <input className='form-control form-control-sm' id='formFileSm' type='file'/>
+                            </div> */}
+                        </tr>
+                    </tbody>
+                </table>
+                <RichTextEditor initialData={data?.post?.content} />
+
             </div>
         </>
     )
-};
+}
 
-export default SideBarPage
+export default PostEdit
