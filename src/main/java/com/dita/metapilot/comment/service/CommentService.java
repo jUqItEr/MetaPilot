@@ -54,7 +54,20 @@ public class CommentService {
         boolean result = false;
 
         try {
-            result = repository.deleteComment(dto);
+            if (repository.hasSibling(dto)) {
+                result = repository.deleteResponses(dto);
+                result &= repository.updateRootComment(dto);
+            } else {
+                long id = dto.getId();
+                long rootId = repository.getRootId(dto);
+                dto.setId(rootId);
+
+                if (!repository.hasSibling(dto)) {
+                    result = repository.deleteComment(dto);
+                }
+                dto.setId(id);
+                result = repository.deleteComment(dto);
+            }
         } catch (Exception e) {
             // 예외 발생 시 로깅하고 삭제 실패로 처리
             System.err.println("댓글 삭제 중 예외 발생: " + e.getMessage());
@@ -71,7 +84,7 @@ public class CommentService {
      * @author Kiseok Kang (@Seungyun)
      */
     public long getCommentCount(PostRequestDto dto) {
-        return repository.getTotalCount(dto);
+        return repository.getCommentCount(dto);
     }
 
     /**

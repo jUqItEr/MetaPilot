@@ -9,8 +9,6 @@ import { color } from "framer-motion"
 import { faDisplay } from "@fortawesome/free-solid-svg-icons"
 import IndexHeader from "./header"
 import PostList from "../../components/common/list"
-import styles from '/styles/sidebar.module.css'
-/* edd */
 
 /**
  * Rendering the category page.
@@ -35,12 +33,8 @@ const SideBarPage = () => {
     const [categoryFold, setCategoryFold] = useState("")
     const [categoryDepth, setCategoryDepth] = useState("")
     const [requestTime, setRequestTime] = useState(new Date())
-    const [sidebarVisible, setSidebarVisible] = useState(true)
+    
     const [totalPostCount, setTotalPostCount] = useState(0);
-
-    const toggleSidebar = () => {
-        setSidebarVisible(!sidebarVisible);
-    };
 
     const categoryClick = (mapper) => {
         setSelectedCategory(mapper);
@@ -99,16 +93,9 @@ const SideBarPage = () => {
 
           axios({
             method: "get",
-            url: "/api/admin/category/list",
+            url: "/api/category/count",
         }).then((res) => {
             setData(res.data);
-
-            const sum = res.data.reduce((accumulator, currentMapper) => {
-              return accumulator + currentMapper.postCount;
-            }, 0);
-
-            setTotalPostCount(sum);
-
             console.log("edd", res.data);
         });
       }, [requestTime]);
@@ -120,27 +107,27 @@ const SideBarPage = () => {
                 <meta property='og:title' content='카테고리 리스트' key='title'/>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             </Head>
-            <div className={`${styles.side} ${sidebarVisible ? '' : styles.hidden}`}>
-                <div>
+            <div>
+                <div /*className="d-flex flex-nowrap"*/style={{ width: '200px'}}>
                     {/* content */}
-                    <div>
+                    <div  style={{maxHeight:'400px', overflowY: 'auto', width:'260px'}}>
                         <div className="list-group">
                             {data?.map((mapper) => {
                                 return (
-                                    <button 
-                                        key={mapper.id} 
-                                        type="button" 
-                                        style={{fontWeight: mapper.id === 1 ? "bold" : "normal"
-                                        , backgroundColor: mapper.id === categoryId ? "var(--bs-gray-100)" : "var(--bs-gray-100)"}}
-                                        className={`list-group-item list-group-item-action`}
-                                        onClick={() => categoryClick(mapper)} >
+                                    <button key={mapper.id} type="button" style={{fontWeight: mapper.id === 1 ? "bold" : "normal"
+                                    , backgroundColor: mapper.id === categoryId ? "#ECECEC" : "white"
+                                    , display: mapper.visible === 0 ? 'none' : 'block'}}
+                                    /* ↑↑↑↑↑ category의 visible 컬럼이 0(비공개 카테고리)이면 표시하지 않습니다 */
+                                    className={`list-group-item list-group-item-action`}
+                                    onClick={() => categoryClick(mapper)} >
                                         {
-                                            mapper.depth === 0
+                                            (mapper.depth === 0
                                             ? mapper.subject + 
                                             (mapper.type === 0 || mapper.countVisible === 0 ? ''
-                                                : (mapper.id === 1 ? ' (' + totalPostCount + ')' : ' (' + mapper.totalCount + ')'))
+                                                : (mapper.id === 1 ? ' (' + mapper.allCount + ')' : ' (' + mapper.refCount + ')'))
                                             : ' ㄴ' + mapper.subject +
-                                            (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.postCount + ')')
+                                            (mapper.type === 0 || mapper.countVisible === 0 ? '' : ' (' + mapper.count + ')'))
+                                            + ' mapper.fold = ' + mapper.fold /* ←----------< 만약 이 값이 0이면 자식 카테고리 접어서 안 보이게 해주세요*/
                                         }
                                     </button>
                                 )

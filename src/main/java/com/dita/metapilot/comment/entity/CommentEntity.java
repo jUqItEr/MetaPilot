@@ -18,6 +18,8 @@ public class CommentEntity {
     private int visible;
     private String createdAt;
     private String nickname;
+    private String refUserId;
     private String refNickname;
+    private String profileImage;
     private int likeCount;
 }

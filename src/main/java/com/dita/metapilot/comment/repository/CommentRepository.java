@@ -21,19 +21,27 @@ public interface CommentRepository {
 
     boolean deleteComment(CommentDto dto);
 
+    boolean hasSibling(CommentDto dto);
+
     boolean updateComment(CommentDto dto);
+
+    boolean updateRootComment(CommentDto dto);
 
     boolean updateRootId(RefDto dto);
 
     long getLastId();
 
-    long getTotalCount(PostRequestDto dto);
+    long getRootId(CommentDto dto);
+
+    long getCommentCount(PostRequestDto dto);
 
     List<CommentEntity> getCommentList(PostRequestDto dto);
 
     boolean createResponse(ResponseDto dto);
 
     boolean deleteResponse(ResponseDto dto);
+
+    boolean deleteResponses(CommentDto dto);
 
     boolean hasResponse(ResponseDto dto);
 }

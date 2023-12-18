@@ -229,8 +229,14 @@ public class CategoryController {
 
 
     @ResponseBody
-    @PostMapping("/info")
-    public ResponseEntity<?> getCategoryInfo(@Valid @RequestBody CategoryDto categoryDto) {
+    @GetMapping("/info")
+    public ResponseEntity<?> getCategoryInfo(@Valid CategoryDto categoryDto) {
         return ResponseEntity.ok(categoryService.getCategoryInfo(categoryDto.getId()));
+    }
+
+    @ResponseBody
+    @GetMapping("/count")
+    public ResponseEntity<?> categoryPostCount() {
+        return ResponseEntity.ok(categoryService.categoryPostCount());
     }
 }

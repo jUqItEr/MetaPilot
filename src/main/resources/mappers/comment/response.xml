@@ -27,6 +27,14 @@
             user_tbl_id = #{userId}
     </delete>
 
+    <delete id="deleteResponses"
+            parameterType="com.dita.metapilot.comment.dto.CommentDto">
+        delete from
+            comment_like_tbl
+        where
+            comment_tbl_id = #{id}
+    </delete>
+
     <select id="hasResponse"
             resultType="boolean"
             parameterType="com.dita.metapilot.comment.dto.ResponseDto">
