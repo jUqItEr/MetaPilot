@@ -294,7 +294,10 @@
 
   .menuItem {
     display: none;
-    position: relative;
+    position: absolute;
+    width: 100px;
+    right: 40px;
+    top: 230px;
   }
 
   .commentMenu {

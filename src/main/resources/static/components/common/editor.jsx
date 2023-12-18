@@ -37,7 +37,7 @@ function RichTextEditor({ initialData }) {
                 editorClassName='editor'
                 toolbarClassName='toolbar-class'
                 toolbar={{
-                    options: ['fontFamily', 'fontSize', 'inline', 'textAlign', 'history', 'image', 'list', 'link'],
+                    options: ['fontFamily', 'fontSize', 'inline', 'textAlign', 'image', 'list', 'link', 'history'],
                     list: {
                         inDropdown: true
                     },
@@ -49,7 +49,15 @@ function RichTextEditor({ initialData }) {
                     },
                     history: {
                         inDropdown: false
-                    }
+                    },
+                    image: {
+                        uploadCallback: (file) => {
+                            console.log(file)
+                        },
+                        urlEnabled: false,
+                        uploadEnabled: true,
+                        previewImage: true
+                    },
                 }}
                 placeholder='내용을 작성해주세요.'
                 localization={{

@@ -65,6 +65,14 @@
 		<result property="createdAt" column="created_at"/>
 	</resultMap>
 
+	<resultMap id="tempData" type="com.dita.metapilot.post.dto.PostDto">
+		<result property="postId" column="id" />
+		<result property="categoryId" column="category_tbl_id" />
+		<result property="subject" column="subject" />
+		<result property="createdAt" column="created_at" />
+		<result property="type" column="type" />
+	</resultMap>
+
 	<!-- 해시태그 생성 -->
 	<insert id="createHashtag" parameterType="com.dita.metapilot.post.dto.HashtagDto">
 		insert into hashtag_tbl(content)
@@ -99,14 +107,6 @@
 		delete from post_hashtag_tbl
 		where post_tbl_id = #{postId}
 	</delete>
-
-	<!-- 게시글 삭제 -->
-	<update id="deletePost" parameterType="com.dita.metapilot.post.dto.PostIdDto">
-		<!-- 게시글 삭제시 휴지통으로 보내기(delete => 1) -->
-		<![CDATA[
-        	update post_tbl set deleted = 1 where id = #{postId}
-        ]]>
-	</update>
 
 	<!-- 여러 게시글 삭제 -->
 	<update id="deletePosts" parameterType="com.dita.metapilot.post.dto.PostIdsDto">
@@ -160,6 +160,11 @@
 		from post_like_tbl plt
 		left join user_tbl ut on plt.user_tbl_id = ut.id
 		where plt.post_tbl_id = #{postId}
+	</select>
+
+	<!-- 모든 해시태그 가져오기 -->
+	<select id="getAllHashtags" resultType="com.dita.metapilot.post.dto.HashtagDto">
+		select * from hashtag_tbl
 	</select>
 
 	<!-- 공지사항 게시글 목록 -->
@@ -263,6 +268,32 @@
 			where
 				pt.id = #{postId}
         ]]>
+	</select>
+
+	<!-- 임시저장 목록 가져오기 -->
+	<select id="getTemporaryList" parameterType="com.dita.metapilot.post.dto.UserIdDto" resultMap="tempData">
+		select
+			id,
+			category_tbl_id,
+			subject,
+			created_at,
+			type
+		from
+			post_tbl
+		where
+			type = 2 and user_tbl_id = #{userId}
+		order by
+			created_at desc
+	</select>
+
+	<!-- 임시저장 게시글 개수 가져오기 -->
+	<select id="getTemporaryCount" parameterType="com.dita.metapilot.post.dto.UserIdDto" resultType="int">
+		select
+			count(*)
+		from
+			post_tbl
+		where
+			type = 2 and user_tbl_id = #{userId}
 	</select>
 
 	<!-- 해시태그 중복체크 -->
@@ -404,14 +435,17 @@
 	<!-- 게시글 수정 -->
 	<update id="updatePost" parameterType="com.dita.metapilot.post.dto.PostDto">
 		<![CDATA[
-        update post_tbl
+        update
+        	post_tbl
         set
+        	category_tbl_id = #{categoryId},
             subject = #{subject},
             content = #{content},
             notice = #{notice},
             thumbnail = #{thumbnail},
             type = #{type},
-            created_at = ifnull(created_at, now())
+            created_at = ifnull(created_at, now()),
+            updated_at = now()
         where id = #{postId}
         ]]>
 	</update>

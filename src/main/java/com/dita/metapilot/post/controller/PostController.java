@@ -42,28 +42,16 @@ public class PostController {
     }
 
     /**
-     * <p>게시글을 삭제하고 성공 여부를 반환하는 컨트롤러 메서드</p>
-     *
-     * @param postIdDto 게시글 번호를 담은 DTO.
-     * @return 게시글 삭제 성공 시 true, 실패 시 false를 반환
-     * @since 2023. 11. 28.
-     */
-    @ResponseBody
-    @PostMapping("/delete")
-    public ResponseEntity<Boolean> deletePost(PostIdDto postIdDto) {
-        return ResponseEntity.ok(postService.deletePost(postIdDto));
-    }
-
-    /**
-     * <p>여러게시글들을 삭제하고 성공 여부를 반환하는 컨트롤러 메서드</p>
+     * <p>게시글들을 삭제하고 성공 여부를 반환하는 컨트롤러 메서드</p>
      *
      * @param postIdsDto 여러 게시글 번호들을 담은 DTO.
      * @return 게시글 삭제 성공 시 true, 실패 시 false를 반환
      * @since
      */
     @ResponseBody
-    @PostMapping("/delete-multiple")
-    public ResponseEntity<Boolean> deletePosts(@RequestBody PostIdsDto postIdsDto) {
+    @PostMapping("/delete")
+    public ResponseEntity<Boolean> deletePosts(PostIdsDto postIdsDto) {
+        System.out.println(postIdsDto);
         boolean result = postService.deletePosts(postIdsDto);
         return ResponseEntity.ok(result);
     }
@@ -79,6 +67,18 @@ public class PostController {
     @PostMapping("/hashtag/search")
     public List<PostDto> findPostByHashtag(@RequestBody List<String> hashtags) {
         return postService.findPostByHashtag(hashtags);
+    }
+
+    /**
+     * <p>모든 해시태그들을 가져오는 컨트롤러 메서드</p>
+     *
+     * @return 모든 해시태그 목록 반환
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/hashtag/list")
+    public List<HashtagDto> getAllHashtags() {
+        return postService.getAllHashtags();
     }
 
     /**
@@ -131,6 +131,30 @@ public class PostController {
     }
 
     /**
+     * <p>임시저장된 게시글 리스트를 반환하는 컨트롤러 메서드</p>
+     *
+     * @return 임시저장된 게시글 리스트를 반환
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/temporary/list")
+    public List<PostDto> getTemporaryList(UserIdDto userIdDto) {
+        return postService.getTemporaryList(userIdDto);
+    }
+
+    /**
+     * <p>임시저장된 게시글 개수를 반환하는 컨트롤러 메서드</p>
+     *
+     * @return 임시저장된 게시글 개수를 반환
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/temporary/count")
+    public ResponseEntity<?> getTemporaryCount(UserIdDto userIdDto) {
+        return ResponseEntity.ok(postService.getTemporaryCount(userIdDto));
+    }
+
+    /**
      * <p>게시글 좋아요 상태 확인 컨트롤러 메서드</p>
      *
      * @param postResponseDto 게시글 번호와 사용자의 ID를 담은 DTO.
@@ -152,9 +176,11 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/update")
-    public ResponseEntity<Boolean> updatePost(@RequestPart(required = false) PostDto postDto,
-                                              @RequestPart(required = false) List<String> tags,
-                                              @RequestPart(required = false) List<MultipartFile> files) {
+    public ResponseEntity<Boolean> updatePost(@RequestPart(name="post", required = false) PostDto postDto,
+                                              @RequestPart(name="tags", required = false) List<String> tags,
+                                              @RequestPart(name="files", required = false) List<MultipartFile> files) {
+        System.out.println("PostDTO = " + postDto);
+        System.out.println("tags = " + tags);
         return ResponseEntity.ok(postService.updatePost(postDto, tags, files));
     }
 
@@ -183,6 +209,12 @@ public class PostController {
     public ResponseEntity<PostViewDto> postView(PostIdDto postIdDto) {
         System.out.println(postIdDto.getPostId());
         return ResponseEntity.ok(postService.getPostView(postIdDto));
+    }
+
+    @ResponseBody
+    @GetMapping("/recent")
+    public ResponseEntity<?> getRecentPostId() {
+        return ResponseEntity.ok(postService.getRecentPostId());
     }
 
     /**
