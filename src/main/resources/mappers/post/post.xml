@@ -320,7 +320,7 @@
 	</select>
 
 	<!-- 게시글 페이징 -->
-	<select id = "getPagingView" parameterType="com.dita.metapilot.post.dto.PagingDto" resultType="com.dita.metapilot.post.entity.PostEntity">
+	<select id = "getPagingView" parameterType="com.dita.metapilot.post.dto.PagingDto" resultMap="postEntity">
 		set @userId = #{userId};
 		set @categoryId = #{categoryId};
 
@@ -353,7 +353,7 @@
 	</select>
 
 	<!-- 게시글 페이징 (전체보기) -->
-	<select id = "getPagingViewAll" parameterType="com.dita.metapilot.post.dto.PagingDto" resultType="com.dita.metapilot.post.entity.PostEntity">
+	<select id = "getPagingViewAll" parameterType="com.dita.metapilot.post.dto.PagingDto" resultMap="postEntity">
 		set @userId = #{userId};
 
 		set @role = (select urt.role_tbl_id from user_role_tbl urt where urt.user_tbl_id = @userId);

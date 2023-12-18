@@ -92,7 +92,7 @@ const PostPage = ({ postId }) => {
         }).then((res) => {
             setData(res.data)
 
-            if (!res.data || res.data?.post === null || res.data?.post?.deleted === 1) {
+            if (!res.data && res.data?.post === null && res.data?.post?.deleted === 1) {
                 alert('삭제됐거나 없는 게시글입니다.')
                 router.push("/")
                 return
