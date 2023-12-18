@@ -1,3 +1,10 @@
-.mainWrap {
-    display:flex
+.wrap {
+    overflow-x: hidden;
+}
+
+@media screen and (max-width: 420px) {
+    .content{
+        margin-left: 50px;
+        width:370;
+    }
 }

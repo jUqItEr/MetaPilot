@@ -32,7 +32,7 @@ public class AdminService {
      * @since 2023. 12. 11.
      * @return 모든 정보를 List에 담습니다.
      */
-    public List<CmsInfoEntity>  getBlogInfo(){return adminRepository.getCmsInfo();}
+    public CmsInfoEntity  getBlogInfo(){return adminRepository.getCmsInfo();}
 
     /**
      * <p>blog info 수정</p>

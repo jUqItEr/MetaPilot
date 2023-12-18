@@ -1,21 +1,53 @@
-.side {
-    width: 15%;
+.sidebar {
+    height:calc(100vh - 57.86px);
+    max-height:calc(100vh - 57.86px);
+    overflow-x: hidden;
+    width: 230px;
+    border-right:1px solid lightgray;
+    margin: 0;
+    margin-top: 57.86px;
+    margin-left: 50px;
+    padding:0;
+    background-color: transparent;
+    position: fixed;
+    z-index: auto;
 }
 
-.hidden {
-    display: none;
+.fortawesomeIcon{
+    width : 15px;
+}
+.barbtn{
+    background-color: transparent;
+    border: none;
+    padding-left: 15px;
+}
+.openbar{
+    text-align : right;
+    padding: 10px 20px 0 0;
+    cursor: pointer;
+    width:50px;
+    height:calc(100vh - 57.86px);
+    overflow-x: hidden;
+    border-right:1px solid lightgray;
+    margin: 0;
+    margin-top: 57.86px;
+    background-color: transparent;
+    position: fixed;
+    z-index: auto;
+    background-color: transparent;
 }
 
-.toggleButton {
-    display: none;
-}
-
-@media (max-width: 420px) {
-    .toggleButton {
-        display: block;
+@media screen and (max-width: 420px) {
+    .sidebar{
+        float: left;
+        position:fixed;
+        background-color: white;
+        z-index: 1000;
+        margin-top:97px;
+    }
+    .openbar{
+        margin-top:100px;
+        z-index: 1000;
     }
 
-    .side {
-        width: 15%;
-    }
 }
