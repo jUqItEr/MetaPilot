@@ -32,9 +32,115 @@
     height: 30px;
 }
 
+.hashtag {
+    resize: none;
+}
+
+.select {
+    margin: 0 auto;
+    margin-top: 50px;
+    width: 80%;
+}
+
+.tablePublic {
+    display: flex;
+    align-items: center;
+}
+
+.tableForm {
+    display: flex;
+}
+
+.formGroup {
+    display: flex;
+}
+
+.publicationTime {
+    width: 21%;
+}
+.timeGroup {
+    margin-right: 50px
+}
+
+.reservation {
+    margin-top: 20px;
+}
+
+.reservationText {
+    color: var(--bs-teal);
+}
+
+.reservationIcon {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.position {
+    position: absolute;
+    z-index: 1000;
+    width: 30%;
+    right: 15%;
+    top: 5%;
+}
+
+.createButton {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: space-between; /* 요소 사이에 간격 추가 */
+    padding-right: 15px; /* 오른쪽 패딩을 추가하여 간격 조정 */
+}
+
+.formCheckCustom {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-right: 15px; /* 버튼과의 간격 */
+    padding: 0;
+}
+
+.formCheckbox {
+    display: flex;
+    align-items: center;
+}
+
+.tag {
+    background-color: #eee;
+    margin-right: 5px;
+}
+
+.tagCloseBtn {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+
+
+/* -------------------------------------------- 추가 */
 .editorLabel {
     font-size: 14px;
     width: 100px;
     color: #ddd;
+}
 
+.modalContent {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.modalCount {
+    color: var(--bs-green);
+}
+
+.postItem {
+    cursor: pointer;
+}
+
+.temporaryGroup {
+    display: flex;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+}
+
+.temporaryText {
+    display: flex;
+    align-items: center;
 }

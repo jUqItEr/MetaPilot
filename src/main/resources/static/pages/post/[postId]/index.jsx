@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import styles from '/styles/post/post.module.css'
 import PostContent from '../../../components/post/content'
+import { useRouter } from 'next/router'
 
 
 export const getServerSideProps = async context => {
@@ -31,6 +32,7 @@ const PostPage = ({ postId }) => {
     const [postLiked, setPostLiked] = useState(false) // 게시글에 대한 좋아요 상태
     const [faChevron, setFaChevron] = useState(false) // 공감수 리스트 상태
     const [requestTime, setRequestTime] = useState(new Date())
+    const router = useRouter()
 
     // 공감수 토글
     const toggleFaChevron = () => {
@@ -90,42 +92,48 @@ const PostPage = ({ postId }) => {
         }).then((res) => {
             setData(res.data)
 
-            if (!res.data || res.data.post === null) {
-                router.push("/404")
+            if (!res.data || res.data?.post === null || res.data?.post?.deleted === 1) {
+                alert('삭제됐거나 없는 게시글입니다.')
+                router.push("/")
+                return
+            } else if (res.data?.post?.type == 1 && user?.role?.roleEntity?.id == 1) {
+                alert('게시글을 열람할 수 있는 권한이 없습니다.')
+                router.push("/")
+                return
             }
+            axios({
+                method: 'get',
+                params: {
+                    postId: postId
+                },
+                url: '/api/comment/count'
+            })
+            .then(res => setCommentCount(res.data))
+            
+            // 게시글 좋아요 리스트
+            axios({
+                method: 'get',
+                params: {
+                    postId: postId, // postId를 prop으로부터 받아오도록 수정했습니다.
+                },
+                url: '/api/post/response/list',
+            }).then((res) => {
+                setLikes(res.data)
+            })
+    
+            // 로그인 되어 있으면 게시글 좋아요 여부 체크
+            axios({
+                method: 'post',
+                params: {
+                    postId: postId,
+                    userId: user?.id,
+                },
+                url: '/api/post/response/exist',
+            }).then((res) => {
+                setPostLiked(res.data)
+            })
         })
-
-        axios({
-            method: 'get',
-            params: {
-                postId: postId
-            },
-            url: '/api/comment/count'
-        })
-        .then(res => setCommentCount(res.data))
-        
-        // 게시글 좋아요 리스트
-        axios({
-            method: 'get',
-            params: {
-                postId: postId, // postId를 prop으로부터 받아오도록 수정했습니다.
-            },
-            url: '/api/post/response/list',
-        }).then((res) => {
-            setLikes(res.data)
-        })
-
-        // 로그인 되어 있으면 게시글 좋아요 여부 체크
-        axios({
-            method: 'post',
-            params: {
-                postId: postId,
-                userId: user?.id,
-            },
-            url: '/api/post/response/exist',
-        }).then((res) => {
-            setPostLiked(res.data)
-        })
+        .catch(_ => router.push("/404"))
     }, [postId, postLiked, requestTime, user?.id])
 
     return (

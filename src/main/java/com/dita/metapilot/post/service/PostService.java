@@ -38,15 +38,7 @@ public class PostService {
     public boolean createPost(PostDto postDto) {
         return postRepository.createPost(postDto);
     }
-    /**
-     * <p>게시글을 삭제하는 메서드</p>
-     *
-     * @param postIdDto 게시글의 번호가 담긴 DTO.
-     * @return 성공적으로 게시글을 삭제했을 때 true 반환
-     */
-    public boolean deletePost(PostIdDto postIdDto) {
-        return postRepository.deletePost(postIdDto);
-    }
+
 
     /**
      * <p>여러개의 게시글들을 삭제하는 메서드</p>
@@ -66,6 +58,15 @@ public class PostService {
      */
     public List<PostDto> findPostByHashtag(List<String> hashtags) {
         return postRepository.findPostByHashtag(hashtags);
+    }
+
+    /**
+     * <p>모든 해시태그 가져오는 메서드</p>
+     *
+     * @return 모든 해시태그 목록 반환.
+     */
+    public List<HashtagDto> getAllHashtags() {
+        return postRepository.getAllHashtags();
     }
 
     /**
@@ -127,6 +128,10 @@ public class PostService {
         return postRepository.getPagingView(pagingDto);
     }
 
+    public long getRecentPostId() {
+        return postRepository.getRecentPostId();
+    }
+
     /**
      * <p>전체 게시글 리스트를 불러오는 메서드</p>
      *
@@ -143,6 +148,26 @@ public class PostService {
      */
     public int getPostCount(PagingDto pagingDto) {
         return postRepository.getPostCount(pagingDto);
+    }
+
+    /**
+     * <p>임시저장된 게시글 리스트를 가져오는 메서드</p>
+     *
+     * @param
+     * @return
+     */
+    public List<PostDto> getTemporaryList(UserIdDto userIdDto) {
+        return postRepository.getTemporaryList(userIdDto);
+    }
+
+    /**
+     * <p>임시저장된 게시글 개수를 가져오는 메서드</p>
+     *
+     * @param
+     * @return
+     */
+    public int getTemporaryCount(UserIdDto userIdDto) {
+        return postRepository.getTemporaryCount(userIdDto);
     }
 
     /**
@@ -201,16 +226,13 @@ public class PostService {
      */
     public boolean updatePost(PostDto postDto, List<String> tags, List<MultipartFile> files) {
         // 게시글 작성 or 수정 체크
-        boolean isPostNew = (postDto.getCreatedAt() == null || postDto.getCreatedAt().isEmpty());
         boolean result = postRepository.updatePost(postDto);
         long postId = postDto.getPostId();
         PostIdDto postIdDto = new PostIdDto(postId);
 
         // 게시글 수정 인경우
-        if (!isPostNew) {
-            postRepository.deleteHashtags(postIdDto);
-            postFileService.deletePostFile(postIdDto);
-        }
+        postRepository.deleteHashtags(postIdDto);
+        postFileService.deletePostFile(postIdDto);
 
         if (tags != null) {
             for (String tag : tags) {

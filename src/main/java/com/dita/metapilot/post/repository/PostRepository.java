@@ -53,6 +53,7 @@ public interface PostRepository {
      */
     boolean createPostHashtag(PostTagDto postTagDto);
 
+
     /**
      * 게시글에 연결된 해시태그 삭제하는 메서드.
      *
@@ -60,14 +61,6 @@ public interface PostRepository {
      * @return 게시글과 연결된 해시태그를 삭제
      */
     void deleteHashtags(PostIdDto postIdDto);
-
-    /**
-     * 게시글을 삭제하는 메서드.
-     *
-     * @param postIdDto 게시글 번호가 담긴 DTO.
-     * @return 게시글을 성공적으로 삭제하면 true, 그렇지 않으면 false를 반환.
-     */
-    boolean deletePost(PostIdDto postIdDto);
 
     /**
      * 여러 개의 게시글 삭제하는 메서드
@@ -84,6 +77,13 @@ public interface PostRepository {
      * @return 검색된 게시글 목록을 반환
      */
     List<PostDto> findPostByHashtag(List<String> hashtags);
+
+    /**
+     * 모든 해시태그 가져오는 메서드
+     *
+     * @return 모든 해시태그 목록 반환
+     */
+    List<HashtagDto> getAllHashtags();
 
     /**
      * 공지사항 게시글 리스트를 불러 오는 메서드.
@@ -137,6 +137,22 @@ public interface PostRepository {
      * @return
      */
     List<PostLikesDto> getLikesList(PostIdDto postIdDto);
+
+    /**
+     * 임시저장된 리스트 가져오는 메서드.
+     *
+     * @param
+     * @return
+     */
+    List<PostDto> getTemporaryList(UserIdDto userIdDto);
+
+    /**
+     * 임시저장된 게시글 개수를 가져오는 메서드.
+     *
+     * @param
+     * @return
+     */
+    int getTemporaryCount(UserIdDto userIdDto);
 
     /**
      * 해시태그 중복을 체크하는 메서드.
