@@ -69,7 +69,7 @@ const PostPage = ({ postId }) => {
     // 공유하기 버튼
     const handleShareClick = () => {
         navigator.clipboard
-            .writeText(window.location.href)
+            .writeText(window.location.origin + window.location.pathname)
             .then(() => {
                 alert('URL이 클립보드에 복사되었습니다.') // 성공 메시지
             })
@@ -137,8 +137,8 @@ const PostPage = ({ postId }) => {
             <div className='wrap'>
                 <div className='container'>
                     <PostHeader post={data?.post} />
-                    <main className={styles.mainContainer}>
-                        <PostContent />
+                    <main className={`${styles.mainContainer} container`}>
+                        <PostContent post={data?.post} />
                     </main>
                     <footer className={styles.footerContainer}>
                         {/* hashtag */}
