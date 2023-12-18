@@ -6,11 +6,13 @@ import IndexSidebar from "../layout/home/sidebar";
 import TrendPost from "../components/common/trend";
 import NoticePost from "../components/common/notice";
 import PostList from "../components/common/postList";
+import PostListImageType from "../components/common/postListImageType"
+import PostListBlogType from "../components/common/postListBlogType"
 import Auth from "./account/auth";
-import styles from '/styles/index.module.css'
 
 const IndexPage = () => {
   const [info, setInfo] = useState([]);
+  const [requestTime, setRequestTime] = useState(new Date())
 
   /**
    * Get CMS Information from API server.
@@ -30,7 +32,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     getInfo();
-  }, []);
+  }, [requestTime]);
 
   return (
     <>
@@ -38,21 +40,15 @@ const IndexPage = () => {
         <title>{info.title}</title>
       </Head>
       <Auth/>
-      <IndexHeader info={info} />
-      {/* 여기에 flex */}
-      <div className={styles.mainWrap}>
-        
-        <div className="container">
-          <TrendPost />
-          <NoticePost />
-          <PostList />
-        </div>
-        <IndexSidebar />
-      </div>
-      
+      <IndexHeader info={info} requestTime={requestTime} setRequestTime={setRequestTime} />
+      <IndexSidebar />
+      <TrendPost />
+      <NoticePost />
+      <PostList categoryId={1} />
+      <PostListImageType categoryId={1} />
+      <PostListBlogType categoryId={1} />
     </>
   );
 };
-
 
 export default IndexPage;
