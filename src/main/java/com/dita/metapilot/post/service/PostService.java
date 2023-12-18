@@ -151,6 +151,15 @@ public class PostService {
     }
 
     /**
+     * <p>게시글 리스트 페이지에서 전체 게시글 개수를 가져오는 메서드(전체용)</p>
+     *
+     * @return 전체 게시글 개수를 반환.
+     */
+    public int getPostCountAll(PagingDto pagingDto) {
+        return postRepository.getPostCountAll(pagingDto);
+    }
+
+    /**
      * <p>임시저장된 게시글 리스트를 가져오는 메서드</p>
      *
      * @param

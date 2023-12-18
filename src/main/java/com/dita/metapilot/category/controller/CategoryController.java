@@ -236,7 +236,7 @@ public class CategoryController {
 
     @ResponseBody
     @GetMapping("/count")
-    public ResponseEntity<?> categoryPostCount() {
-        return ResponseEntity.ok(categoryService.categoryPostCount());
+    public ResponseEntity<?> categoryPostCount(CategoryPostDto categoryPostDto) {
+        return ResponseEntity.ok(categoryService.categoryPostCount(categoryPostDto));
     }
 }

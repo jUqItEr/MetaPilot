@@ -119,6 +119,18 @@ public class PostController {
     }
 
     /**
+     * <p>게시글 리스트 페이지의 게시글 개수를 조회하는 컨트롤러 메서드</p>
+     *
+     * @return
+     * @since
+     */
+    @ResponseBody
+    @GetMapping("/countAll")
+    public ResponseEntity<?> getPostCountAll(PagingDto pagingDto) {
+        return ResponseEntity.ok(postService.getPostCountAll(pagingDto));
+    }
+
+    /**
      * <p>인기 게시글 리스트를 반환하는 컨트롤러 메서드</p>
      *
      * @return 인기 게시글 리스트를 반환

@@ -114,6 +114,6 @@ public interface CategoryRepository {
     CategoryEntity getCategoryInfo(int id);
 
 
-    List<CategoryCountEntity> categoryPostCount();
+    List<CategoryCountEntity> categoryPostCount(CategoryPostDto categoryPostDto);
 
 }

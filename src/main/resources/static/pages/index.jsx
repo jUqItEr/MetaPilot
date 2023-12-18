@@ -56,6 +56,7 @@ const IndexPage = () => {
             <NoticePost />
             <PostList categoryId={1} />
             <PostListImageType categoryId={1} />
+            <PostListBlogType categoryId={1} />
             {/* <PostListBlogType categoryId={1} /> */}
         </div>
       </div>

@@ -147,8 +147,8 @@ public class CategoryService {
      * @since 2023. 12. 04.
      * @return 카테고리의 헤더를 List에 담습니다.
      */
-    public List<CategoryCountEntity> categoryPostCount() {
-        return categoryRepository.categoryPostCount();
+    public List<CategoryCountEntity> categoryPostCount(CategoryPostDto categoryPostDto) {
+        return categoryRepository.categoryPostCount(categoryPostDto);
     }
 
 

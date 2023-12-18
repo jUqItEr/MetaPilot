@@ -8,12 +8,11 @@ import NoticePost from "../../components/common/notice";
 import PostList from "../../components/common/postList"
 import PostListImageType from "../../components/common/postListImageType"
 import PostListBlogType from "../../components/common/postListBlogType"
+import styles from "/styles/index.module.css"
 import Auth from "../account/auth";
 
 export const getServerSideProps = async context => {
   const { id } = context.params
-
-  console.error(context.params)
 
   return {
       props: {
@@ -24,6 +23,7 @@ export const getServerSideProps = async context => {
 
 const IndexPage = ({ id }) => {
   const [info, setInfo] = useState([]);
+  const [requestTime, setRequestTime] = useState(new Date())
 
   /**
    * Get CMS Information from API server.
@@ -51,13 +51,24 @@ const IndexPage = ({ id }) => {
         <title>{info.title}</title>
       </Head>
       <Auth/>
-      <IndexHeader info={info} />
-      <IndexSidebar />
-      <TrendPost />
-      <NoticePost />
-      <PostList categoryId={id} />
-      <PostListImageType categoryId={id} />
-      <PostListBlogType categoryId={id} />
+      <div className={styles.wrap}>
+        <div  style={{position:'fixed',width:'100vw',  backgroundColor: 'var(--bs-body-bg)', zIndex:'1000' }}>
+          <IndexHeader info={info} requestTime={requestTime} setRequestTime={setRequestTime} />
+        </div>
+
+        <div style={{zIndex:'1000'}}>
+          <IndexSidebar info={info}/>
+        </div>
+
+        <div style={{boxSizing: 'border-box'}} className={styles.content}>
+            <div style={{paddingTop:'60px'}}><TrendPost/></div>
+            <NoticePost />
+            <PostList categoryId={id} />
+            <PostListImageType categoryId={id} />
+            <PostListBlogType categoryId={id} />
+            {/* <PostListBlogType categoryId={1} /> */}
+        </div>
+      </div>
     </>
   );
 };

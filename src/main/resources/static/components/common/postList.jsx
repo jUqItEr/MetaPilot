@@ -50,7 +50,7 @@ const PostList = ({ categoryId }) => {
                 categoryId: categoryId, // 카테고리 id 받아올수있게 수정
                 userId: user?.id,
             },
-            url: "/api/post/count",
+            url: categoryId === 1 ? "/api/post/countAll" : "/api/post/count",
         }).then((res) => {
             const postCount = res.data // 조건에 만족하는 전체 게시글수
             setPostTotalCount(postCount)
@@ -74,6 +74,7 @@ const PostList = ({ categoryId }) => {
             url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
             setPostList(res.data)
+            console.log("postList 속 page : ", postList)
             const tempMaxPage = maxPage
 
             const nextPageGroup = Math.ceil(paging.page / paging.count)
@@ -91,7 +92,6 @@ const PostList = ({ categoryId }) => {
             },
             url: "/api/category/info",
         }).then((res) => {
-            //console.log("postList3의 res.data : ", res.data.subject)
             setCategorySubject(res.data.subject)
             setCategoryType(res.data.type)
         });
@@ -122,7 +122,7 @@ const PostList = ({ categoryId }) => {
                     data: {
                         postIds: postIds,
                     },
-                    url: "/api/post/delete-multiple",
+                    url: "/api/post/delete",
                 }).then((res) => {
                     alert('삭제되었습니다');
                     setSelectedPost([]);
@@ -144,6 +144,7 @@ const PostList = ({ categoryId }) => {
     // 글관리 눌릴시 삭제 표시/숨기기 함수
     const toggleCheckboxVisibility = () => {
         setIsCheckboxVisible(!isCheckboxVisible)
+        $('input[type=checkbox]').prop('checked', false)
     }
 
     // 권한없을시 글관리 버튼 표시 여부 함수
@@ -202,6 +203,7 @@ const PostList = ({ categoryId }) => {
                 ...paging,
                 page: pageNumber,
             })
+            $('input[type=checkbox]').prop('checked', false)
         }
     }
 
