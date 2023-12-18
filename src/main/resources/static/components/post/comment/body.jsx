@@ -6,7 +6,7 @@ import $ from 'jquery'
 import Link from 'next/link'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisVertical, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisVertical, faLock, faRectangleXmark } from '@fortawesome/free-solid-svg-icons'
 
 
 const CommentsList = ({ pid, requestTime, setRequestTime }) => {
@@ -127,11 +127,18 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
         } else {
             alert(`${errorMessage}을 작성하려면 내용을 입력해주세요.`)
         }
-        $('.comment-menu').css('display', 'none')
+        $('.reply-menu').hide()
+        $('.content-form').show()
+        $('.update-form').hide()
+        $('.comment-menu').hide()
     }
 
-    const hasAuthority = ({ userId }) => {
-        return (user?.id === userId || (user !== null && user?.role?.roleEntity?.id !== 1))
+    const hasAdmin = () => {
+        return user !== null && user?.role?.roleEntity?.id !== 1
+    }
+
+    const hasAuthority = ({ userId, refUserId }) => {
+        return (user?.id === userId || user?.id === refUserId)
     }
 
     // 댓글, 답글 좋아요
@@ -154,9 +161,14 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
 
     const toggleFormVisible = ({ id }) => {
         setFormVisible(prevState => (prevState === id ? null : id))
+
+        $('.content-form').show()
+        $('.update-form').hide()
+        $('.comment-menu').hide()
     }
 
     const toggleUpdateForm = ({ id }) => {
+        $('.reply-form').hide()
         $(`.content-form:not([data-value='${id}'])`).show()
         $(`.update-form:not([data-value='${id}'])`).hide()
 
@@ -164,6 +176,8 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
         $(`#c${id}`).children(':last-child').toggle()
 
         $('.comment-menu').hide()
+
+        setFormVisible(null)
     }
 
     // 메뉴 토글 핸들러
@@ -222,7 +236,7 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
                 <div id={`c${comment.id}`} key={index} className={`${comment.depth ? styles.commentForm : styles.replyForm}`}>
                     <div className='content-form' data-value={comment.id}>
                         <div className={styles.commentHeader}>
-                            {(comment.visible === 1 || hasAuthority(comment)) && (
+                            {(comment.visible === 1 || (hasAuthority(comment)) || hasAdmin()) && (
                                 <div style={{
                                     alignItems: 'center',
                                     display: 'flex'
@@ -240,7 +254,7 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
                                     </strong>
                                 </div>
                             )}
-                            {(hasAuthority(comment) && comment.visible !== 2) && (
+                            {(((user?.id === comment.userId) || hasAdmin()) && comment.visible !== 2) && (
                                 <div className={styles.menu}>
                                     <button type='button' className='btn' onClick={() => toggleMenu(comment.id)}>
                                         <span className={styles.menuIcon}>
@@ -258,24 +272,29 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
                             </div>
                         </div>
                         {/* 대댓글 */}
-                        {(comment.visible === 1 || hasAuthority(comment)) ? (
+                        {(comment.visible === 1 || (hasAuthority(comment) || hasAdmin())) ? (
                             <p data-id={comment.id}>
                                 {(comment.refId !== 0 && comment.refId !== comment.rootId) && (
-                                    <Link href={`${comment.refNickname !== null ? '#c' + comment.refId : '#'}`} scroll={false}>
+                                    (comment.refNickname !== null) ? (
+                                        <Link href={`#c${comment.refId}`} scroll={false}>
                                         <a>
-                                            <strong>{`@${comment.refNickname !== null ? comment.refNickname : ''}`}&nbsp;</strong>
+                                            <strong>{`@${comment.refNickname !== null ? comment.refNickname : ''}`}</strong>
                                         </a>
                                     </Link>
+                                    ) : (
+                                        <FontAwesomeIcon icon={faRectangleXmark} width={18}/>
+                                    )
                                 )}
+                                {(comment.refId !== 0 && comment.refId !== comment.rootId) && (<span>&nbsp;</span>)}
                                 {comment.content}
                             </p>
                         ) : (
-                            <p>비밀 댓글입니다.</p>
+                            <p>{comment.visible ? comment.content : '비밀 댓글입니다.'}</p>
                         )}
                         <div className={styles.commentDetails}>
                             <span>{comment.createdAt}</span>
                             <div>
-                                {((comment.visible === 1 && user !== null) || (comment.visible === 0 && hasAuthority(comment))) && (
+                                {((comment.visible === 1 && user !== null) || (comment.visible === 0 && (hasAuthority(comment) || hasAdmin()))) && (
                                     <button className='btn' onClick={() => toggleFormVisible(comment)}>답글</button>
                                 )}
                                 {comment.visible === 1 && (
@@ -287,7 +306,7 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
                             </div>
                         </div>
                         {formVisible === comment.id && (
-                            <div className={styles.testForm}>
+                            <div className={`${styles.testForm} reply-form`}>
                                 {/* 폼 내용 또는 자식 컴포넌트 */}
                                 <div className={styles.commentHandlerForm}>
                                     <strong>{user?.nickname}</strong>님의 답글
@@ -302,7 +321,7 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
                                             {comment.visible !== 0 ? (
                                                 <input type='checkbox' name={`commentVisible${comment.id}`} data-id={`c${comment.id}`} className={styles.editorCheckbox} />
                                             ) : (
-                                                <input type='checkbox' name={`commentVisible${comment.id}`} data-id={`c${comment.id}`} className={styles.editorCheckbox} defaultChecked readOnly/>
+                                                <input type='checkbox' name={`commentVisible${comment.id}`} data-id={`c${comment.id}`} className={styles.editorCheckbox} checked readOnly={true}/>
                                             )}
                                             <label htmlFor={`commentVisible${comment.id}`} className={styles.editorLabel}>비밀댓글</label>
                                         </div>

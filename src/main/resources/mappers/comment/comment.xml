@@ -15,6 +15,7 @@
         <result property="visible" column="visible"/>
         <result property="createdAt" column="created_at"/>
         <result property="nickname" column="nickname"/>
+        <result property="refUserId" column="ref_user_id"/>
         <result property="refNickname" column="ref_nickname"/>
         <result property="profileImage" column="profile_image"/>
         <result property="likeCount" column="likes"/>
@@ -97,6 +98,7 @@
             ct.*,
             ut.nickname,
             ut.profile_image,
+            ut2.id as ref_user_id,
             ut2.nickname as ref_nickname,
             (
                 select
