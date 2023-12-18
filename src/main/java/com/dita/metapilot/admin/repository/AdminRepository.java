@@ -25,7 +25,7 @@ public interface AdminRepository {
      * @since 2023. 12. 11.
      * @return 모든 정보를 List에 담습니다.
      */
-    List<CmsInfoEntity> getCmsInfo();
+    CmsInfoEntity getCmsInfo();
 
     List<HashtagEntity> readTag(HashtagSearchDto hashtagSearchDto);
 

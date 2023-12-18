@@ -96,7 +96,7 @@
     </update>
 
     <!-- Get CMS Information. -->
-    <select id="getCmsInfo" resultType="com.dita.metapilot.admin.entity.CmsInfoEntity">
+    <select id="getCmsInfo" resultMap="cmsInfoEntity">
         select
             bi.*
         from
