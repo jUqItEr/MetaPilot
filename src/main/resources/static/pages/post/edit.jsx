@@ -40,9 +40,6 @@ const PostEdit = ({ categoryId, postId }) => {
 
     return (
         <>
-            {/* <Head>
-                <title>게시글 {postId ? '수정' : '작성'}</title>
-            </Head> */}
             <div className='container'>
                 <header className={styles.editHeader}>
                     <div></div>
@@ -54,18 +51,14 @@ const PostEdit = ({ categoryId, postId }) => {
                 <table>
                     <tbody>
                         <tr className={styles.editTitle}>
-                            <div className={styles.editSecret}>
-                                
-                            </div>
-                            <td width={90}>제목</td>
-                                <td><input className='form-control' type='text' placeholder='제목을 입력해주세요.' /></td>
+                            <td className={styles.editSecret}>
+                                <div width={90}>제목</div>
+                                <div><input className='form-control' type='text' placeholder='제목을 입력해주세요.' /></div>
 
                                 <input type="checkbox" id="formcheck" className={styles.editorCheckbox}/>
                                 <label htmlFor="formcheck" className={styles.editorLabel}>비밀댓글</label>
-                                <input className={`${styles.editFile} form-control form-control-sm`} id='formFileSm' type='file'/>
-                            {/* <div className={styles.editFile}>
-                                <input className='form-control form-control-sm' id='formFileSm' type='file'/>
-                            </div> */}
+                                <input className={`${styles.editFile} form-control form-control-sm`} id='formFileSm' type='file'/>    
+                            </td>
                         </tr>
                     </tbody>
                 </table>

@@ -51,19 +51,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 //.and()
                 .formLogin().disable()
+
                 .httpBasic().disable()
 
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userRepository))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
                 .antMatchers("/api/user/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/moderator/**")
-                .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                .access("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 //                .antMatchers("/api/admin/**")
 //                .access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
                 .and()
+
                 .oauth2Login()
                 .successHandler(oAuth2SuccessHandler)
                 .loginPage("http://localhost:3080/account/login")
