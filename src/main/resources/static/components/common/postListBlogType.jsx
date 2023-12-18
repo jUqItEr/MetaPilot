@@ -47,7 +47,7 @@ const PostListBlogType = ({ categoryId }) => {
                 categoryId: categoryId, // 카테고리 id 받아올수있게 수정
                 userId: user?.id,
             },
-            url: "/api/post/count",
+            url: categoryId === 1 ? "/api/post/countAll" : "/api/post/count",
         }).then((res) => {
             const postCount = res.data // 조건에 만족하는 전체 게시글수
 
@@ -67,8 +67,9 @@ const PostListBlogType = ({ categoryId }) => {
                 userId: user?.id,
                 categoryId: categoryId, // 카테고리 id 받아올수있게 수정
             },
-            url: "/api/post/page",
+            url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
+            console.log("blogType 속 page : ", res.data)
           setPostList(res.data)
           const tempMaxPage = maxPage
           
@@ -202,9 +203,9 @@ const PostListBlogType = ({ categoryId }) => {
                     ))}
                     
                     <div className={styles.postListSelectGroup}>
-                        <div class="form-group">
+                        <div className="form-group">
                             <select 
-                                class="form-control mb-3"
+                                className="form-control mb-3"
                                 value={paging.limit}
                                 onChange={handlePaging}
                             >

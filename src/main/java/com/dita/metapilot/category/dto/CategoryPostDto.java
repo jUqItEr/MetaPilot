@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class CategoryPostDto {
     private int categoryId;
     private long postId;
+    private String userId;
 }

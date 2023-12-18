@@ -50,7 +50,7 @@ const PostList = ({ categoryId }) => {
                 categoryId: categoryId, // 카테고리 id 받아올수있게 수정
                 userId: user?.id,
             },
-            url: "/api/post/count",
+            url: categoryId === 1 ? "/api/post/countAll" : "/api/post/count",
         }).then((res) => {
             const postCount = res.data // 조건에 만족하는 전체 게시글수
             setPostTotalCount(postCount)
@@ -73,8 +73,8 @@ const PostList = ({ categoryId }) => {
             },
             url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
-            console.log("postList 속 res.data : ", res.data)
             setPostList(res.data)
+            console.log("postList 속 page : ", postList)
             const tempMaxPage = maxPage
 
             const nextPageGroup = Math.ceil(paging.page / paging.count)
@@ -92,7 +92,6 @@ const PostList = ({ categoryId }) => {
             },
             url: "/api/category/info",
         }).then((res) => {
-            //console.log("postList3의 res.data : ", res.data.subject)
             setCategorySubject(res.data.subject)
             setCategoryType(res.data.type)
         });

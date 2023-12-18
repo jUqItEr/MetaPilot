@@ -36,7 +36,7 @@ const PostListImageType = ({ categoryId }) => {
                 categoryId: categoryId, // 카테고리 id 받아올수있게 수정
                 userId: user?.id,
             },
-            url: "/api/post/count",
+            url: categoryId === 1 ? "/api/post/countAll" : "/api/post/count",
         }).then((res) => {
             const postCount = res.data // 조건에 만족하는 전체 게시글수
 
@@ -56,8 +56,9 @@ const PostListImageType = ({ categoryId }) => {
                 userId: user?.id,
                 categoryId: categoryId, // 카테고리 id 받아올수있게 수정
             },
-            url: "/api/post/page",
+            url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
+            console.log("imageType 속 page : ", res.data)
           setPostList(res.data)
           const tempMaxPage = maxPage
           

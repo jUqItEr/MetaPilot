@@ -23,6 +23,7 @@ import Profile from '../../components/common/profile';
 
 const SideBarPage = ({ info }) => {
     const router = useRouter();
+    const [user, setUser] = useState([])
     const [data, setData] = useState([]);
     const [ category, setCategory ] = useState([])
     const [selectedCategory, setSelectedCategory] = useState(null)
@@ -75,7 +76,8 @@ const SideBarPage = ({ info }) => {
     };
 
       useEffect(() => {
-          const getCategory = () => {
+        setUser(JSON.parse(localStorage.getItem('user')))
+          /*const getCategory = () => {
             axios({
                 method: 'get',
                 url: '/api/category/list'
@@ -85,15 +87,21 @@ const SideBarPage = ({ info }) => {
             })
           }
 
-          getCategory()
+          getCategory()*/
 
           axios({
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            },
             method: "get",
+            params: {
+                userId: user?.id,
+            },
             url: "/api/category/count",
         }).then((res) => {
             setData(res.data);
         });
-      }, []);
+      }, [user?.id]);
 
     return (
         <>
