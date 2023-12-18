@@ -55,6 +55,20 @@ public class PostController {
     }
 
     /**
+     * <p>여러게시글들을 삭제하고 성공 여부를 반환하는 컨트롤러 메서드</p>
+     *
+     * @param postIdsDto 여러 게시글 번호들을 담은 DTO.
+     * @return 게시글 삭제 성공 시 true, 실패 시 false를 반환
+     * @since
+     */
+    @ResponseBody
+    @PostMapping("/delete-multiple")
+    public ResponseEntity<Boolean> deletePosts(@RequestBody PostIdsDto postIdsDto) {
+        boolean result = postService.deletePosts(postIdsDto);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
      * <p>해시태그로 게시글을 검색하고 성공 여부를 반환하는 컨트롤러 메서드</p>
      *
      * @param hashtags 입력한 해시태그.

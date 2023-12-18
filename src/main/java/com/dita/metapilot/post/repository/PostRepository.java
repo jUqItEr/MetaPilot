@@ -70,6 +70,14 @@ public interface PostRepository {
     boolean deletePost(PostIdDto postIdDto);
 
     /**
+     * 여러 개의 게시글 삭제하는 메서드
+     *
+     * @param postIdsDto 게시글 번호들이 담긴 DTO.
+     * @return
+     */
+    boolean deletePosts(PostIdsDto postIdsDto);
+
+    /**
      * 해시태그로 게시글을 조회하는 메서드.
      *
      * @param hashtags 입력한 해시태그 .
