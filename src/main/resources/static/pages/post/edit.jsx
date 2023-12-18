@@ -136,79 +136,86 @@ const PostEdit = () => {
     useEffect(() => {
         const cid = localStorage.getItem('categoryId')
         const pid = localStorage.getItem('postId')
+        const tempUser = JSON.parse(localStorage.getItem('user'))
 
-        setUser(JSON.parse(localStorage.getItem('user')))
+        setUser(tempUser)
 
-        setId(cid || 1)
-        setPostId(pid)
-        getCategories()
-
-        if (pid !== undefined) {
-            // 게시글 수정 모드로 동작
-            axios({
-                method: 'get',
-                params: {
-                    postId: pid
-                },
-                url: '/api/post/view'
-            })
-            .then((res) => {
-                setData(res.data)
-                setTags(res.data?.hashtags?.map(tag => tag.content))
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        if (tempUser === undefined || tempUser === null || tempUser?.role?.roleEntity?.id == 1) {
+            alert('작성 권한이 없습니다.')
+            router.push('/')
+            return
         } else {
-            axios({
-                method: 'post',
-                url: '/api/post/create'
-            })
-            .then((res) => {
+            setId(cid || 1)
+            setPostId(pid)
+            getCategories()
+
+            if (pid !== undefined) {
+                // 게시글 수정 모드로 동작
                 axios({
                     method: 'get',
-                    url: '/api/post/'
+                    params: {
+                        postId: pid
+                    },
+                    url: '/api/post/view'
                 })
+                .then((res) => {
+                    setData(res.data)
+                    setTags(res.data?.hashtags?.map(tag => tag.content))
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            } else {
+                axios({
+                    method: 'post',
+                    url: '/api/post/create'
+                })
+                .then((res) => {
+                    axios({
+                        method: 'get',
+                        url: '/api/post/'
+                    })
+                })
+            }
+            axios({
+                headers: {
+                    'Authorization': localStorage.getItem('token')
+                },
+                method: 'get',
+                params: {
+                    userId: user?.id,
+                },
+                url: '/api/post/temporary/count'
+            }).then((res) => {
+                const tempCount = res.data
+                setTempTotalCount(tempCount)
+            })
+            .catch(_ => {
+                localStorage.removeItem('token')
+                localStorage.removeItem('user')
+                router.push('/')
+                return
+            })
+
+            axios({
+                headers: {
+                    'Authorization': localStorage.getItem('token'),
+                },
+                method: 'get',
+                params: {
+                    userId: user?.id,
+                },
+                url: '/api/post/temporary/list'
+            }).then((res) => {
+                setTempList(res.data)
+            })
+            .catch(_ => {
+                localStorage.removeItem('token')
+                localStorage.removeItem('user')
+                router.push('/')
+                return
             })
         }
-        axios({
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            method: 'get',
-            params: {
-                userId: user?.id,
-            },
-            url: '/api/post/temporary/count'
-        }).then((res) => {
-            const tempCount = res.data
-            setTempTotalCount(tempCount)
-        })
-        .catch(_ => {
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-            router.push('/')
-            return
-        })
-
-        axios({
-            headers: {
-                'Authorization': localStorage.getItem('token'),
-            },
-            method: 'get',
-            params: {
-                userId: user?.id,
-            },
-            url: '/api/post/temporary/list'
-        }).then((res) => {
-            setTempList(res.data)
-        })
-        .catch(_ => {
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-            router.push('/')
-            return
-        })
     }, [tempTotalCount, requestTime])
 
     return (

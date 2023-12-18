@@ -81,7 +81,6 @@ const SideBarPage = ({ info }) => {
                 url: '/api/category/list'
             })
             .then((res) => {
-                console.log(res.data)
                 setCategory(res.data)
             })
           }
@@ -93,7 +92,6 @@ const SideBarPage = ({ info }) => {
             url: "/api/category/count",
         }).then((res) => {
             setData(res.data);
-            console.log("edd", res.data);
         });
       }, []);
 

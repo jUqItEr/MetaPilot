@@ -15,7 +15,6 @@ const TrendPost = () => {
             url: '/api/post/popular'
         })
         .then((res) => {
-            console.log(res.data);
             setTrend(res.data);
         });
     }, []);

@@ -2,7 +2,7 @@ import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import IndexHeader from "../layout/home/header";
-import IndexSidebar from "../layout/home/sidebar2";
+import IndexSidebar from "../layout/home/sidebar";
 import TrendPost from "../components/common/trend";
 import NoticePost from "../components/common/notice";
 import PostList from "../components/common/postList";

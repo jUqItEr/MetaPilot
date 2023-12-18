@@ -31,8 +31,8 @@ const Auth = () => {
                 localStorage.setItem('user', JSON.stringify(res.data))
             }
         })
-        .catch((err) => {
-            console.log(err)
+        .catch(_ => {
+            
         })
     }, [])
 
