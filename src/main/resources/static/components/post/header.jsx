@@ -62,14 +62,6 @@ const PostHeader = ({ post }) => {
     return (
         post && (
             <header className='headerContainer'>
-                <div className={styles.headerPostList}>
-                    <div className='headerCate'>
-                        <Link href=''>
-                            <a>게임</a>
-                        </Link>
-                    </div>
-                    <div className='headerList'>목록열기</div>
-                </div>
                 <div className={styles.headerComponent}>
                     <div className={styles.headerCompoCate}>{post?.categorySubject}</div>
                     <div className={styles.headerCompoTitle}>{post?.subject}</div>
@@ -108,7 +100,7 @@ const PostHeader = ({ post }) => {
                             <div></div>
                             <div className={styles.commentMenu}>
                                 {(post?.userId === user?.id) && (<button className='btn' type='button' onClick={() => updatePost(post)}>수정</button>)}
-                                {user?.role?.roleEntity?.id != 1 && (<button className='btn' onClick={() => deletePost(post)}>삭제</button>)}
+                                {(post?.userId === user?.id || user?.role?.roleEntity?.id != 1) && (<button className='btn' onClick={() => deletePost(post)}>삭제</button>)}
                                 <button className='btn' onClick={handleShareClick}>URL 복사</button>
                             </div>
                         </div>

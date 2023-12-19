@@ -1,7 +1,9 @@
+import styles from '/styles/post/post.module.css'
+
 const PostContent = ({post}) => {
     return (
         <>
-            <div dangerouslySetInnerHTML={{ __html: post?.content }} />
+            <div className={styles.postContent} dangerouslySetInnerHTML={{ __html: post?.content }} />
         </>
     )
 }
