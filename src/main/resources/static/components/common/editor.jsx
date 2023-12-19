@@ -9,15 +9,13 @@ const Editor = dynamic(
     { loading: () => null, ssr: false }
 )
 
-function RichTextEditor({ initialData }) {
-    const [editorState, setEditorState] = useState()
-
+function RichTextEditor({ initialData, editorState, setEditorState }) {
     const onEditorStateChange = editorState => {
         setEditorState(editorState)
     }
 
     useEffect(() => {
-        if (initialData !== undefined) {
+        if (initialData !== null && initialData !== undefined) {
             setEditorState(
                 EditorState.createWithContent(
                     stateFromHTML(initialData)

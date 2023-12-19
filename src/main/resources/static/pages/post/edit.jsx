@@ -5,8 +5,11 @@ import { useEffect, useState } from "react"
 import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faClock } from "@fortawesome/free-solid-svg-icons"
+import draftToHtml from 'draftjs-to-html';
 import $ from 'jquery'
 import Modal from "react-bootstrap/Modal"
+import { convertToRaw } from "draft-js"
+import { stateToHTML } from "draft-js-export-html"
 
 const RichTextEditor = dynamic(
     () => import("../../components/common/editor"),
@@ -14,6 +17,8 @@ const RichTextEditor = dynamic(
 )
 
 const PostEdit = () => {
+    const [editorState, setEditorState] = useState()
+
     const [data, setData] = useState([])
     const [id, setId] = useState(1)
     const [postId, setPostId] = useState(0)
@@ -91,6 +96,9 @@ const PostEdit = () => {
         const privatePublish = $('#private').is(':checked')
         const isNotice = $('#noticeCheck').is(':checked')
         const title = $('#title').val()
+        const content = stateToHTML(editorState.getCurrentContent())
+
+        console.log(content)
         
         if (title !== '') {
             if (privatePublish && isNotice) {
@@ -101,7 +109,7 @@ const PostEdit = () => {
                 'categoryId': cid,
                 'postId': postId,
                 'subject': title,
-                'content': null,
+                'content': content,
                 'type': privatePublish ? 1 : 0,
                 'notice': isNotice ? 1: 0
             }
@@ -149,7 +157,9 @@ const PostEdit = () => {
             setPostId(pid)
             getCategories()
 
-            if (pid !== undefined) {
+            console.log(pid)
+
+            if (pid !== null) {
                 // 게시글 수정 모드로 동작
                 axios({
                     method: 'get',
@@ -168,12 +178,20 @@ const PostEdit = () => {
             } else {
                 axios({
                     method: 'post',
+                    params: {
+                        categoryId: cid || 1,
+                        userId: user?.id
+                    },
                     url: '/api/post/create'
                 })
-                .then((res) => {
+                .then(_ => {
                     axios({
                         method: 'get',
-                        url: '/api/post/'
+                        url: '/api/post/recent'
+                    })
+                    .then(res => {
+                        localStorage.setItem('postId', res.data)
+                        setPostId(res.data)
                     })
                 })
             }
@@ -258,7 +276,10 @@ const PostEdit = () => {
                         </tr>
                     </tbody>
                 </table>
-                <RichTextEditor initialData={data?.post?.content} />
+                <RichTextEditor
+                    initialData={data?.post?.content}
+                    editorState={editorState}
+                    setEditorState={setEditorState} />
                 {/* 위치 절대 좌표로 */}
                 <div className={`${styles.position} card card-body publish-menu`} style={{
                     display: 'none'
