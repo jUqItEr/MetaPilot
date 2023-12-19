@@ -325,6 +325,7 @@
 		set @categoryId = #{categoryId};
 
 		set @role = (select urt.role_tbl_id from user_role_tbl urt where urt.user_tbl_id = @userId);
+		set @role = if(@userId is null or @userId = '', 1, @role);
 
 		select
 			pt.id, pt.subject, pt.content, pt.user_tbl_id, pt.created_at
@@ -357,6 +358,7 @@
 		set @userId = #{userId};
 
 		set @role = (select urt.role_tbl_id from user_role_tbl urt where urt.user_tbl_id = @userId);
+		set @role = if(@userId is null or @userId = '', 1, @role);
 
 		select
 			pt.id, pt.subject, pt.content, pt.user_tbl_id, pt.created_at
@@ -384,9 +386,11 @@
 
 	<!-- Page 전체 게시글 가져오기 -->
 	<select id="getPostCount" parameterType="com.dita.metapilot.post.dto.PagingDto" resultType="int">
+		set @userId = #{userId};
 		set @categoryId = #{categoryId};
 
-		set @role = (select urt.role_tbl_id from user_role_tbl urt where urt.user_tbl_id = #{userId});
+		set @role = (select urt.role_tbl_id from user_role_tbl urt where urt.user_tbl_id = @userId);
+		set @role = if(@userId is null or @userId = '', 1, @role);
 
 		select
 			count(*)
@@ -409,6 +413,7 @@
 	<!-- Page 전체 게시글 가져오기(전체용) -->
 	<select id="getPostCountAll" parameterType="com.dita.metapilot.post.dto.PagingDto" resultType="int">
 		set @role = (select urt.role_tbl_id from user_role_tbl urt where urt.user_tbl_id = #{userId});
+		set @role = if(@userId is null or @userId = '', 1, @role);
 
 		select
 			count(*)

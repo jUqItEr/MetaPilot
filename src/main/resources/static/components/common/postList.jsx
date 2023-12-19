@@ -110,7 +110,6 @@ const PostList = ({ categoryId }) => {
     // 게시글 삭제 함수
     const handleDelete = () => {
         if (selectedPost.length > 0) {
-            const postIds = selectedPost.map(String)
 
             if (confirm('선택한 포스트를 삭제하시겠습니까?')) {
                 axios({
@@ -119,8 +118,8 @@ const PostList = ({ categoryId }) => {
                         'Content-Type': 'application/json',
                     },
                     method: "post",
-                    data: {
-                        postIds: postIds,
+                    params: {
+                        postIds: [selectedPost].map(String),
                     },
                     url: "/api/post/delete",
                 }).then((res) => {
@@ -149,7 +148,7 @@ const PostList = ({ categoryId }) => {
 
     // 권한없을시 글관리 버튼 표시 여부 함수
     const showManageButton = () => {
-        return user?.role?.roleEntity?.id !== 1
+        return user?.role?.roleEntity?.id !== 1 && user !== null;
     }
 
     // 이전 페이지 그룹으로 이동하는 함수

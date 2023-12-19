@@ -5,8 +5,6 @@ const Auth = () => {
     const isValidJSON = ctx => {
         let result
 
-        console.log('context? ', ctx)
-
         try {
             JSON.stringify(ctx)
             result = true
@@ -19,21 +17,26 @@ const Auth = () => {
     useEffect(() => {
         const token = localStorage.getItem('token')
         
-        axios({
-            headers: {
-                'Authorization': token
-            },
-            method: 'post',
-            url: '/api/token/principal'
-        })
-        .then((res) => {
-            if (isValidJSON(res.data)) {
-                localStorage.setItem('user', JSON.stringify(res.data))
-            }
-        })
-        .catch(_ => {
-            
-        })
+        if (token !== null) {
+            console.error('hello')
+            axios({
+                headers: {
+                    'Authorization': token
+                },
+                method: 'post',
+                url: '/api/token/principal'
+            })
+            .then((res) => {
+                if (isValidJSON(res.data)) {
+                    localStorage.setItem('user', JSON.stringify(res.data))
+                }
+            })
+            .catch(_ => {
+                localStorage.removeItem('user')
+            })
+        } else {
+            localStorage.removeItem('user')
+        }
     }, [])
 
     return null
