@@ -49,7 +49,7 @@ public interface UserRepository {
      * @param userId 찾고자 하는 사용자의 ID.
      * @return 해당 ID를 가진 사용자의 UserEntity 객체. 해당 사용자가 없으면 null을 반환합니다.
      */
-    UserEntity findUserByUserId(String userId); //userId 중복 체크
+    boolean findUserByUserId(String userId); //userId 중복 체크
 
     /**
      * <p>userId를 통해 Token이 DB에 저장되어 있는지 확인하는 메서드.</p>

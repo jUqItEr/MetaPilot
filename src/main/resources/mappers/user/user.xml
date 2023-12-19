@@ -48,9 +48,9 @@
     </insert>
 
     <!-- 아이디 중복 체크 -->
-    <select id="findUserByUserId" resultMap="userEntity">
+    <select id="findUserByUserId" resultType="boolean">
         select
-            id
+            count(id) > 0
         from
             user_tbl
         where
