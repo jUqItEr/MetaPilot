@@ -7,10 +7,9 @@ import TrendPost from "../components/common/trend";
 import NoticePost from "../components/common/notice";
 import PostList from "../components/common/postList";
 import PostListImageType from "../components/common/postListImageType"
-import PostListBlogType from "../components/common/postListBlogType"
 import Auth from "./account/auth";
 import styles from "/styles/index.module.css"
-import Profile from "../components/common/profile";
+
 
 const IndexPage = () => {
   const [info, setInfo] = useState([]);
@@ -33,6 +32,9 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
+    localStorage.removeItem('categoryId')
+    localStorage.removeItem('postId')
+
     getInfo();
   }, []);
 

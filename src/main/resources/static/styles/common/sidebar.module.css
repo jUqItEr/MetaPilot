@@ -35,15 +35,29 @@
     z-index: auto;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (min-width: 420px) {
     .sidebar{
         float: left;
         position:fixed;
         z-index: 1000;
-        margin-top:94px;
+        margin-top:58px;
     }
     .openbar{
-        margin-top:94px;
+        margin-top:58px;
+        z-index: 1000;
+    }
+
+}
+
+@media screen and (max-width: 912px) {
+    .sidebar{
+        float: left;
+        position:fixed;
+        z-index: 1000;
+        margin: top 58px;
+    }
+    .openbar{
+        margin-top:58px;
         z-index: 1000;
     }
 

@@ -4,13 +4,19 @@ import axios from 'axios'
 import PostHeader from '../../../components/post/header'
 import CommentsList from '../../../components/post/comment/body'
 import LikesList from '../../../components/post/likes'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import styles from '/styles/post/post.module.css'
 import PostContent from '../../../components/post/content'
 import { useRouter } from 'next/router'
+
+
+import IndexHeader from "../../../layout/home/header";
+import IndexSidebar from "../../../layout/home/sidebar";
+import PostList from "../../../components/common/postList";
+import Auth from "../../account/auth";
+import styles2 from "/styles/index.module.css"
 
 
 export const getServerSideProps = async context => {
@@ -24,6 +30,7 @@ export const getServerSideProps = async context => {
 }
 
 const PostPage = ({ postId }) => {
+    const [info, setInfo] = useState([]);
     const [commentCount, setCommentCount] = useState(0)
     const [data, setData] = useState([])
     const [likes, setLikes] = useState([])
@@ -33,6 +40,15 @@ const PostPage = ({ postId }) => {
     const [faChevron, setFaChevron] = useState(false) // 공감수 리스트 상태
     const [requestTime, setRequestTime] = useState(new Date())
     const router = useRouter()
+
+    const getInfo = async () => {
+        axios({
+          method: "get",
+          url: "/api/info",
+        }).then((res) => {
+          setInfo(res.data !== undefined ? res.data.data : null);
+        });
+      };
 
     // 공감수 토글
     const toggleFaChevron = () => {
@@ -134,14 +150,29 @@ const PostPage = ({ postId }) => {
             })
         })
         .catch(_ => router.push("/404"))
+
+        getInfo();
     }, [postId, postLiked, requestTime, user?.id])
 
-    return (
-        <>
-            <Head>
+  return (
+    <>
+      <Head>
                 <title>게시글</title>
                 <meta property='og:title' content='게시글' key='title' />
             </Head>
+      <Auth/>
+      <div className={styles2.wrap}>
+        <div style={{position:'fixed',width:'100vw', backgroundColor: 'var(--bs-body-bg)', zIndex:'1000' }}>
+          <IndexHeader info={info} requestTime={requestTime} setRequestTime={setRequestTime} />
+        </div>
+
+        <div style={{zIndex:'1000', backgroundColor: 'var(--bs-body-bg)'}}>
+          <IndexSidebar info={info}/>
+        </div>
+
+        <div style={{boxSizing: 'border-box'}} className={styles2.content}>
+            
+            <PostList categoryId={1} />
             <div className='wrap'>
                 <div className='container'>
                     <PostHeader post={data?.post} />
@@ -278,8 +309,10 @@ const PostPage = ({ postId }) => {
                     </footer>
                 </div>
             </div>
-        </>
-    )
+        </div>
+      </div>
+    </>
+  )
 }
 
 export default PostPage

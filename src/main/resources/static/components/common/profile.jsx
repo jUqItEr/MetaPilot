@@ -16,7 +16,7 @@ const Profile = ({ info }) => {
     }
 
     const handleSetting = () => {
-        router.push('/admin/basic/user')
+        router.push('/admin/basic/info')
         return
     }
 
