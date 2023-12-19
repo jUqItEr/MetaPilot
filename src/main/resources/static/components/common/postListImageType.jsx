@@ -91,7 +91,6 @@ const PostListImageType = ({ categoryId }) => {
 
     // 이전 페이지 그룹으로 이동하는 함수
     const goToPrevGroup = () => {
-        alert("이전 버튼 눌러짐")
         if (currentPageGroup > 1) {
         const prevPageGroup = currentPageGroup - 1;
         const newFirstPageInGroup = (prevPageGroup - 1) * paging.count + 1;
@@ -113,7 +112,6 @@ const PostListImageType = ({ categoryId }) => {
 
     // 다음 페이지 그룹으로 이동하는 함수
     const goToNextGroup = () => {
-        alert("다음 버튼 눌러짐")
         if (currentPageGroup < Math.ceil(maxPage / paging.count)) {
         const nextPageGroup = currentPageGroup + 1;
         const newFirstPageInGroup = (nextPageGroup - 1) * paging.count + 1;
