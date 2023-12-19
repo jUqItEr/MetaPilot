@@ -74,7 +74,7 @@ const PostList = ({ categoryId }) => {
             url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
             setPostList(res.data)
-            console.log("postList 속 page : ", postList)
+            //console.log("postList 속 page : ", postList)
             const tempMaxPage = maxPage
 
             const nextPageGroup = Math.ceil(paging.page / paging.count)
@@ -250,7 +250,7 @@ const PostList = ({ categoryId }) => {
                                             <a>
                                                 <div className={styles.postList}>
                                                     <span className={styles.postListTitles}>{postList.subject}</span>
-                                                    <span className={styles.postListCommentCount}>({postList.commentCount})</span>
+                                                    <span className={styles.postListCommentCount}>({postList.commentCount}) {postList.type === 1 ? " [ 비공개 ]" : ""}</span>
                                                 </div>
                                             </a>
                                         </Link>
