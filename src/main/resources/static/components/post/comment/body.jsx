@@ -264,7 +264,7 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
                                 </div>
                             )}
                         </div>
-                        <div className={`${styles.menuItem} comment-menu`} data-id={comment.id}>
+                        <div className={`${styles.menuItem2} comment-menu`} data-id={comment.id}>
                             <div></div>
                             <div className={styles.commentMenu}>
                                 {user?.id === comment.userId && (<button className='btn' onClick={() => toggleUpdateForm(comment)}>수정</button>)}

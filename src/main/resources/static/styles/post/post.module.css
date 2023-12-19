@@ -306,6 +306,13 @@
     top: 230px;
   }
 
+  /* 여기 부분 안맞으면 고쳐야함 */
+  .menuItem2 {
+    position: absolute;
+    width: 100px;
+    right: 330px;
+  }
+
   .commentMenu {
     border: 1px solid black;
     display: flex;
