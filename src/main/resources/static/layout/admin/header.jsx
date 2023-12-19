@@ -3,6 +3,7 @@ import Image from 'next/image'
 import axios from 'axios'
 import styles from '../../styles/admin/layout/header.module.css'
 import logoImg from '../../public/image/profileEXImg.png'
+import Link from "next/link"
 /**
  * Rendering the login page.
  *
@@ -20,10 +21,12 @@ export default function AdminHeader() {
             </Head>
             {/* header */}
             <div className="p-3 " style={{backgroundColor: '#0d6efd'}}>
-                <a href="# " className="d-flex align-items-center mb-2 mb-lg-0 text-black text-decoration-none">
-                    <Image className={styles.logoImg}  src='/image/metapilot.svg' alt='' width={30} height={30}  />
-                    <div className={styles.title} >관리자 페이지</div>
-                </a>
+                <Link href='/'>
+                    <a className="d-flex align-items-center mb-2 mb-lg-0 text-black text-decoration-none">
+                        <Image className={styles.logoImg}  src='/image/metapilot.svg' alt='' width={30} height={30}  />
+                        <div className={styles.title} >관리자 페이지</div>
+                    </a>
+                </Link>
             </div>
         </>
     )

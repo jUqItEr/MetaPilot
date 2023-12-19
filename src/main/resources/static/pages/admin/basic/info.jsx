@@ -176,7 +176,7 @@ function AdminInfoPage() {
                                         {/* db에 이미지 한번도 저장된적 없다면 profile.png src={"/image/profile.png"}
                                             db에 저장된 이미지가 있다면 adminProfile.png src={info?.profileImage}
                                             등록버튼을 클릭했고, 선택된 파일이 있다면 src={imageURL}*/}
-                                        <img src = {info?.profileImage || "/image/profile.png"} className="img-thumbnail" alt="..." style={{width:'160px' , height : '160px'}}/>
+                                        <img src = {info?.profileImage || "/image/metapilot.svg"} className="img-thumbnail" alt="..." style={{width:'160px' , height : '160px'}}/>
                                         <label className="text-body-tertiary ps-3" style={{width:'100%'}} htmlFor={"exampleFormControlInput2"} name={"profileImage"}> 프로필 이미지는 가로 160px 섬네일로 생성됩니다.</label>
                                     </div>
                                     <div className="input-group col " style={{width:'100%'}}>

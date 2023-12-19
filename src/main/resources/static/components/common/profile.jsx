@@ -39,7 +39,7 @@ const Profile = ({ info }) => {
                     alignItems: 'center',
                     padding: '10px 0 0 10px'
                 }}>
-                    <img src={info?.profileImage || '/image/profileExImg.png'}
+                    <img src={info?.profileImage || '/image/metapilot.svg'}
                         alt='...'
                         style={{ width: '120px', borderRadius: '50%' }} />
                 </div>
