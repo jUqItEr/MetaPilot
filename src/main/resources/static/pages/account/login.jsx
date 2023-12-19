@@ -3,6 +3,7 @@ import axios from "axios";
 import Head from "next/head";
 import Link from "next/link";
 import styles from "/styles/login.module.css";
+import { useEffect } from "react";
 
 /**
  * Rendering the login page.
@@ -39,6 +40,13 @@ export default function LoginPage() {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    axios({
+      method: 'post',
+      url: '/api/token/welcome'
+    })
+  }, [])
 
   return (
     <>
