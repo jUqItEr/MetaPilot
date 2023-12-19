@@ -1,402 +1,418 @@
 /* --------------header---------------- */
 .headerComponent {
-    height: 250px;
-    position: relative;
-    border: 1px solid black;
+  height: 250px;
+  position: relative;
+  border: 1px solid black;
 }
 
 .headerCompoCate {
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: crimson;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: crimson;
 }
 
 .headerCompoTitle {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
 }
 
 .headerPostList {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .headerSubList {
-    display: flex;
+  display: flex;
 }
 
 .headerProfile {
-    display: flex;
-    position: absolute;
-    left: 5%;
-    bottom: 10%;
-    border-radius: 50%;
+  display: flex;
+  position: absolute;
+  left: 5%;
+  bottom: 10%;
+  border-radius: 50%;
 }
 
 .headerProfileName {
-    margin: 0 10px;
+  margin: 0 10px;
 }
 
 .profileNickname {
-  font-size: 16px;
+font-size: 16px;
 }
 
 .headerSubDropdown {
-    position: absolute;
-    right: 5%;
-    bottom: 10%;
+  position: absolute;
+  right: 5%;
+  bottom: 10%;
 }
 /* --------------footer---------------- */
 .mainContainer {
-    width: 100%;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
+  width: 100%;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
 }
 
 .postContent {
-  padding: 50px;
-  font-size: 20px;
+padding: 50px;
+font-size: 20px;
 }
 
 .footerContainer {
-  width: 100%;
-  border: 1px solid black;
-  overflow: hidden;
+width: 100%;
+border: 1px solid black;
+overflow: hidden;
 
 }
 .footerBtnContainer {
-    display: flex;
-    justify-content: space-between;
-    margin: 0 auto;
-    margin-top: 30px;
-    width: 90%;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  margin-top: 30px;
+  width: 90%;
 }
 
 .hashtagBox {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 auto;
-    margin-top: 30px;
-    width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  margin-top: 30px;
+  width: 90%;
 
 }
 
+.con
+
 .hashtag {
-    padding: 2px 9px;
-    background-color: var(--bs-secondary-bg-subtle);
-    border-radius: 10%;
-    margin: 0 2px;
+  padding: 2px 9px;
+  background-color: var(--bs-secondary-bg-subtle);
+  border-radius: 10%;
+  margin: 0 2px;
 }
 
 .footerBtnList {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .footerLikeComment {
 
-    display: flex;
+  display: flex;
 }
 
 .footerLikesBox {
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: inline-flex;
-    align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .likeButton {
-    border: none;
+  border: none;
 }
 
-  .likeIcon {
-    color: var(--bs-red);
-    margin-right: 5px;
-  }
+.likeIcon {
+  color: var(--bs-red);
+  margin-right: 5px;
+}
 
-  .likeCount {
-    margin-right: 5px;
-    color: black;
-  }
+.likeCount {
+  margin-right: 5px;
+  color: black;
+}
 
-  .postCommentForm {
-    margin: 0 auto;
-    margin-top: 50px;
-    border-left: 2px solid var(--bs-gray-100);
-    padding: 10px 4px;
-    width: 100%;
-    border: 1px solid black;
-  }
+.postCommentForm {
+  margin: 0 auto;
+  margin-top: 50px;
+  border-left: 2px solid var(--bs-gray-100);
+  padding: 10px 4px;
+  width: 100%;
+  border: 1px solid black;
+}
 
-  .commentForm {
-    margin-left: 50px;
-    padding: 10px 4px;
-    width: 92%;
-    border-bottom: 1px solid black;
-  }
+.commentForm {
+  margin-left: 50px;
+  padding: 10px 4px;
+  width: 92%;
+  border-bottom: 1px solid black;
+}
 
-  /* .tlqkfForm {
-    width: 100%;
-    border-bottom: 1px solid black;
-  } */
+/* .tlqkfForm {
+  width: 100%;
+  border-bottom: 1px solid black;
+} */
 
-  .testForm {
-    margin-left: 30px;
+.testForm {
+  margin-left: 30px;
 
-  }
+}
 
-  .commentHeader {
-    display: flex;
-    justify-content: space-between;
-  }
+.menuIcon {
+  width: 20px;
+  font-size: 14px;
+}
 
-  .menuIcon {
-    width: 20px;
-    font-size: 14px;
-  }
+.commentHandlerForm {
+  margin: 0 auto;
+  width: 95%;
+  margin-top: 10px;
+}
 
-  .commentHandlerForm {
-    margin: 0 auto;
-    width: 95%;
-    margin-top: 10px;
-  }
+.replyForm {
+  padding: 10px 4px;
+  width: 97%;
+  border-bottom: 1px solid black;
+}
+.replyCommentForm {
+  padding: 10px 4px;
+  width: 97%;
+  border-bottom: 1px solid black;
+}
 
-  .replyForm {
-    padding: 10px 4px;
-    width: 97%;
-    border-bottom: 1px solid black;
-  }
-  .replyCommentForm {
-    padding: 10px 4px;
-    width: 97%;
-    border-bottom: 1px solid black;
-  }
+.replyForm:first-child {
+  padding: 10px 4px;
+  width: 97%;
+  border-top: 1px solid black;
+}
 
-  .replyForm:first-child {
-    padding: 10px 4px;
-    width: 97%;
-    border-top: 1px solid black;
-  }
+.commentInputGroup {
+  margin: 0 auto;
+}
 
-  .commentInputGroup {
-    margin: 0 auto;
-  }
+.commentTextarea {
+  height: 100px;
+  line-height: 100px;
+}
 
-  .commentTextarea {
-    height: 100px;
-    line-height: 100px;
-  }
+.editorForm {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+}
 
-  .editorForm {
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    width: 95%;
-  }
+.editor {
+  display: flex;
+}
 
-  .editor {
-    display: flex;
-  }
+.inputForm {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
 
-  .inputForm {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-  }
+.editorCheckbox {
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--bs-blue);
+}
 
-  .editorCheckbox {
-    margin-left: 10px;
-    width: 20px;
-    height: 20px;
-    accent-color: var(--bs-blue);
-  }
+.editorLabel {
+  width: 100%;
+  font-size: 14px;
+  color: #ddd;
+}
 
-  .editorLabel {
-    width: 100%;
-    font-size: 14px;
-    color: #ddd;
-  }
+.dropdownArrow {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
 
-  .dropdownArrow {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-  }
+.likesWrap {
+  margin: 0 auto;
+  width: 90%;
+  padding: 20px;
+}
 
-  .likesWrap {
-    margin: 0 auto;
-    width: 90%;
-    padding: 20px;
-  }
+.likesContent{
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+}
 
-  .likesContent{
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-  }
+.likesBloger {
+  color: red;
+  height: 10%;
+}
 
-  .likesBloger {
-    color: red;
-    height: 10%;
-  }
+.likesList {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 이미지와 텍스트 사이의 간격 */
+  width: 150px;
+}
 
-  .likesList {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px; /* 이미지와 텍스트 사이의 간격 */
-    width: 150px;
-  }
+.likesUserImage {
+  border-radius: 50%;
+}
 
-  .likesUserImage {
-    border-radius: 50%;
-  }
+.likesUsername {
+  margin: auto 0;
+}
 
-  .likesUsername {
-    margin: auto 0;
-  }
+.likesPageButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  .likesPageButtons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+}
 
-  }
+.likesButton {
+  display: flex;
+  align-items: center; /* 세로 축에서 중앙 정렬 */
+  width: 20px;       /* 버튼의 너비 */
+  height: 20px;      /* 버튼의 높이 */
+  padding: 5px;      /* 버튼 내부의 여백 */
+}
 
-  .likesButton {
-    display: flex;
-    align-items: center; /* 세로 축에서 중앙 정렬 */
-    width: 20px;       /* 버튼의 너비 */
-    height: 20px;      /* 버튼의 높이 */
-    padding: 5px;      /* 버튼 내부의 여백 */
-  }
+.faChevronLeft, .faChevronRight {
+  font-size: 10px;
+}
 
-  .faChevronLeft, .faChevronRight {
-    font-size: 10px;
-  }
+.faChevronIcon {
+  width: 15px;  /* 원하는 너비 */
+  height: 15px; /* 원하는 높이 */
+  display: flex; /* 아이콘을 flex 아이템으로 만들기 */
+  justify-content: center; /* 가로 방향 중앙 정렬 */
+  align-items: center; /* 세로 방향 중앙 정렬 */
+}
 
-  .faChevronIcon {
-    width: 15px;  /* 원하는 너비 */
-    height: 15px; /* 원하는 높이 */
-    display: flex; /* 아이콘을 flex 아이템으로 만들기 */
-    justify-content: center; /* 가로 방향 중앙 정렬 */
-    align-items: center; /* 세로 방향 중앙 정렬 */
-  }
+.menuIcon {
+  width: 5px;  /* 원하는 너비 */
+  height: 15px; /* 원하는 높이 */
+  display: flex; /* 아이콘을 flex 아이템으로 만들기 */
+  justify-content: center; /* 가로 방향 중앙 정렬 */
+  align-items: center; /* 세로 방향 중앙 정렬 */
+}
 
-  .menuIcon {
-    width: 5px;  /* 원하는 너비 */
-    height: 15px; /* 원하는 높이 */
-    display: flex; /* 아이콘을 flex 아이템으로 만들기 */
-    justify-content: center; /* 가로 방향 중앙 정렬 */
-    align-items: center; /* 세로 방향 중앙 정렬 */
-  }
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
 
-  .menuItem {
-    display: none;
-    position: absolute;
-    width: 100px;
-    right: 40px;
-    top: 230px;
-  }
+.menuItem2 {
+  display: none;
+  position: absolute;
+  width: 100px;
+  right: 0px;
+  top: 30px;
+  
+}
 
-  .commentMenu {
-    border: 1px solid black;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 0px;
-    z-index: 1;
-    background-color: white;
-  }
+/* 여기 부분 안맞으면 고쳐야함 */
+.menuItem {
+  display: none;
+  position: absolute;
+  width: 100px;
+  right: 35px;
+  top: 230px;
+}
 
+.commentMenu {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0px;
+  z-index: 1;
+  background-color: white;
+}
 
+.contentForm {
+  position: relative;
 
-  .commentsWrap {
-    width: 100%;
-    padding-left: 20px;
-    margin-top: 10px;
-  }
+}
 
-  .comment {
-    border-bottom: 1px solid #ddd;
-    padding: 8px 0;
-  }
+.commentsWrap {
+  width: 100%;
+  padding-left: 20px;
+  margin-top: 10px;
+}
 
-  .reply {
-    border-left: 2px solid #eee;
-    margin-left: 20px;
-    padding: 4px 0;
-  }
+.comment {
+  border-bottom: 1px solid #ddd;
+  padding: 8px 0;
+}
 
-  .commentDetails {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.8rem;
-  }
+.reply {
+  border-left: 2px solid #eee;
+  margin-left: 20px;
+  padding: 4px 0;
+}
 
-  .commentDetailsButtons {
-    margin-right: 30px;
-  }
+.commentDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
 
-  .footerLinkList {
-    display: flex;
-  }
+.commentDetailsButtons {
+  margin-right: 30px;
+}
 
-  .footerAdList {
-    width: 100%;
-    height: 300px;
-    margin: 0 auto;
-    margin-top: 50px;
-  }
+.footerLinkList {
+  display: flex;
+}
 
-  .footerAdContent {
-    margin: 0 auto;
-    padding: 30px;
-    display: flex;
-    justify-content: space-between;
-  }
+.footerAdList {
+  width: 100%;
+  height: 300px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
 
-  .footerAdDivisor {
-    margin: 0 auto;
-    width: 95%;
-  }
+.footerAdContent {
+  margin: 0 auto;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+}
 
-  .storeList {
-    margin: 0 auto;
-    margin-top: 20px;
-    width: 95%;
-    list-style: none;
-    padding: 0;
-  }
+.footerAdDivisor {
+  margin: 0 auto;
+  width: 95%;
+}
 
-  .storeItem {
-    margin-top: 10px;
-  }
+.storeList {
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 95%;
+  list-style: none;
+  padding: 0;
+}
 
-  .storeLink {
-    color: var(--bs-blue);
-    text-decoration: none;
-    font-weight: bold;
-  }
+.storeItem {
+  margin-top: 10px;
+}
 
-  .storeDescription {
-    font-size: 0.9em;
-  }
+.storeLink {
+  color: var(--bs-blue);
+  text-decoration: none;
+  font-weight: bold;
+}
 
-  .payButton {
-    margin-left: 5px;
-    background-color: var(--bs-teal);
-    color: white;
-    border: none;
-    padding: 2px 5px;
-    font-size: 0.7em;
-    cursor: pointer;
-  }
+.storeDescription {
+  font-size: 0.9em;
+}
+
+.payButton {
+  margin-left: 5px;
+  background-color: var(--bs-teal);
+  color: white;
+  border: none;
+  padding: 2px 5px;
+  font-size: 0.7em;
+  cursor: pointer;
+}

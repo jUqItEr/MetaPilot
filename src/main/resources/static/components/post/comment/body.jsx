@@ -234,7 +234,7 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
         <div className={styles.commentsWrap}>
             {comments?.map((comment, index) => (
                 <div id={`c${comment.id}`} key={index} className={`${comment.depth ? styles.commentForm : styles.replyForm}`}>
-                    <div className='content-form' data-value={comment.id}>
+                    <div className={`${styles.contentForm} content-form`} data-value={comment.id}>
                         <div className={styles.commentHeader}>
                             {(comment.visible === 1 || (hasAuthority(comment)) || hasAdmin()) && (
                                 <div style={{
@@ -264,7 +264,7 @@ const CommentsList = ({ pid, requestTime, setRequestTime }) => {
                                 </div>
                             )}
                         </div>
-                        <div className={`${styles.menuItem} comment-menu`} data-id={comment.id}>
+                        <div className={`${styles.menuItem2} comment-menu`} data-id={comment.id}>
                             <div></div>
                             <div className={styles.commentMenu}>
                                 {user?.id === comment.userId && (<button className='btn' onClick={() => toggleUpdateForm(comment)}>수정</button>)}
