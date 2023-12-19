@@ -43,11 +43,11 @@ const IndexPage = () => {
       </Head>
       <Auth/>
       <div className={styles.wrap}>
-        <div  style={{position:'fixed',width:'100vw',  backgroundColor: 'var(--bs-body-bg)', zIndex:'1000' }}>
+        <div style={{position:'fixed',width:'100vw', backgroundColor: 'var(--bs-body-bg)', zIndex:'1000' }}>
           <IndexHeader info={info} requestTime={requestTime} setRequestTime={setRequestTime} />
         </div>
 
-        <div style={{zIndex:'1000'}}>
+        <div style={{zIndex:'1000', backgroundColor: 'var(--bs-body-bg)'}}>
           <IndexSidebar info={info}/>
         </div>
 

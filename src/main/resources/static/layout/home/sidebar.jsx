@@ -37,6 +37,7 @@ const SideBarPage = ({ info }) => {
     const [isMobile, setIsMobile] = useState(false);
 
     const toggleSidebar = () => {
+        
         setIsSidebarOpen(!isSidebarOpen);
     };
 

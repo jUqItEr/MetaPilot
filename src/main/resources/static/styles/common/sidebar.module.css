@@ -31,17 +31,14 @@
     border-right:1px solid lightgray;
     margin: 0;
     margin-top: 57.86px;
-    background-color: transparent;
     position: fixed;
     z-index: auto;
-    background-color: transparent;
 }
 
 @media screen and (max-width: 420px) {
     .sidebar{
         float: left;
         position:fixed;
-        background-color: white;
         z-index: 1000;
         margin-top:94px;
     }
