@@ -18,7 +18,6 @@ const Auth = () => {
         const token = localStorage.getItem('token')
         
         if (token !== null) {
-            console.error('hello')
             axios({
                 headers: {
                     'Authorization': token
@@ -27,14 +26,24 @@ const Auth = () => {
                 url: '/api/token/principal'
             })
             .then((res) => {
-                if (isValidJSON(res.data)) {
-                    localStorage.setItem('user', JSON.stringify(res.data))
+                try {
+                    console.error('hello')
+                    if (isValidJSON(res.data)) {
+                        console.error('hello')
+                        localStorage.setItem('user', JSON.stringify(res.data))
+                    }
+                } catch (e) {
+                    console.error('hello1')
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('user')
                 }
             })
             .catch(_ => {
+                localStorage.removeItem('token')
                 localStorage.removeItem('user')
             })
         } else {
+            localStorage.removeItem('token')
             localStorage.removeItem('user')
         }
     }, [])

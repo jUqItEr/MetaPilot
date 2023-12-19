@@ -1,14 +1,8 @@
 import { useRouter } from 'next/router';
 
-import Head from "next/head"
-import Image from 'next/image'
 import axios from 'axios'
 import $ from 'jquery'
 import {useEffect, useState} from "react"
-import { color } from "framer-motion"
-import { faDisplay } from "@fortawesome/free-solid-svg-icons"
-import IndexHeader from "./header"
-import PostList from "../../components/common/list"
 import styles from "../../styles/common/sidebar.module.css"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGripLines,faBars} from "@fortawesome/free-solid-svg-icons";
@@ -101,7 +95,18 @@ const SideBarPage = ({ info }) => {
         }).then((res) => {
             setData(res.data);
         });
-      }, [user?.id]);
+    }, [user?.id]);
+
+    const showEditButton = () => {
+        return user != null && user?.role?.roleEntity?.id !== 1
+    }
+
+    const categoryEditClick = (event, mapper) => {
+        event.stopPropagation();
+        if (mapper.id === 1) {
+            router.push(`/admin/menu/category`);
+        }
+    };
 
     return (
         <>
@@ -111,14 +116,14 @@ const SideBarPage = ({ info }) => {
                         <FontAwesomeIcon icon={isSidebarOpen ? faGripLines : faBars } className={styles.fortawesomeIcon} />
                     </button>
                 </div>
-                <div className={styles.sidebar}  style={{ width: isSidebarOpen ? '230px' : '0px'}}>
+                <div className={styles.sidebar}  style={{ width: isSidebarOpen ? '230px' : '0px', backgroundColor:'var(--bs-body-bg)'}}>
                     <Profile info={info} />
                     <div className="list-group">
                         {data?.map((mapper) => {
                             return (
                                 <div key={mapper.id} type="button" data-ref={mapper.refId} style={{fontWeight: mapper.depth === 0? "bold" : "normal",
                                 borderBottom : mapper.depth === 0 ? '1px solid var(--bb-main)': '1px solid var(--bb-sub)',
-                                backgroundColor : mapper.depth === 0 ? 'var(--bg-main)': 'var(--bg-sub)', borderRadius:'0'}}
+                                backgroundColor : mapper.depth === 0 ? 'var(--bs-body-bg)': 'var(--bg-sub)', borderRadius:'0'}}
                                 /* ↑↑↑↑↑ category의 visible 컬럼이 0(비공개 카테고리)이면 표시하지 않습니다 */
                                 className={`list-group-item list-group-item-action`}
                                 onClick={() => categoryClick(mapper)} >
@@ -151,10 +156,19 @@ const SideBarPage = ({ info }) => {
                                                 }
                                             </div>
                                         </div>
-                                        <div className='fold' onClick={(event) => foldClick(event, mapper)}>
-                                            {
-                                                (mapper.id != 1 && mapper.depth === 0) ? '▼' : ''
-                                            }
+                                        <div>
+                                            <div className='fold' onClick={(event) => foldClick(event, mapper)}>
+                                                {
+                                                    (mapper.id != 1 && mapper.depth === 0) ? '▼' : ''
+                                                }
+                                            </div>
+                                            {showEditButton() && (
+                                            <div className='categoryEdit' onClick={(event) => categoryEditClick(event, mapper)}>
+                                                {
+                                                    (mapper.id === 1) ? '[ Edit ]' : ''
+                                                }
+                                            </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
