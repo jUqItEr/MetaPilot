@@ -2,6 +2,9 @@ import Image from 'next/image'
 import axios from 'axios'
 import Head from 'next/head'
 import Link from 'next/link'
+import $ from 'jquery'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 /**
  * Rendering the login page.
@@ -11,31 +14,69 @@ import Link from 'next/link'
  * @returns Return the login page.
  */
 export default function LoginPage() {
-    const checkId = () => {
-        let result = undefined
+    const router = useRouter()
 
-        axios.post('/user/api/checkId')
-            .then((res) => result = res.data.data)        
+    const checkId = () => {
+        let result = false
+
+        axios({
+            method: 'post',
+            params: {
+                userId: String($('#id').val())
+            },
+            url: '/api/token/checkUserId'
+        })
+        .then((res) => {            
+            if (res.data) {
+                result = true
+                alert('이미 존재하는 아이디입니다.') 
+            } else {
+                alert('사용 가능한 아이디입니다.')
+            }
+        })
         return result
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault()
 
+        const check = () => {
+            let result = false
+        
+            axios({
+                method: 'post',
+                params: {
+                    userId: String($('#id').val())
+                },
+                url: '/api/token/checkUserId'
+            })
+            .then((res) => {
+                console.log($('#id').val(), 'is', res.data)
+                result = res.data
+            })
+            return result
+        }
+
         const { id, email, nickname, password, passwordCheck } = event.target.elements
         
         if (password.value !== passwordCheck.value) {
-            return alert('비밀번호가 일치하지 않습니다')
+            alert('비밀번호가 일치하지 않습니다')
+        } else if (check()) {
+            alert('이미 존재하는 아이디입니다.')
+        } else {
+            const newUser = {
+                id: id.value,
+                nickname: nickname.value,
+                email: email.value,
+                password: password.value
+            }
+            axios.post('/api/token/register', newUser)
+                .then((res) => {
+                    alert('회원가입 성공')
+                    router.push('/account/login')
+                    return
+                })
         }
-
-        const newUser = {
-            id: id.value,
-            nickname: nickname.value,
-            email: email.value,
-            password: password.value
-        }
-        axios.post('/user/api/register', newUser)
-            .then((res) => alert('회원가입 성공'))
     }
 
     return ( 

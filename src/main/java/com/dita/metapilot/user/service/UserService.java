@@ -50,16 +50,8 @@ public class UserService {
      * @param userId 중복 확인을 할 사용자 ID.
      * @throws CustomValidationException 중복된 사용자 ID가 존재하는 경우 예외를 발생
      */
-    public String duplicateUserId(String userId) {
-        UserEntity user = userRepository.findUserByUserId(userId);
-
-        if (user != null) {
-            Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("userId", "이미 존재하는 사용자 아이디 입니다.");
-
-            throw new CustomValidationException(errorMap);
-        }
-        return userId;
+    public boolean duplicateUserId(String userId) {
+        return userRepository.findUserByUserId(userId);
     }
 
     /**
