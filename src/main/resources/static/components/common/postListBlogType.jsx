@@ -69,7 +69,7 @@ const PostListBlogType = ({ categoryId }) => {
             },
             url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
-            console.log("blogType 속 page : ", res.data)
+            //console.log("blogType 속 page : ", res.data)
           setPostList(res.data)
           const tempMaxPage = maxPage
           
@@ -185,7 +185,7 @@ const PostListBlogType = ({ categoryId }) => {
                                         />
                                         <span className={styles.postListTitles} style={{marginLeft: '26px'}}>
                                             <div style={{fontSize: '26px'}}>
-                                                {postList.subject}
+                                                {postList.subject} {postList.type === 1 ? " [ 비공개 ]" : ""}
                                             </div>
                                             <div style={{fontSize: '14px', marginTop: '10px'}}>
                                                 {postList.content}

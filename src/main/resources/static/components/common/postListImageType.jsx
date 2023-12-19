@@ -58,7 +58,7 @@ const PostListImageType = ({ categoryId }) => {
             },
             url: categoryId === 1 ? "/api/post/pageAll" : "/api/post/page",
         }).then((res) => {
-            console.log("imageType 속 page : ", res.data)
+            //console.log("imageType 속 page : ", res.data)
           setPostList(res.data)
           const tempMaxPage = maxPage
           
@@ -167,7 +167,7 @@ const PostListImageType = ({ categoryId }) => {
                                             height={150}
                                         /><br/>
                                         <div style={{fontSize: '18px'}}>
-                                            {postList.subject}
+                                            {postList.subject} {postList.type === 1 ? " [ 비공개 ]" : ""}
                                         </div>
                                         <div>{postList.createdAt}</div>
                                         <span style={{marginRight: '8px'}}>댓글 : {postList.commentCount}</span>
