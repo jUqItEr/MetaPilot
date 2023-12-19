@@ -47,15 +47,16 @@ function RichTextEditor({ initialData, editorState, setEditorState }) {
                     },
                     history: {
                         inDropdown: false
-                    },
-                    image: {
-                        uploadCallback: (file) => {
-                            console.log(file)
-                        },
-                        urlEnabled: false,
-                        uploadEnabled: true,
-                        previewImage: true
-                    },
+                    }
+                    // ,
+                    // image: {
+                    //     uploadCallback: (file) => {
+                    //         console.log(file)
+                    //     },
+                    //     urlEnabled: false,
+                    //     uploadEnabled: true,
+                    //     previewImage: true
+                    // },
                 }}
                 placeholder='내용을 작성해주세요.'
                 localization={{
