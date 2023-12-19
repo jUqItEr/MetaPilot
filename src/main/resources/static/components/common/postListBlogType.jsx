@@ -188,7 +188,7 @@ const PostListBlogType = ({ categoryId }) => {
                                                 {postList.subject} {postList.type === 1 ? " [ 비공개 ]" : ""}
                                             </div>
                                             <div style={{fontSize: '14px', marginTop: '10px'}}>
-                                                {postList.content}
+                                                {/*{postList.content}*/}
                                             </div>
                                             <div style={{fontSize: '16px', marginTop: '50px'}}>
                                                 <span style={{marginRight: '10px'}}>{postList.createdDate}</span>

@@ -289,6 +289,7 @@
         set @userId = #{userId};
 
         set @role = (select urt.role_tbl_id from user_role_tbl urt where urt.user_tbl_id = @userId);
+        set @role = if(@userId is null or @userId = '', 1, @role);
 
         set @secretPost = if(@role = 1, 1, 404);
 
