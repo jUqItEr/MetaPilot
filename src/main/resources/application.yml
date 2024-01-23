@@ -19,7 +19,7 @@ spring:
             scope:
               - email
               - profile
-#            redirectUri: http://localhost:8000/login/oauth2/code/google #고정
+            redirectUri: https://metapilot.hxlab.co.kr/login/oauth2/code/google #고정
           naver:
             client-id: KKLTKhPdrznQJblkS0Uj
             client-secret: T6ZOXfPHpG
