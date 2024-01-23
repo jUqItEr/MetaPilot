@@ -3,8 +3,9 @@
 const nextConfig = {
     reactStrictMode: false,
     swcMinify: true,
+    output: 'standalone',
     images: {
-        domains: ['i.imgur.com', 'localhost']
+        domains: ['i.imgur.com', 'localhost', 'metapilot.hxlab.co.kr', 'api.metapilot.hxlab.co.kr']
     },
     async rewrites() {
         if (process.env.NODE_ENV === 'package') {
