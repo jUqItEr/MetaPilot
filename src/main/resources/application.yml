@@ -21,8 +21,8 @@ spring:
               - profile
             redirectUri: https://metapilot.hxlab.co.kr/login/oauth2/code/google #고정
           naver:
-            client-id: KKLTKhPdrznQJblkS0Uj
-            client-secret: T6ZOXfPHpG
+            client-id: iKgO6DpLCHYqOI2nx2e7
+            client-secret: Dm5XMrErPS
             client-name: Naver
             clientAuthenticationMethod: post
             authorization-grant-type: authorization_code
