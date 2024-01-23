@@ -1,6 +1,7 @@
 package com.dita.metapilot.security;
 
 import com.dita.metapilot.security.provider.GoogleUserInfo;
+import com.dita.metapilot.security.provider.KakaoUserInfo;
 import com.dita.metapilot.security.provider.NaverUserInfo;
 import com.dita.metapilot.security.provider.OAuth2UserInfo;
 import com.dita.metapilot.user.entity.UserEntity;
@@ -47,7 +48,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")){
             oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
-        } else {
+        } else if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
+            oAuth2UserInfo = new KakaoUserInfo((Map)oAuth2User.getAttributes().get("response"));
+        }
+        else {
             System.out.println("우리는 구글과 네이버만 지원해요 ㅎㅎ");//TODO
         }
 
