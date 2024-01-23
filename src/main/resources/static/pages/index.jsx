@@ -42,6 +42,13 @@ const IndexPage = () => {
     <>
       <Head>
         <title>{info.title}</title>
+        <meta name="title" property="og:title" content={info.title} />
+            <meta
+              name="description"
+              property="og:description"
+              content={info.profile}/>
+            <meta name="image" property="og:image" content="%PUBLIC_URL%/image/metapilot.svg" />
+            <meta name="url" property="og:url" content="https://metapilot.hxlab.co.kr/" />
       </Head>
       <Auth/>
       <div className={styles.wrap}>
